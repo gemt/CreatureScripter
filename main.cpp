@@ -5,12 +5,13 @@
 #include <QSqlError>
 #include <QDebug>
 #include "warnings.h"
-
+#include "table.h"
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
     MainWindow w;
     w.show();
+
     QCoreApplication::setApplicationVersion("0.1");
     QCoreApplication::setOrganizationName("gemt");
     QCoreApplication::setOrganizationDomain("github.com/gemt");
@@ -40,11 +41,18 @@ int main(int argc, char *argv[])
     db.setUserName(settings.value("username").toString());
     db.setPassword(settings.value("password").toString());
     bool ok = db.open();
-
     if(!ok)
     {
         Warning("Unable to connect to db: " + db.lastError().text());
     }
 
+    try{
+        Creatures::Get();
+        Creatures::Get().LoadCreatures();
+    }catch(std::exception& e){
+        Warning(e.what());
+        return 1;
+    }
+    w.InitTable();
     return a.exec();
 }

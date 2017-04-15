@@ -5,7 +5,9 @@
 #include <QSqlError>
 #include <QSqlRecord>
 #include <QDebug>
+#include <QTableWidgetItem>
 
+Creatures Creatures::instance;
 
 const QVector<QString> creature_template::rows =
 {
@@ -111,10 +113,48 @@ const QVector<QString> creature_ai_scripts::rows =
     "comment"
 };
 
-QVector<std::shared_ptr<Creature>> Creature::GetCreatures(const QString &name)
+Creature::Creature(const QString& name, unsigned int entry) :
+    name(name),
+    entry(entry),
+    nItm(new QTableWidgetItem(name)),
+    eItm(new QTableWidgetItem(QString("%1").arg(entry)))
 {
-    QVector<std::shared_ptr<Creature>> result;
 
+}
+
+std::vector<Creature*> Creatures::GetCreatures(const QString &name)
+{
+    if(name.isEmpty())
+        return _creatures;
+    QString sn = name.toLower();
+    std::vector<Creature*> ret;
+    for(auto it = _creatures.cbegin(); it != _creatures.cend(); it++){
+        if((*it)->name.contains(sn))
+            ret.push_back(*it);
+    }
+
+    return ret;
+}
+
+std::vector<Creature*> Creatures::GetCreatures(unsigned int entry)
+{
+    std::vector<Creature*> ret;
+    for(auto it = _creatures.cbegin(); it != _creatures.cend(); it++){
+        if((*it)->entry == entry)
+            ret.push_back(*it);
+    }
+    return ret;
+}
+
+
+void Creatures::LoadCreatures()
+{
+    static bool loaded = false;
+    if(loaded){
+        throw std::logic_error("Creatures::LoadCreatures called twize");
+    }else{
+        loaded = true;
+    }
     QSettings settings;
     QSqlDatabase db = QSqlDatabase::database(settings.value("connectionName").toString());
     bool ret = db.isOpen();
@@ -122,12 +162,8 @@ QVector<std::shared_ptr<Creature>> Creature::GetCreatures(const QString &name)
         throw std::logic_error("Unable to open database connection: " + db.connectionName().toStdString());
     }
     QSqlQuery q(db);
-    QString ns = "%"+name+"%";
-    ns.replace("'", "''");
-    q.prepare(QString("SELECT entry, name FROM %1.creature_template WHERE name LIKE '%2'")
-              .arg(settings.value("worldDB").toString())
-              .arg(ns));
-    ret = q.exec();
+    ret = q.exec(QString("SELECT entry, name FROM %1.creature_template")
+                 .arg(settings.value("worldDB").toString()));
     int entryField = q.record().indexOf("entry");
     int nameField = q.record().indexOf("name");
     if(!ret){
@@ -137,24 +173,11 @@ QVector<std::shared_ptr<Creature>> Creature::GetCreatures(const QString &name)
         qDebug() << q.lastQuery();
     }
     if(!q.isValid()){
-        // throw something
+        //throw std::logic_error("Query is not valid");
     }
     while(q.next()){
-        result.push_back(std::make_shared<Creature>(q.value(nameField).toString(), q.value(entryField).toUInt()));
+        QString n = q.value(nameField).toString().toLower();
+        unsigned int e = q.value(entryField).toUInt();
+        _creatures.push_back(new Creature(n,e));
     }
-    return result;
 }
-
-
-Creature::Creature(QString&& name, unsigned int entry) :
-    name(std::move(name)),
-    entry(entry)
-{
-
-}
-
-
-
-
-
-

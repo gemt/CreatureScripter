@@ -20,5 +20,6 @@ SOURCES += main.cpp\
 HEADERS  += mainwindow.h \
     table.h \
     config.h \
-    warnings.h
+    warnings.h \
+    creaturesearchtable.h
 5

@@ -11,6 +11,8 @@
 #include <QVector>
 #include <QString>
 #include <memory>
+#include <map>
+#include <QAbstractTableModel>
 
 struct creature_template
 {
@@ -32,18 +34,42 @@ struct creature_ai_scripts
     static const QVector<QString> rows;
 };
 
+class QTableWidgetItem;
 class Creature
 {
 public:
-    static QVector<std::shared_ptr<Creature>> GetCreatures(const QString& name);
 
-    Creature():entry(0){}
-    Creature(QString&& name, unsigned int entry);
+    Creature():entry(0),name("INVALID"){}
+    Creature(const QString& name, unsigned int entry);
 
     unsigned int entry;
     QString name;
 
+    QTableWidgetItem* nItm;
+    QTableWidgetItem* eItm;
 };
+
+class Creatures
+{
+public:
+    static Creatures& Get(){
+        return instance;
+    }
+
+    void LoadCreatures();
+
+
+    std::vector<Creature*> GetCreatures(const QString& name);
+    std::vector<Creature*> GetCreatures(unsigned int entry);
+
+private:
+    Creatures(){}
+    static Creatures instance;
+    std::vector<Creature*> _creatures;
+};
+
+
+
 
 #endif // TABLE_H
 
