@@ -25,8 +25,7 @@ MainWindow::MainWindow(QWidget *parent)
     QWidget* cw = new QWidget(parent);
     setCentralWidget(cw);
     QRect rec = QApplication::desktop()->screenGeometry();
-    cw->resize(rec.width()/2, rec.height()/2);
-
+    resize(rec.width()/2, rec.height()/2);
     nameSearchTimer.setSingleShot(true);
     connect(&nameSearchTimer, &QTimer::timeout, this, &MainWindow::onNameSearchTimeout);
 
@@ -49,28 +48,21 @@ void MainWindow::InitTable()
     connect(nameSearch, &QLineEdit::returnPressed, this, &MainWindow::onNameSearch);
     connect(nameSearch, &QLineEdit::textChanged, this, &MainWindow::onNameSearchChange);
 
-    entrySearch = new QLineEdit(cw);
-    entrySearch->setValidator(new QIntValidator(0, 999999999, entrySearch));
-    connect(entrySearch, &QLineEdit::returnPressed, this, &MainWindow::onEntrySearch);
-    connect(entrySearch, &QLineEdit::textChanged, this, &MainWindow::onEntrySearchChange);
-
-    sl->addRow(new QLabel("Name"), nameSearch);
-    sl->addRow(new QLabel("Entry"), entrySearch);
+    sl->addRow(new QLabel("Name/Entry"), nameSearch);
 
     std::vector<Creature*> creatures = Creatures::Get().GetCreatures("");
-    searchResults = new QTableWidget(creatures.size(), 2);
+    searchResults = new QTableWidget((int)creatures.size(), 2);
     searchResults->setHorizontalHeaderLabels(QStringList{"Entry", "Name"});
     searchResults->verticalHeader()->hide();
     searchResults->setSelectionBehavior(QAbstractItemView::SelectRows);
     searchResults->setEditTriggers(QAbstractItemView::NoEditTriggers);
     for(int i = 0; i < creatures.size(); i++) {
-        searchResults->setItem(i, 0, creatures.at(i)->eItm);
-        searchResults->setItem(i, 1, creatures.at(i)->nItm);
+        searchResults->setItem(i, 0, new QTableWidgetItem(QString("%1").arg(creatures.at(i)->entry)));
+        searchResults->setItem(i, 1, new QTableWidgetItem(creatures.at(i)->name));
     }
     bl->addWidget(searchResults);
     searchResults->resizeColumnsToContents();
     searchResults->horizontalHeader()->setStretchLastSection(true);
-
 }
 
 void MainWindow::onNameSearch()
@@ -78,20 +70,9 @@ void MainWindow::onNameSearch()
     onNameSearchTimeout();
 }
 
-void MainWindow::onEntrySearch()
-{
-    // entrySearch has a validator that only accepts ints
-
-}
-
-void MainWindow::onNameSearchChange(const QString& s)
+void MainWindow::onNameSearchChange(const QString&)
 {
     nameSearchTimer.start(500);
-}
-
-void MainWindow::onEntrySearchChange(const QString &)
-{
-
 }
 
 void MainWindow::onNameSearchTimeout()
@@ -101,26 +82,18 @@ void MainWindow::onNameSearchTimeout()
         return;
     currentDisplayedSearch = nameSearch->text();
 
-    std::vector<Creature*> ret = Creatures::Get().GetCreatures(nameSearch->text());
+    std::vector<Creature*> ret = Creatures::Get().GetCreatures(currentDisplayedSearch);
+    SetRows(ret);
+
+}
+
+void MainWindow::SetRows(const std::vector<Creature *> &vec)
+{
     for(int i = 0; i < searchResults->rowCount(); i++){
-        if(i < ret.size()){ //size+1? nah dont think so
-            searchResults->item(i, 0)->setText(QString("%1").arg(ret.at(i)->entry));
-            searchResults->item(i, 1)->setText(ret.at(i)->name);
+        if(i < vec.size()){ //size+1? nah dont think so
+            searchResults->item(i, 0)->setText(QString("%1").arg(vec.at(i)->entry));
+            searchResults->item(i, 1)->setText(vec.at(i)->name);
         }
-        searchResults->setRowHidden(i, !(i < ret.size()));
+        searchResults->setRowHidden(i, !(i < vec.size()));
     }
-    return;
-    while(searchResults->rowCount())
-        searchResults->removeRow(searchResults->rowCount()-1);
-
-
-    foreach(Creature const* p, ret){
-        searchResults->insertRow(searchResults->rowCount());
-        QTableWidgetItem* itm = new QTableWidgetItem(QString("%1").arg(p->entry));
-        searchResults->setItem(searchResults->rowCount()-1, 0, itm);
-        itm = new QTableWidgetItem(p->name);
-        searchResults->setItem(searchResults->rowCount()-1, 1, itm);
-    }
-    //searchResults->resizeColumnsToContents();
-    //searchResults->horizontalHeader()->setStretchLastSection(true);
 }

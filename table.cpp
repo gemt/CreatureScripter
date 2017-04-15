@@ -115,9 +115,7 @@ const QVector<QString> creature_ai_scripts::rows =
 
 Creature::Creature(const QString& name, unsigned int entry) :
     name(name),
-    entry(entry),
-    nItm(new QTableWidgetItem(name)),
-    eItm(new QTableWidgetItem(QString("%1").arg(entry)))
+    entry(entry)
 {
 
 }
@@ -126,26 +124,28 @@ std::vector<Creature*> Creatures::GetCreatures(const QString &name)
 {
     if(name.isEmpty())
         return _creatures;
-    QString sn = name.toLower();
+    QString lName = name;
+    bool isUInt;
+    unsigned int intVal = lName.toUInt(&isUInt);
     std::vector<Creature*> ret;
-    for(auto it = _creatures.cbegin(); it != _creatures.cend(); it++){
-        if((*it)->name.contains(sn))
-            ret.push_back(*it);
+    if(isUInt){
+        for(auto it = _creatures.cbegin(); it != _creatures.cend(); it++){
+            if((*it)->entry == intVal)
+                ret.push_back(*it);
+        }
+        return ret;
+    }else{
+        QString sn = lName.toLower();
+        std::vector<Creature*> ret;
+        for(auto it = _creatures.cbegin(); it != _creatures.cend(); it++){
+            if((*it)->name.contains(sn))
+                ret.push_back(*it);
+        }
+
+        return ret;
     }
 
-    return ret;
 }
-
-std::vector<Creature*> Creatures::GetCreatures(unsigned int entry)
-{
-    std::vector<Creature*> ret;
-    for(auto it = _creatures.cbegin(); it != _creatures.cend(); it++){
-        if((*it)->entry == entry)
-            ret.push_back(*it);
-    }
-    return ret;
-}
-
 
 void Creatures::LoadCreatures()
 {

@@ -44,9 +44,6 @@ public:
 
     unsigned int entry;
     QString name;
-
-    QTableWidgetItem* nItm;
-    QTableWidgetItem* eItm;
 };
 
 class Creatures
@@ -60,7 +57,6 @@ public:
 
 
     std::vector<Creature*> GetCreatures(const QString& name);
-    std::vector<Creature*> GetCreatures(unsigned int entry);
 
 private:
     Creatures(){}
