@@ -2,15 +2,15 @@
 #define WARNINGS_H
 
 #include <QMessageBox>
-#include <QDebug>
 
-static void Warning(const QString& warn)
+class Warnings
 {
-    qDebug() << warn;
-    QMessageBox msgBox;
-    msgBox.setText(warn);
-    msgBox.setIcon(QMessageBox::Icon::Warning);
-    msgBox.exec();
-}
+public:
+    static void Warning(QString warn,QMessageBox::Icon severity = QMessageBox::Warning);
+
+    static QString confirmBox(const QString &text, const QStringList &opts, QWidget *parent);
+};
+
+
 
 #endif // WARNINGS_H

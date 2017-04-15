@@ -9,6 +9,14 @@
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
+    const QString splitterSheetV =			\
+    "QSplitter[orientation=\"2\"]::handle {	\
+        border: 3px dashed black;			\
+        margin: 1px 50px;					\
+        min-height: 10px;					\
+        max-height: 10px;					\
+    }";
+    a.setStyleSheet(splitterSheetV);
     MainWindow w;
     w.show();
 
@@ -43,16 +51,15 @@ int main(int argc, char *argv[])
     bool ok = db.open();
     if(!ok)
     {
-        Warning("Unable to connect to db: " + db.lastError().text());
-    }
+        Warnings::Warning("Unable to connect to db: " + db.lastError().text());    }
 
     try{
         Creatures::Get();
         Creatures::Get().LoadCreatures();
     }catch(std::exception& e){
-        Warning(e.what());
+        Warnings::Warning(e.what());
         return 1;
     }
-    w.InitTable();
+    w.InitWindow();
     return a.exec();
 }

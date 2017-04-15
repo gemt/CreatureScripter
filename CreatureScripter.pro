@@ -15,11 +15,12 @@ CONFIG += c++11
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    table.cpp
+    table.cpp \
+    warnings.cpp \
+    worktabs.cpp
 
 HEADERS  += mainwindow.h \
     table.h \
     config.h \
     warnings.h \
-    creaturesearchtable.h
-5
+    worktabs.h
