@@ -12,22 +12,22 @@
 	
 	"paramTypes" : [
 		{
-			"type" 	: "time",
+			"type" 	: "ms",
 			"name"	: "InitialMin",
 			"desc"	: "Minumum Time used to calculate Random Initial Expire",
 		},
 		{
-			"type" 	: "time",
+			"type" 	: "ms",
 			"name"	: "InitialMax ",
 			"desc"	: "Maximum Time used to calculate Random Initial Expire",
 		},
 		{
-			"type" 	: "time",
+			"type" 	: "ms",
 			"name"	: "RepeatMin",
 			"desc"	: "Minimum Time used to calculate Random Repeat Expire",
 		},
 		{
-			"type" 	: "time",
+			"type" 	: "ms",
 			"name"	: "RepeatMax",
 			"desc"	: "Maximum Time used to calculate Random Repeat Expire",
 		},
@@ -50,6 +50,46 @@
 			"type" 	: "pct",
 			"name"	: "ManaMin%",
 			"desc"	: "Minimum Mana% That will trigger this Event to Expire",
+		},
+		{
+			"type" 	: "spellid",
+			"name"	: "SpellID",
+			"desc"	: "The Spell ID that will trigger the Event.",
+		},
+		{
+			"type" 	: "spellschool",
+			"name"	: "School",
+			"desc"	: "Spell School to trigger the Event.",
+		},
+		{
+			"type" 	: "dist",
+			"name"	: "MinDist",
+			"desc"	: "This Distance is the Minimum Distance between the NPC and it's target to allow this Event to Expire",
+		},
+		{
+			"type" 	: "dist",
+			"name"	: "MaxDist",
+			"desc"	: "This Distance is the Maximum Distance between the NPC and it's target to allow this Event to Expire",
+		},
+		{
+			"type" 	: "bool",
+			"name"	: "Hostile-or-Not",
+			"desc"	: "This will expire if Unit are hostile. If Param1=1 it will only expire if Unit are not Hostile(generally determined by faction)",
+		},
+		{
+			"type" 	: "dist",
+			"name"	: "MaxAllowedRange",
+			"desc"	: "Expires when a Unit moves within this distance to creature",
+		},
+		{
+			"type" 	: "hp",
+			"name"	: "HPDeficit",
+			"desc"	: "This is the Amount of HP Missing from Full HP to trigger this event (You would need to calculate the amount of HP the event happens and subtract that from Full HP Value to get this number)",
+		},
+		{
+			"type" 	: "dist",
+			"name"	: "Radius",
+			"desc"	: "This is the Range in Yards the NPC will scan for nearby Friendlies (Faction is Friendly To) for the missing amount of HP in Param1.",
 		},
 	],
 				
@@ -103,19 +143,129 @@
 			],
 		},
 		{
-			"id"	: 3,
-			"name"	: "EVENT_T_MANA",
-			"d1" 	: "Expires when the NPC's Mana% is between (Param1) and (Param2). Will repeat between every (Param3) and (Param4) If Event Conditions Are Still Met.",
-			"t"		: "BOTH",
+			"id"	: 4,
+			"name"	: "EVENT_T_AGGRO",
+			"d1" 	: "Expires ONLY upon the NPC's INITIAL Aggro at the Start of Combat (Does NOT Repeat) and Only Resets on Spawn or Evade.",
+			"t"		: "CO",
 			"params":[
-				"ManaMax%",
-				"ManaMin%",
+			],
+		},
+		{
+			"id"	: 5,
+			"name"	: "EVENT_T_KILL",
+			"d1" 	: "Expires upon Killing a Player. Will Repeat Check between (Param1) and (Param2). This Event Will Not Trigger Again Until Repeat Timer Expires.",
+			"t"		: "CO",
+			"params":[
 				"RepeatMin",
 				"RepeatMax",
 			],
 		},
-
-		
+		{
+			"id"	: 6,
+			"name"	: "EVENT_T_DEATH",
+			"d1" 	: "Expires on the NPC's Death. (This Triggers At The Moment The NPC Dies).",
+			"t"		: "BOTH",
+			"params":[
+			],
+		},
+		{
+			"id"	: 7,
+			"name"	: "EVENT_T_EVADE",
+			"d1" 	: "Expires at the moment the Creature EnterEvadeMode() and Exits Combat.",
+			"t"		: "CO",
+			"params":[
+			],
+		},
+		{
+			"id"	: 8,
+			"name"	: "EVENT_T_SPELLHIT",
+			"d1" 	: "Expires upon Spell Hit of the NPC. When (param1) is set, it is the specific Spell ID used as the trigger. With (param2) specified, the expiration is limited to specific spell schools (-1 for all) and Spell ID value is ignored. Will repeat Event Conditions Check between every (Param3) and (Param4). Only A Spell ID or Spell School may be Specified but NOT both.",
+			"t"		: "BOTH",
+			"params":[
+				"SpellID",
+				"School",
+				"RepeatMin",
+				"RepeatMax",
+			],
+		},
+		{
+			"id"	: 9,
+			"name"	: "EVENT_T_RANGE",
+			"d1" 	: "Expires when the Highest Threat Target Distance is Greater than (Param1) and Less than (Param2). Will repeat between every (Param3) and (Param4) if Event Conditions Are Still Met."
+			"t"		: "CO",
+			"params":[
+				"MinDist",
+				"MaxDist",
+				"RepeatMin",
+				"RepeatMax",
+			],
+		},
+		{
+			"id"	: 10,
+			"name"	: "EVENT_T_OOC_LOS",
+			"d1" 	: "Expires when a unit moves within distance (MaxAllowedRange) of the NPC. If (Param1) is 0 it will expire only when unit is hostile, If (Param1) is 1 it will expire only when unit is friendly. This depends generally on faction relations. Will repeat every (Param3) and (Param4). Does NOT expire when the NPC is in combat."
+			"t"		: "OOCO",
+			"params":[
+				"Hostile-or-Not",
+				"MaxAllowedRange",
+				"RepeatMin",
+				"RepeatMax",
+			],
+		},
+		{
+			"id"	: 11,
+			"name"	: "EVENT_T_SPAWNED",
+			"d1" 	: "Expires on initial spawn and respawn of the NPC (Useful for setting Ranged Movement/Summoning Pets/Applying Buffs)."
+			"t"		: "BOTH",
+			"params":[
+			],
+		},
+		{
+			"id"	: 12,
+			"name"	: "EVENT_T_TARGET_HP",
+			"d1" 	: "Expires when current target's HP% is between (Param1) and (Param2). Will repeat every (Param3) and (Param4)If Event Conditions Are Still Met."
+			"t"		: "CO",
+			"params":[
+				"HPMax%",
+				"HPMin%",
+				"RepeatMin",
+				"RepeatMax",
+			],
+		},
+		{
+			"id"	: 13,
+			"name"	: "EVENT_T_TARGET_CASTING",
+			"d1" 	: "Expires when the current target is casting a spell. Will repeat every (Param1) and (Param2) If Event Conditions Are Still Met."
+			"t"		: "CO",
+			"params":[
+				"RepeatMin",
+				"RepeatMax",
+			],
+		},
+		{
+			"id"	: 14,
+			"name"	: "EVENT_T_FRIENDLY_HP",
+			"d1" 	: "Expires when a friendly unit in (Radius) has at least (Param1) HP points missing. Will repeat every (Param3) and (Param4) If Event Conditions Are Still Met."
+			"t"		: "CO",
+			"params":[
+				"HPDeficit",
+				"Radius",
+				"RepeatMin",
+				"RepeatMax",
+			],
+		},
+		{
+			"id"	: 15,
+			"name"	: "EVENT_T_FRIENDLY_IS_CC",
+			"d1" 	: "Expires when a friendly unit is crowd controlled within the given Radius (Param2). Will repeat every (Param3) and (Param4)."
+			"t"		: "CO",
+			"params":[
+				"DispellType",
+				"Radius",
+				"RepeatMin",
+				"RepeatMax",
+			],
+		},
 	]
 }	
 	

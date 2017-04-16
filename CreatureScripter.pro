@@ -23,7 +23,8 @@ SOURCES += main.cpp\
     creaturetemplateraw.cpp \
     creatureaiscriptsraw.cpp \
     dbconnectionsettings.cpp \
-    scriptaitab.cpp
+    scriptaitab.cpp \
+    eventaidef.cpp
 
 HEADERS  += mainwindow.h \
     config.h \
@@ -35,7 +36,8 @@ HEADERS  += mainwindow.h \
     creaturetemplateraw.h \
     creatureaiscriptsraw.h \
     dbconnectionsettings.h \
-    scriptaitab.h
+    scriptaitab.h \
+    eventaidef.h
 
 RESOURCES += \
     icons.qrc
