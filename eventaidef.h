@@ -21,6 +21,10 @@
  *
  * DispellType requires some bitmask thing
  *
+ * an event can be without 't'
+ *
+ * EVENT_T_RECEIVE_EMOTE needs customizing
+ *
  */
 class EventAIDef
 {
