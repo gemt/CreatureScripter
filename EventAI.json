@@ -1,0 +1,136 @@
+{
+	"keywords"	: {
+		"CO"			:	"COMBAT ONLY",
+		"OOCO"			:	"OUT OF COMBAT ONLY",
+		"BOTH"			:	"BOTH",		
+		"t"				:	"Triggers",
+		"tn"			:	"Trigger note",
+		"n"				:	"NOTE",
+		"d1"			:	"Description",
+		"d2"			:	"Detailed Description",
+	},
+	
+	"paramTypes" : [
+		{
+			"type" 	: "time",
+			"name"	: "InitialMin",
+			"desc"	: "Minumum Time used to calculate Random Initial Expire",
+		},
+		{
+			"type" 	: "time",
+			"name"	: "InitialMax ",
+			"desc"	: "Maximum Time used to calculate Random Initial Expire",
+		},
+		{
+			"type" 	: "time",
+			"name"	: "RepeatMin",
+			"desc"	: "Minimum Time used to calculate Random Repeat Expire",
+		},
+		{
+			"type" 	: "time",
+			"name"	: "RepeatMax",
+			"desc"	: "Maximum Time used to calculate Random Repeat Expire",
+		},
+		{
+			"type" 	: "pct",
+			"name"	: "HPMax%",
+			"desc"	: "Maximum HP% That will trigger this Event to Expire",
+		},
+		{
+			"type" 	: "pct",
+			"name"	: "HPMin%",
+			"desc"	: "Minimum HP% That will trigger this Event to Expire",
+		},
+		{
+			"type" 	: "pct",
+			"name"	: "ManaMax%",
+			"desc"	: "Maximum Mana% That will trigger this Event to Expire",
+		},
+		{
+			"type" 	: "pct",
+			"name"	: "ManaMin%",
+			"desc"	: "Minimum Mana% That will trigger this Event to Expire",
+		},
+	],
+				
+	"events": [
+		{
+			"id"	: 0,
+			"name"	: "EVENT_T_TIMER_IN_COMBAT",
+			"d1" 	: "Expires at first between (Param1) and (Param2) and then will repeat between every (Param3) and (Param4),  EXPIRES ONLY IN COMBAT.",
+			"t"		: "CO",
+			"params":[
+				"InitialMin",
+				"InitialMax",
+				"RepeatMin",
+				"RepeatMax",
+			],
+		},
+		{
+			"id"	: 1,
+			"name"	: "EVENT_T_TIMER_OOC",
+			"d1" 	: "Expires at first between (Param1) and (Param2) and then will repeat between every (Param3) and (Param4),  EXPIRES ONLY OUT OF COMBAT BUT NOT DURING EVADE.",
+			"t"		: "OOCO",
+			"params":[
+				"InitialMin",
+				"InitialMax",
+				"RepeatMin",
+				"RepeatMax",
+			],
+		},
+		{
+			"id"	: 2,
+			"name"	: "EVENT_T_HP",
+			"d1" 	: "Expires when the NPC's HP% is between (Param1) and (Param2). Will repeat between every (Param3) and (Param4) If Event Conditions Are Still Met.",
+			"t"		: "BOTH",
+			"params":[
+				"HPMax%",
+				"HPMin%",
+				"RepeatMin",
+				"RepeatMax",
+			],
+		},
+		{
+			"id"	: 3,
+			"name"	: "EVENT_T_MANA",
+			"d1" 	: "Expires when the NPC's Mana% is between (Param1) and (Param2). Will repeat between every (Param3) and (Param4) If Event Conditions Are Still Met.",
+			"t"		: "BOTH",
+			"params":[
+				"ManaMax%",
+				"ManaMin%",
+				"RepeatMin",
+				"RepeatMax",
+			],
+		},
+		{
+			"id"	: 3,
+			"name"	: "EVENT_T_MANA",
+			"d1" 	: "Expires when the NPC's Mana% is between (Param1) and (Param2). Will repeat between every (Param3) and (Param4) If Event Conditions Are Still Met.",
+			"t"		: "BOTH",
+			"params":[
+				"ManaMax%",
+				"ManaMin%",
+				"RepeatMin",
+				"RepeatMax",
+			],
+		},
+
+		
+	]
+}	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
