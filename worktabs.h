@@ -5,12 +5,15 @@
 #include "creature.h"
 
 class Creature;
-
-class WorkTab : public QWidget
+class CreatureSpawnLocations;
+class WorkTab : public QTabWidget
 {
 public:
     WorkTab(Creature* pCreature, QWidget* parent);
     FullCreature fullCreature;
+
+private:
+    CreatureSpawnLocations* locationsTab;
 };
 
 class WorkTabs : public QTabWidget

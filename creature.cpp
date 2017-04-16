@@ -115,7 +115,16 @@ const QVector<QString> creature_ai_scripts::rows =
 };
 */
 
-static void SelectStar(const QString& tableName, QVector<Table>& res,
+QString CreatureTable::tableName = "creature";
+QString CreatureTemplate::tableName = "creature_template";
+QString CreatureAIScripts::tableName = "creature_ai_scripts";
+
+QStringList CreatureTable::names;
+QStringList CreatureTemplate::names;
+QStringList CreatureAIScripts::names;
+
+
+static void SelectStar(const QString& tableName, QVector<QStringList>& res, const QStringList& names,
                        unsigned int entry, const QString& entryFN)
 {
     QSettings settings;
@@ -137,32 +146,34 @@ static void SelectStar(const QString& tableName, QVector<Table>& res,
                                  + ", Error: " + q.lastError().text().toStdString());
     }
     while(q.next()){
-        Table t;
         QSqlRecord record = q.record();
-        for(int i = 0; i < record.count(); i++) {
-            t.fields[record.fieldName(i)] = record.value(i).toString();
+        Q_ASSERT(!names.isEmpty());
+        QStringList t;
+        foreach(const QString& n, names){
+            int idx = record.indexOf(n);
+            t.push_back(idx == -1 ? "" : record.value(idx).toString());
         }
-        res.push_back(std::move(t));
+        res.push_back(t);
     }
 }
 
 
 CreatureTemplate::CreatureTemplate(unsigned int entry)
 {
-    QVector<Table> tmp;
-    SelectStar("creature_template", tmp, entry, "entry");
+    QVector<QStringList> tmp;
+    SelectStar(tableName, tmp, names, entry, "entry");
     Q_ASSERT(tmp.size() == 1);
-    table = Table(tmp.first());
+    table = tmp.first();
 }
 
 CreatureTable::CreatureTable(unsigned int entry)
 {
-    SelectStar("creature", tables, entry, "id");
+    SelectStar(tableName, positions, names, entry, "id");
 }
 
 CreatureAIScripts::CreatureAIScripts(unsigned int entry)
 {
-    SelectStar("creature_ai_scripts", tables, entry, "creature_id");
+    SelectStar(tableName, events, names, entry, "creature_id");
 }
 
 

@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <QString>
+#include <QMap>
 
 class Creature
 {
@@ -15,22 +16,25 @@ public:
     QString name;
 };
 
-class CreatureCache
+class Cache
 {
 public:
-    static CreatureCache& Get(){
+    static Cache& Get(){
         return instance;
     }
 
     void LoadCreatures();
-
+    void LoadSchemas();
+    void LoadMaps();
 
     std::vector<Creature*> GetCreatures(const QString& name);
+    QString MapName(unsigned int entry);
 
 private:
-    CreatureCache(){}
-    static CreatureCache instance;
+    Cache(){}
+    static Cache instance;
     std::vector<Creature*> _creatures;
+    QMap<unsigned int, QString> maps;
 };
 
 

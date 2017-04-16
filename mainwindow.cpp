@@ -1,7 +1,7 @@
 #include "mainwindow.h"
 #include "warnings.h"
 #include "worktabs.h"
-#include "creaturecache.h"
+#include "cache.h"
 
 #include <QDebug>
 #include <QSqlError>
@@ -57,7 +57,7 @@ void MainWindow::InitWindow()
 
         sl->addRow(new QLabel("Name/Entry"), nameSearch);
 
-        std::vector<Creature*> creatures = CreatureCache::Get().GetCreatures("");
+        std::vector<Creature*> creatures = Cache::Get().GetCreatures("");
         searchResults = new QTableWidget((int)creatures.size(), 2);
         searchResults->setHorizontalHeaderLabels(QStringList{"Entry", "Name"});
         searchResults->verticalHeader()->hide();
@@ -98,7 +98,7 @@ void MainWindow::onNameSearchTimeout()
         return;
     currentDisplayedSearch = nameSearch->text();
 
-    std::vector<Creature*> ret = CreatureCache::Get().GetCreatures(currentDisplayedSearch);
+    std::vector<Creature*> ret = Cache::Get().GetCreatures(currentDisplayedSearch);
     SetRows(ret);
 }
 

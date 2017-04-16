@@ -1,7 +1,8 @@
+#include "creaturespawnlocations.h"
 #include "worktabs.h"
 #include "warnings.h"
 #include "creature.h"
-#include "creaturecache.h"
+#include "cache.h"
 
 #include <QVBoxLayout>
 #include <QHBoxLayout>
@@ -11,11 +12,11 @@
 #include <QTableWidget>
 
 WorkTab::WorkTab(Creature* pCreature, QWidget *parent) :
-    QWidget(parent),
+    QTabWidget(parent),
     fullCreature(pCreature->entry)
 {
-    QVBoxLayout* mainLayout = new QVBoxLayout(this);
-    mainLayout->addWidget(new QTableWidget());
+    locationsTab = new CreatureSpawnLocations(fullCreature.cCreatures, this);
+    addTab(locationsTab, "Spawn Locations");
 }
 
 WorkTabs::WorkTabs(QWidget *parent) :
@@ -30,7 +31,7 @@ WorkTabs::WorkTabs(QWidget *parent) :
 
 void WorkTabs::addTab(unsigned int entry)
 {
-    std::vector<Creature*> ret = CreatureCache::Get().GetCreatures(QString("%1").arg(entry));
+    std::vector<Creature*> ret = Cache::Get().GetCreatures(QString("%1").arg(entry));
     if(ret.size() != 1){
         Warnings::Warning("WorkTabs::addTab got entry that returned more than 1 creature. Skipping");
         return;
@@ -39,6 +40,7 @@ void WorkTabs::addTab(unsigned int entry)
     try{
         WorkTab* wt = new WorkTab(pCreature, this);
         QTabWidget::addTab(wt, pCreature->name);
+        setCurrentWidget(wt);
     }catch(std::exception& e){
         Warnings::Warning(e.what());
     }

@@ -4,8 +4,10 @@
 #include <QSqlDatabase>
 #include <QSqlError>
 #include <QDebug>
+
 #include "warnings.h"
-#include "creaturecache.h"
+#include "cache.h"
+#include "creature.h"
 
 int main(int argc, char *argv[])
 {
@@ -55,8 +57,11 @@ int main(int argc, char *argv[])
         Warnings::Warning("Unable to connect to db: " + db.lastError().text());    }
 
     try{
-        CreatureCache::Get();
-        CreatureCache::Get().LoadCreatures();
+        Cache::Get();
+        Cache::Get().LoadCreatures();
+        Cache::Get().LoadSchemas();
+        Cache::Get().LoadMaps();
+
     }catch(std::exception& e){
         Warnings::Warning(e.what());
         return 1;

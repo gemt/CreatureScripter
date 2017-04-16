@@ -17,12 +17,14 @@ SOURCES += main.cpp\
         mainwindow.cpp \
     warnings.cpp \
     worktabs.cpp \
-    creaturecache.cpp \
-    creature.cpp
+    creature.cpp \
+    creaturespawnlocations.cpp \
+    cache.cpp
 
 HEADERS  += mainwindow.h \
     config.h \
     warnings.h \
     worktabs.h \
-    creaturecache.h \
-    creature.h
+    creature.h \
+    creaturespawnlocations.h \
+    cache.h
