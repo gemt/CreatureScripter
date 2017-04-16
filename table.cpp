@@ -1,4 +1,6 @@
 #include "table.h"
+#include "warnings.h"
+
 #include <QSqlQuery>
 #include <QSqlDatabase>
 #include <QSettings>
@@ -7,7 +9,7 @@
 #include <QDebug>
 #include <QTableWidgetItem>
 
-Creatures Creatures::instance;
+CreatureCache CreatureCache::instance;
 
 const QVector<QString> creature_template::rows =
 {
@@ -120,7 +122,7 @@ Creature::Creature(const QString& name, unsigned int entry) :
 
 }
 
-std::vector<Creature*> Creatures::GetCreatures(const QString &name)
+std::vector<Creature*> CreatureCache::GetCreatures(const QString &name)
 {
     if(name.isEmpty())
         return _creatures;
@@ -147,7 +149,7 @@ std::vector<Creature*> Creatures::GetCreatures(const QString &name)
 
 }
 
-void Creatures::LoadCreatures()
+void CreatureCache::LoadCreatures()
 {
     static bool loaded = false;
     if(loaded){
@@ -181,3 +183,76 @@ void Creatures::LoadCreatures()
         _creatures.push_back(new Creature(n,e));
     }
 }
+
+FullCreature::FullCreature(unsigned int entry)
+{
+    QSettings settings;
+    QSqlDatabase db = QSqlDatabase::database(settings.value("connectionName").toString());
+    bool ret = db.isOpen();
+    if(!ret){
+        throw std::logic_error("Unable to open database connection: " + db.connectionName().toStdString());
+    }
+    QString worldDB = settings.value("worldDB").toString();
+    try{
+        SelectStar(worldDB, "creature_template", db, cTemplate, entry, "entry");
+        SelectStar(worldDB, "creature", db, cCreature, entry, "id");
+        SelectStar(worldDB, "creature_ai_scripts", db, cAIScripts, entry, "creature_id");
+    }catch(std::exception& e){
+        Warnings::Warning(e.what());
+    }
+
+
+
+/*
+    int entryField = q.record().indexOf("entry");
+    int nameField = q.record().indexOf("name");
+    if(!ret){
+        throw std::logic_error("Query failed. Error: " + q.lastError().text().toStdString()
+                               + ", Query:" + q.lastQuery().toStdString());
+    }else{
+        qDebug() << q.lastQuery();
+    }
+    if(!q.isValid()){
+        //throw std::logic_error("Query is not valid");
+    }
+    while(q.next()){
+        QString n = q.value(nameField).toString().toLower();
+        unsigned int e = q.value(entryField).toUInt();
+        _creatures.push_back(new Creature(n,e));
+    }
+    */
+}
+
+void FullCreature::SelectStar(const QString& worldDB, const QString& tableName,
+                              const QSqlDatabase& db, QVector<Table>& res,
+                              unsigned int entry, const QString& entryFN)
+{
+    QSqlQuery q(db);
+    bool ret = q.exec(QString("SELECT * FROM %1.%2 WHERE %3 = %4")
+                      .arg(worldDB)
+                      .arg(tableName)
+                      .arg(entryFN)
+                      .arg(entry));
+    if(!ret){
+        throw std::runtime_error("SelectStar failed. Query: " + q.lastQuery().toStdString()
+                                 + ", Error: " + q.lastError().text().toStdString());
+    }
+    while(q.next()){
+        Table t;
+        QSqlRecord record = q.record();
+        for(int i = 0; i < record.count(); i++) {
+            t.fields[record.fieldName(i)] = record.value(i).toString();
+        }
+        res.push_back(std::move(t));
+    }
+}
+
+
+
+
+
+
+
+
+
+

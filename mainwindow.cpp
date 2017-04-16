@@ -57,7 +57,7 @@ void MainWindow::InitWindow()
 
         sl->addRow(new QLabel("Name/Entry"), nameSearch);
 
-        std::vector<Creature*> creatures = Creatures::Get().GetCreatures("");
+        std::vector<Creature*> creatures = CreatureCache::Get().GetCreatures("");
         searchResults = new QTableWidget((int)creatures.size(), 2);
         searchResults->setHorizontalHeaderLabels(QStringList{"Entry", "Name"});
         searchResults->verticalHeader()->hide();
@@ -98,7 +98,7 @@ void MainWindow::onNameSearchTimeout()
         return;
     currentDisplayedSearch = nameSearch->text();
 
-    std::vector<Creature*> ret = Creatures::Get().GetCreatures(currentDisplayedSearch);
+    std::vector<Creature*> ret = CreatureCache::Get().GetCreatures(currentDisplayedSearch);
     SetRows(ret);
 }
 
@@ -111,8 +111,7 @@ void MainWindow::onCreatureSelect(int row, int)
         Warnings::Warning("Unable to read entry from selected collumn");
         return;
     }
-    QString name = searchResults->item(row, 1)->text();
-    workTabs->addTab(newTab, name);
+    workTabs->addTab(entry);
 }
 
 void MainWindow::SetRows(const std::vector<Creature *> &vec)

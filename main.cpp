@@ -54,8 +54,8 @@ int main(int argc, char *argv[])
         Warnings::Warning("Unable to connect to db: " + db.lastError().text());    }
 
     try{
-        Creatures::Get();
-        Creatures::Get().LoadCreatures();
+        CreatureCache::Get();
+        CreatureCache::Get().LoadCreatures();
     }catch(std::exception& e){
         Warnings::Warning(e.what());
         return 1;

@@ -12,7 +12,11 @@
 #include <QString>
 #include <memory>
 #include <map>
+#include <vector>
 #include <QAbstractTableModel>
+#include <QSqlResult>
+#include <QSqlDatabase>
+#include <QMap>
 
 struct creature_template
 {
@@ -34,7 +38,6 @@ struct creature_ai_scripts
     static const QVector<QString> rows;
 };
 
-class QTableWidgetItem;
 class Creature
 {
 public:
@@ -46,10 +49,31 @@ public:
     QString name;
 };
 
-class Creatures
+class Table
 {
 public:
-    static Creatures& Get(){
+    QMap<QString,QString> fields;
+};
+
+class FullCreature
+{
+public:
+    FullCreature(unsigned int entry);
+
+    QVector<Table> cTemplate;
+    QVector<Table> cCreature;
+    QVector<Table> cAIScripts;
+
+private:
+    void SelectStar(const QString& worldDB, const QString& tableName,
+                    const QSqlDatabase& db, QVector<Table>& res,
+                    unsigned int entry, const QString& entryFN);
+};
+
+class CreatureCache
+{
+public:
+    static CreatureCache& Get(){
         return instance;
     }
 
@@ -59,8 +83,8 @@ public:
     std::vector<Creature*> GetCreatures(const QString& name);
 
 private:
-    Creatures(){}
-    static Creatures instance;
+    CreatureCache(){}
+    static CreatureCache instance;
     std::vector<Creature*> _creatures;
 };
 
