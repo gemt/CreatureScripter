@@ -9,10 +9,10 @@
 #include "warnings.h"
 #include "cache.h"
 #include "creature.h"
+#include "dbconnectionsettings.h"
 
-int main(int argc, char *argv[])
+void SetStyle()
 {
-    QApplication a(argc, argv);
     qApp->setStyle(QStyleFactory::create("Fusion"));
     QPalette darkPalette;
     darkPalette.setColor(QPalette::WindowText, Qt::white);
@@ -29,51 +29,41 @@ int main(int argc, char *argv[])
     darkPalette.setColor(QPalette::Button, QColor(53,53,53));
     darkPalette.setColor(QPalette::Highlight, QColor(18, 56, 94).light(200));
     qApp->setPalette(darkPalette);
+}
 
-    MainWindow w;
-    w.show();
-
+void SetAppInfo()
+{
     QCoreApplication::setApplicationVersion("0.1");
     QCoreApplication::setOrganizationName("gemt");
     QCoreApplication::setOrganizationDomain("github.com/gemt");
     QCoreApplication::setApplicationName("CreatureScripter");
+}
 
+bool CheckConnectionSettings(MainWindow& mw)
+{
     QSettings settings;
-    settings.setValue("connectionName", QString("creature_script"));
-    settings.setValue("hostName", "127.0.0.1");
-    settings.setValue("port", 3306);
-    settings.setValue("username", "root");
-    settings.setValue("databaseName", "mangos");
-    //settings.setValue("password", "");
-    settings.setValue("worldDB", "mangos");
-
-    qDebug() << "Connecting to database:";
-    qDebug() << "connectionName:" << settings.value("connectionName").toStringList();
-    qDebug() << "Hostname: " << settings.value("hostName").toString();
-    qDebug() << "port: "     << settings.value("port").toInt();
-    qDebug() << "dbName: "      << settings.value("databaseName").toString();
-    qDebug() << "username: "  << settings.value("username").toString();
-    qDebug() << "password: "  << settings.value("password").toString();
-
-    QSqlDatabase db = QSqlDatabase::addDatabase("QMYSQL", settings.value("connectionName").toString());
-    db.setHostName(settings.value("hostName").toString());
-    db.setPort(settings.value("port").toInt());
-    db.setDatabaseName(settings.value("databaseName").toString());
-    db.setUserName(settings.value("username").toString());
-    db.setPassword(settings.value("password").toString());
-    bool ok = db.open();
-    if(!ok)
+    if(!settings.contains("worldDB"))
     {
-        Warnings::Warning("Unable to connect to db: " + db.lastError().text());    }
+        // First time startup
+        DBConnectionSettings dbSettings(&mw);
+        return dbSettings.exec() == QDialog::Accepted;
+    }else{
+        if(!Cache::Get().Connect()){
+            DBConnectionSettings dbSettings(&mw);
+            return dbSettings.exec() == QDialog::Accepted;
+        }
+    }
+}
 
-    try{
-        Cache::Get();
-        Cache::Get().LoadCreatures();
-        Cache::Get().LoadSchemas();
-        Cache::Get().LoadMaps();
+int main(int argc, char *argv[])
+{
+    QApplication a(argc, argv);
+    SetStyle();
+    SetAppInfo();
+    MainWindow w;
+    w.show();
 
-    }catch(std::exception& e){
-        Warnings::Warning(e.what());
+    if(!CheckConnectionSettings(w)){
         return 1;
     }
     w.InitWindow();

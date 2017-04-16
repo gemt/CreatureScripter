@@ -1,5 +1,6 @@
 #include "cache.h"
 #include "creature.h"
+#include "warnings.h"
 
 #include <QSqlDatabase>
 #include <QSettings>
@@ -48,6 +49,51 @@ std::vector<Creature*> Cache::GetCreatures(const QString &name)
 QString Cache::MapName(unsigned int entry)
 {
     return maps.value(entry, "Unknown map");
+}
+
+bool Cache::Connect()
+{
+    QSettings settings;
+    qDebug() << "Connecting to database:";
+    qDebug() << "connectionName:" << settings.value("connectionName").toString();
+    qDebug() << "Hostname: " << settings.value("hostName").toString();
+    qDebug() << "port: "     << settings.value("port").toInt();
+    qDebug() << "username: "  << settings.value("username").toString();
+    qDebug() << "password: "  << settings.value("password").toString();
+    qDebug() << "dbName: "      << settings.value("worldDB").toString();
+
+    QSqlDatabase db = QSqlDatabase::addDatabase("QMYSQL", settings.value("connectionName").toString());
+    db.setHostName(settings.value("hostName").toString());
+    db.setPort(settings.value("port").toInt());
+    db.setDatabaseName(settings.value("worldDB").toString());
+    db.setUserName(settings.value("username").toString());
+    db.setPassword(settings.value("password").toString());
+
+    bool ok = db.open();
+    if(!ok)
+    {
+        Warnings::Warning(db.lastError().text());
+        return false;
+    }
+    try{
+        Cache::Get();
+        Cache::Get().LoadCreatures();
+        Cache::Get().LoadSchemas();
+        Cache::Get().LoadMaps();
+
+    }catch(std::exception& e){
+        Warnings::Warning(e.what());
+        return false;
+    }
+    return true;
+}
+
+bool Cache::isConnected()
+{
+
+    QSettings settings;
+    QSqlDatabase db = QSqlDatabase::database(settings.value("connectionName").toString(), false);
+    return db.isOpen() && db.isValid();
 }
 
 void Cache::LoadCreatures()

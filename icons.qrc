@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/icons">
+        <file>ico/Data-Settings-32.png</file>
+        <file>ico/Data-Settings-48.png</file>
+    </qresource>
+</RCC>

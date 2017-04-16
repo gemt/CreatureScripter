@@ -2,6 +2,7 @@
 #include "warnings.h"
 #include "worktabs.h"
 #include "cache.h"
+#include "dbconnectionsettings.h"
 
 #include <QDebug>
 #include <QSqlError>
@@ -16,8 +17,14 @@
 #include <QDesktopWidget>
 #include <QSplitter>
 #include <QTabWidget>
+#include <QMenuBar>
+#include <QIcon>
+
 
 #define QT_DEBUG_PLUGINS
+
+
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent),
       currentDisplayedSearch("-@-@!`?=?mlasmc")
@@ -29,8 +36,6 @@ MainWindow::MainWindow(QWidget *parent)
     resize(rec.width()/2, rec.height()/2);
     nameSearchTimer.setSingleShot(true);
     connect(&nameSearchTimer, &QTimer::timeout, this, &MainWindow::onNameSearchTimeout);
-
-    QSplitter splitter;
 }
 
 MainWindow::~MainWindow()
@@ -79,6 +84,19 @@ void MainWindow::InitWindow()
         splitter->addWidget(workTabs);
     }
     splitter->setSizes(QList<int>{(int)(creatureTableWidth*1.5), rec.width()-creatureTableWidth});
+
+    {
+        QMenu* menu = QMainWindow::menuBar()->addMenu("File");
+        QAction* act = new QAction(QIcon(":/icons/ico/Data-Settings-48.png"), "DB Connection");
+        connect(act, &QAction::triggered, [this](){
+            DBConnectionSettings dbSettings(this);
+            if(dbSettings.exec() == QDialog::Accepted){
+
+            }
+        });
+        menu->addActions(QList<QAction*>{act});
+
+    }
 }
 
 void MainWindow::onNameSearch()

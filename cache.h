@@ -22,6 +22,8 @@ public:
     static Cache& Get(){
         return instance;
     }
+    bool Connect();
+    bool isConnected();
 
     void LoadCreatures();
     void LoadSchemas();
@@ -33,6 +35,7 @@ public:
 private:
     Cache(){}
     static Cache instance;
+
     std::vector<Creature*> _creatures;
     QMap<unsigned int, QString> maps;
 };

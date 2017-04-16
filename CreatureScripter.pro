@@ -21,7 +21,8 @@ SOURCES += main.cpp\
     creaturespawnlocations.cpp \
     cache.cpp \
     creaturetemplateraw.cpp \
-    creatureaiscriptsraw.cpp
+    creatureaiscriptsraw.cpp \
+    dbconnectionsettings.cpp
 
 HEADERS  += mainwindow.h \
     config.h \
@@ -31,4 +32,8 @@ HEADERS  += mainwindow.h \
     creaturespawnlocations.h \
     cache.h \
     creaturetemplateraw.h \
-    creatureaiscriptsraw.h
+    creatureaiscriptsraw.h \
+    dbconnectionsettings.h
+
+RESOURCES += \
+    icons.qrc

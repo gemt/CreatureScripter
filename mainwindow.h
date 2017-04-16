@@ -10,6 +10,8 @@ class QLineEdit;
 class Creature;
 class QTabWidget;
 class WorkTabs;
+class QToolBar;
+
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -28,7 +30,7 @@ private slots:
 private:
     QTableWidget* searchResults;
     QLineEdit* nameSearch;
-
+    QToolBar* toolbar;
     WorkTabs* workTabs;
 
     QString currentDisplayedSearch;
