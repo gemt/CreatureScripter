@@ -166,6 +166,16 @@ CreatureTemplate::CreatureTemplate(unsigned int entry)
     table = tmp.first();
 }
 
+QString CreatureTemplate::value(const QString &key)
+{
+    for(int i = 0; i < names.size(); i++){
+        if(names.at(i) == key){
+            return table.at(i);
+        }
+    }
+    throw std::logic_error("CreatureTemplate::value no entry for key: " + key.toStdString());
+}
+
 CreatureTable::CreatureTable(unsigned int entry)
 {
     SelectStar(tableName, positions, names, entry, "id");

@@ -26,7 +26,7 @@ class CreatureTemplate
 public:
     CreatureTemplate(unsigned int entry);
     QStringList table;
-
+    QString value(const QString& key);
     static QStringList names;
     static QString tableName;
 };

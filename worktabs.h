@@ -1,21 +1,27 @@
 #ifndef WORKTABS_H
 #define WORKTABS_H
 
-#include <QTabWidget>
 #include "creature.h"
+
+#include <QTabWidget>
+#include <QMap>
 
 class Creature;
 class CreatureSpawnLocations;
 class CreatureTemplateRaw;
 class CreatureAIScriptsRaw;
+class ScriptAITab;
 
 class WorkTab : public QTabWidget
 {
 public:
     WorkTab(Creature* pCreature, QWidget* parent);
     FullCreature fullCreature;
+    unsigned int Entry();
 
 private:
+    Creature* pCreature;
+    ScriptAITab* scriptAITab;
     CreatureSpawnLocations* locationsTab;
     CreatureTemplateRaw* rawTemplateTab;
     CreatureAIScriptsRaw* rawAITab;
@@ -28,12 +34,15 @@ public:
 
     void addTab(unsigned int entry);
 
+protected:
+    void keyPressEvent(QKeyEvent *event);
+
 private slots:
     void onTabCloseRequest(int);
 
-    // QWidget interface
-protected:
-    void keyPressEvent(QKeyEvent *event);
+private:
+    QMap<unsigned int, QWidget*> tabMap;
+
 };
 
 #endif // WORKTABS_H

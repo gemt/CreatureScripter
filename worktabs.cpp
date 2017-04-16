@@ -5,6 +5,7 @@
 #include "cache.h"
 #include "creaturetemplateraw.h"
 #include "creatureaiscriptsraw.h"
+#include "scriptaitab.h"
 
 #include <QVBoxLayout>
 #include <QHBoxLayout>
@@ -15,14 +16,23 @@
 
 WorkTab::WorkTab(Creature* pCreature, QWidget *parent) :
     QTabWidget(parent),
+    pCreature(pCreature),
     fullCreature(pCreature->entry)
 {
+
+    scriptAITab = new ScriptAITab(fullCreature, this);
+    addTab(scriptAITab, "Event Modifier");
     locationsTab = new CreatureSpawnLocations(fullCreature.cCreatures, this);
     addTab(locationsTab, "Spawn Locations");
     rawTemplateTab = new CreatureTemplateRaw(fullCreature.cTemplate, this);
     addTab(rawTemplateTab, "Creature Template");
     rawAITab = new CreatureAIScriptsRaw(fullCreature.cAIScripts, this);
     addTab(rawAITab, "AI events");
+}
+
+unsigned int WorkTab::Entry()
+{
+    return pCreature->entry;
 }
 
 WorkTabs::WorkTabs(QWidget *parent) :
@@ -37,6 +47,11 @@ WorkTabs::WorkTabs(QWidget *parent) :
 
 void WorkTabs::addTab(unsigned int entry)
 {
+    if(tabMap.contains(entry)){
+        setCurrentWidget(tabMap[entry]);
+        return;
+    }
+
     std::vector<Creature*> ret = Cache::Get().GetCreatures(QString("%1").arg(entry));
     if(ret.size() != 1){
         Warnings::Warning("WorkTabs::addTab got entry that returned more than 1 creature. Skipping");
@@ -44,9 +59,13 @@ void WorkTabs::addTab(unsigned int entry)
     }
     Creature* pCreature = ret.at(0);
     try{
-        WorkTab* wt = new WorkTab(pCreature, this);
+        WorkTab* wt = new WorkTab(pCreature, nullptr);
         QTabWidget::addTab(wt, pCreature->name);
+        tabMap[wt->Entry()] = wt;
         setCurrentWidget(wt);
+        if(QWidget* cw = currentWidget()){
+            cw->setFocus();
+        }
     }catch(std::exception& e){
         Warnings::Warning(e.what());
     }
@@ -58,9 +77,9 @@ void WorkTabs::onTabCloseRequest(int idx)
     QString ret = Warnings::confirmBox(QString("Close %1?").arg(tabText(idx)),
                              QStringList{yes, "Cancel"}, this);
     if(ret == yes) {
-        QWidget* t = QTabWidget::widget(idx);
+        WorkTab* wt = static_cast<WorkTab*>(QTabWidget::widget(idx));
         removeTab(idx);
-        t->deleteLater();
+        wt->deleteLater();
         if(QWidget* cw = currentWidget()){
             cw->setFocus();
         }

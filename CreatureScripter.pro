@@ -22,7 +22,8 @@ SOURCES += main.cpp\
     cache.cpp \
     creaturetemplateraw.cpp \
     creatureaiscriptsraw.cpp \
-    dbconnectionsettings.cpp
+    dbconnectionsettings.cpp \
+    scriptaitab.cpp
 
 HEADERS  += mainwindow.h \
     config.h \
@@ -33,7 +34,8 @@ HEADERS  += mainwindow.h \
     cache.h \
     creaturetemplateraw.h \
     creatureaiscriptsraw.h \
-    dbconnectionsettings.h
+    dbconnectionsettings.h \
+    scriptaitab.h
 
 RESOURCES += \
     icons.qrc
