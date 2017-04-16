@@ -4,6 +4,7 @@
 #include "creature.h"
 #include "cache.h"
 #include "creaturetemplateraw.h"
+#include "creatureaiscriptsraw.h"
 
 #include <QVBoxLayout>
 #include <QHBoxLayout>
@@ -20,6 +21,8 @@ WorkTab::WorkTab(Creature* pCreature, QWidget *parent) :
     addTab(locationsTab, "Spawn Locations");
     rawTemplateTab = new CreatureTemplateRaw(fullCreature.cTemplate, this);
     addTab(rawTemplateTab, "Creature Template");
+    rawAITab = new CreatureAIScriptsRaw(fullCreature.cAIScripts, this);
+    addTab(rawAITab, "AI events");
 }
 
 WorkTabs::WorkTabs(QWidget *parent) :

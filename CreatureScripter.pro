@@ -20,7 +20,8 @@ SOURCES += main.cpp\
     creature.cpp \
     creaturespawnlocations.cpp \
     cache.cpp \
-    creaturetemplateraw.cpp
+    creaturetemplateraw.cpp \
+    creatureaiscriptsraw.cpp
 
 HEADERS  += mainwindow.h \
     config.h \
@@ -29,4 +30,5 @@ HEADERS  += mainwindow.h \
     creature.h \
     creaturespawnlocations.h \
     cache.h \
-    creaturetemplateraw.h
+    creaturetemplateraw.h \
+    creatureaiscriptsraw.h

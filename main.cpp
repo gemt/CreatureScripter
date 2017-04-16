@@ -4,7 +4,8 @@
 #include <QSqlDatabase>
 #include <QSqlError>
 #include <QDebug>
-
+#include <QStyleFactory>
+#include <QPalette>
 #include "warnings.h"
 #include "cache.h"
 #include "creature.h"
@@ -12,14 +13,23 @@
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    const QString splitterSheetV =			\
-    "QSplitter[orientation=\"2\"]::handle {	\
-        border: 3px dashed black;			\
-        margin: 1px 50px;					\
-        min-height: 10px;					\
-        max-height: 10px;					\
-    }";
-    a.setStyleSheet(splitterSheetV);
+    qApp->setStyle(QStyleFactory::create("Fusion"));
+    QPalette darkPalette;
+    darkPalette.setColor(QPalette::WindowText, Qt::white);
+    darkPalette.setColor(QPalette::ToolTipText, Qt::white);
+    darkPalette.setColor(QPalette::Text, Qt::white);
+    darkPalette.setColor(QPalette::ButtonText, Qt::white);
+    darkPalette.setColor(QPalette::BrightText, Qt::red);
+    darkPalette.setColor(QPalette::Link, QColor(42, 130, 218));
+    darkPalette.setColor(QPalette::HighlightedText, Qt::black);
+    darkPalette.setColor(QPalette::Window, QColor(53,53,53));
+    darkPalette.setColor(QPalette::Base, QColor(25,25,25));
+    darkPalette.setColor(QPalette::AlternateBase, QColor(53,53,53));
+    darkPalette.setColor(QPalette::ToolTipBase, QColor(215,215,215));
+    darkPalette.setColor(QPalette::Button, QColor(53,53,53));
+    darkPalette.setColor(QPalette::Highlight, QColor(18, 56, 94).light(200));
+    qApp->setPalette(darkPalette);
+
     MainWindow w;
     w.show();
 

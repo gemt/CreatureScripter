@@ -75,7 +75,7 @@ void MainWindow::InitWindow()
         connect(searchResults, &QTableWidget::cellActivated, this, &MainWindow::onCreatureSelect);
     }
     {
-        workTabs = new WorkTabs(workTabs);
+        workTabs = new WorkTabs(this);
         splitter->addWidget(workTabs);
     }
     splitter->setSizes(QList<int>{(int)(creatureTableWidth*1.5), rec.width()-creatureTableWidth});
