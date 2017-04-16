@@ -1,7 +1,7 @@
 #include "mainwindow.h"
-#include "table.h"
 #include "warnings.h"
 #include "worktabs.h"
+#include "creaturecache.h"
 
 #include <QDebug>
 #include <QSqlError>

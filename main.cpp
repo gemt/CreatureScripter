@@ -5,7 +5,8 @@
 #include <QSqlError>
 #include <QDebug>
 #include "warnings.h"
-#include "table.h"
+#include "creaturecache.h"
+
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);

@@ -1,6 +1,7 @@
 #include "worktabs.h"
 #include "warnings.h"
-#include "table.h"
+#include "creature.h"
+#include "creaturecache.h"
 
 #include <QVBoxLayout>
 #include <QHBoxLayout>

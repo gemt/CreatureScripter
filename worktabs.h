@@ -2,7 +2,7 @@
 #define WORKTABS_H
 
 #include <QTabWidget>
-#include "table.h"
+#include "creature.h"
 
 class Creature;
 
