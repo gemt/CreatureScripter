@@ -3,6 +3,7 @@
 #include "warnings.h"
 #include "creature.h"
 #include "cache.h"
+#include "creaturetemplateraw.h"
 
 #include <QVBoxLayout>
 #include <QHBoxLayout>
@@ -17,6 +18,8 @@ WorkTab::WorkTab(Creature* pCreature, QWidget *parent) :
 {
     locationsTab = new CreatureSpawnLocations(fullCreature.cCreatures, this);
     addTab(locationsTab, "Spawn Locations");
+    rawTemplateTab = new CreatureTemplateRaw(fullCreature.cTemplate, this);
+    addTab(rawTemplateTab, "Creature Template");
 }
 
 WorkTabs::WorkTabs(QWidget *parent) :

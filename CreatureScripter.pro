@@ -19,7 +19,8 @@ SOURCES += main.cpp\
     worktabs.cpp \
     creature.cpp \
     creaturespawnlocations.cpp \
-    cache.cpp
+    cache.cpp \
+    creaturetemplateraw.cpp
 
 HEADERS  += mainwindow.h \
     config.h \
@@ -27,4 +28,5 @@ HEADERS  += mainwindow.h \
     worktabs.h \
     creature.h \
     creaturespawnlocations.h \
-    cache.h
+    cache.h \
+    creaturetemplateraw.h

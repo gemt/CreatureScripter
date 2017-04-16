@@ -6,6 +6,7 @@
 
 class Creature;
 class CreatureSpawnLocations;
+class CreatureTemplateRaw;
 class WorkTab : public QTabWidget
 {
 public:
@@ -14,6 +15,7 @@ public:
 
 private:
     CreatureSpawnLocations* locationsTab;
+    CreatureTemplateRaw* rawTemplateTab;
 };
 
 class WorkTabs : public QTabWidget
