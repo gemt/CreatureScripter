@@ -10,6 +10,7 @@
 #include "cache.h"
 #include "creature.h"
 #include "dbconnectionsettings.h"
+#include "eventaidef.h"
 
 void SetStyle()
 {
@@ -62,6 +63,8 @@ int main(int argc, char *argv[])
     SetAppInfo();
     MainWindow w;
     w.show();
+
+    EventAIDef def;
 
     if(!CheckConnectionSettings(w)){
         return 1;

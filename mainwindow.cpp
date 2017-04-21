@@ -3,6 +3,8 @@
 #include "worktabs.h"
 #include "cache.h"
 #include "dbconnectionsettings.h"
+#include "timer.h"
+#include "creaturesearcher.h"
 
 #include <QDebug>
 #include <QSqlError>
@@ -62,6 +64,12 @@ void MainWindow::InitWindow()
 
         sl->addRow(new QLabel("Name/Entry"), nameSearch);
 
+        QSettings settings;
+        QSqlDatabase db = QSqlDatabase::database(settings.value("connectionName").toString());
+        searcher = new CreatureSearcher(searchWidget, db);
+        bl->addWidget(searcher);
+        creatureTableWidth = 500;
+        /*
         std::vector<Creature*> creatures = Cache::Get().GetCreatures("");
         searchResults = new QTableWidget((int)creatures.size(), 2);
         searchResults->setHorizontalHeaderLabels(QStringList{"Entry", "Name"});
@@ -76,14 +84,16 @@ void MainWindow::InitWindow()
         searchResults->resizeColumnsToContents();
         searchResults->horizontalHeader()->setStretchLastSection(true);
         creatureTableWidth = searchResults->width();
-
         connect(searchResults, &QTableWidget::cellActivated, this, &MainWindow::onCreatureSelect);
+        */
     }
     {
         workTabs = new WorkTabs(this);
         splitter->addWidget(workTabs);
     }
-    splitter->setSizes(QList<int>{(int)(creatureTableWidth*1.5), rec.width()-creatureTableWidth});
+    splitter->setStretchFactor(0, 0);
+    splitter->setStretchFactor(1, 1000);
+    //splitter->setSizes(QList<int>{(int)(creatureTableWidth*1.5), rec.width()-creatureTableWidth});
 
     {
         QMenu* menu = QMainWindow::menuBar()->addMenu("File");
@@ -106,7 +116,7 @@ void MainWindow::onNameSearch()
 
 void MainWindow::onNameSearchChange(const QString&)
 {
-    nameSearchTimer.start(500);
+    nameSearchTimer.start(100);
 }
 
 void MainWindow::onNameSearchTimeout()
@@ -116,15 +126,20 @@ void MainWindow::onNameSearchTimeout()
         return;
     currentDisplayedSearch = nameSearch->text();
 
-    std::vector<Creature*> ret = Cache::Get().GetCreatures(currentDisplayedSearch);
-    SetRows(ret);
+    Timer t;
+    //std::vector<Creature*> ret = Cache::Get().GetCreatures(currentDisplayedSearch);
+    qDebug() << "GetCreatures: " << t.Elapsed();
+    t.Reset();
+    //SetRows(ret);
+    searcher->Search(currentDisplayedSearch);
+    qDebug() << "SetRows: " << t.Elapsed();
 }
 
 void MainWindow::onCreatureSelect(int row, int)
 {
     QWidget* newTab = new QWidget();
     bool ok;
-    unsigned int entry = searchResults->item(row, 0)->text().toUInt(&ok);
+    unsigned int entry = 0;//searchResults->item(row, 0)->text().toUInt(&ok);
     if(!ok){
         Warnings::Warning("Unable to read entry from selected collumn");
         return;
@@ -134,6 +149,7 @@ void MainWindow::onCreatureSelect(int row, int)
 
 void MainWindow::SetRows(const std::vector<Creature *> &vec)
 {
+    /*
     for(int i = 0; i < searchResults->rowCount(); i++){
         if(i < vec.size()){ //size+1? nah dont think so
             searchResults->item(i, 0)->setText(QString("%1").arg(vec.at(i)->entry));
@@ -141,4 +157,5 @@ void MainWindow::SetRows(const std::vector<Creature *> &vec)
         }
         searchResults->setRowHidden(i, !(i < vec.size()));
     }
+    */
 }

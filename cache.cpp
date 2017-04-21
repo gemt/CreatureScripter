@@ -3,12 +3,12 @@
 #include "warnings.h"
 
 #include <QSqlDatabase>
-#include <QSettings>
 #include <QDebug>
 #include <QSqlQuery>
 #include <QSqlError>
 #include <QSqlResult>
 #include <QSqlRecord>
+#include <QStandardItem>
 
 Cache Cache::instance;
 
@@ -34,10 +34,10 @@ std::vector<Creature*> Cache::GetCreatures(const QString &name)
         }
         return ret;
     }else{
-        QString sn = lName.toLower();
+        //QString sn = lName.toLower();
         std::vector<Creature*> ret;
         for(auto it = _creatures.cbegin(); it != _creatures.cend(); it++){
-            if((*it)->name.contains(sn))
+            if((*it)->name.contains(name, Qt::CaseInsensitive))
                 ret.push_back(*it);
         }
 
@@ -50,6 +50,11 @@ QString Cache::MapName(unsigned int entry)
 {
     return maps.value(entry, "Unknown map");
 }
+
+Cache::Cache(){
+
+}
+
 
 bool Cache::Connect()
 {
@@ -68,7 +73,7 @@ bool Cache::Connect()
     db.setDatabaseName(settings.value("worldDB").toString());
     db.setUserName(settings.value("username").toString());
     db.setPassword(settings.value("password").toString());
-
+    qDebug() << settings.value("password").toString();
     bool ok = db.open();
     if(!ok)
     {
@@ -90,7 +95,6 @@ bool Cache::Connect()
 
 bool Cache::isConnected()
 {
-
     QSettings settings;
     QSqlDatabase db = QSqlDatabase::database(settings.value("connectionName").toString(), false);
     return db.isOpen() && db.isValid();
@@ -98,11 +102,12 @@ bool Cache::isConnected()
 
 void Cache::LoadCreatures()
 {
+    QSettings settings;
     static bool loaded = false;
     if(loaded) throw std::logic_error("Cache::LoadCreatures called twize");
     else loaded = true;
 
-    QSettings settings;
+
     QSqlDatabase db = QSqlDatabase::database(settings.value("connectionName").toString());
     if(!db.isOpen()){
         throw std::logic_error("Database connection not open");
@@ -118,7 +123,7 @@ void Cache::LoadCreatures()
     }
 
     while(q.next()){
-        QString n = q.value(nameField).toString().toLower();
+        QString n = q.value(nameField).toString();//.toLower();
         unsigned int e = q.value(entryField).toUInt();
         _creatures.push_back(new Creature(n,e));
     }
@@ -166,11 +171,11 @@ void Cache::LoadSchemas()
 
 void Cache::LoadMaps()
 {
+    QSettings settings;
     static bool loaded = false;
     if(loaded) throw std::logic_error("Cache::LoadMaps called twize");
     else loaded = true;
 
-    QSettings settings;
     QSqlDatabase db = QSqlDatabase::database(settings.value("connectionName").toString());
     if(!db.isOpen()){
         throw std::logic_error("Database connection not open");
@@ -186,7 +191,7 @@ void Cache::LoadMaps()
     }
 
     while(q.next()){
-        QString n = q.value(nameField).toString().toLower();
+        QString n = q.value(nameField).toString();//.toLower();
         unsigned int e = q.value(entryField).toUInt();
         maps[e] = n;
     }

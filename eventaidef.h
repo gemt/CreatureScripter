@@ -25,6 +25,8 @@
  *
  * EVENT_T_RECEIVE_EMOTE needs customizing
  *
+ * EVENT_T_TARGET_BUFFED defines some enum stuff, look at it.
+ *
  */
 class EventAIDef
 {

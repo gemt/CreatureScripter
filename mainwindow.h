@@ -11,6 +11,7 @@ class Creature;
 class QTabWidget;
 class WorkTabs;
 class QToolBar;
+class CreatureSearcher;
 
 class MainWindow : public QMainWindow
 {
@@ -28,7 +29,9 @@ private slots:
     void onNameSearchTimeout();
     void onCreatureSelect(int, int);
 private:
-    QTableWidget* searchResults;
+    //QTableWidget* searchResults;
+    CreatureSearcher* searcher;
+
     QLineEdit* nameSearch;
     QToolBar* toolbar;
     WorkTabs* workTabs;

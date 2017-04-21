@@ -1,9 +1,11 @@
 #ifndef CREATURECACHE_H
 #define CREATURECACHE_H
 
+#include <QMap>
 #include <vector>
 #include <QString>
-#include <QMap>
+#include <QSettings>
+#include <QSqlDatabase>
 
 class Creature
 {
@@ -22,6 +24,7 @@ public:
     static Cache& Get(){
         return instance;
     }
+
     bool Connect();
     bool isConnected();
 
@@ -33,11 +36,12 @@ public:
     QString MapName(unsigned int entry);
 
 private:
-    Cache(){}
+    Cache();
     static Cache instance;
 
     std::vector<Creature*> _creatures;
     QMap<unsigned int, QString> maps;
+
 };
 
 
