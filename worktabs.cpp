@@ -45,7 +45,7 @@ WorkTabs::WorkTabs(QWidget *parent) :
     connect(this, &QTabWidget::tabCloseRequested, this, &WorkTabs::onTabCloseRequest);
 }
 
-void WorkTabs::addTab(unsigned int entry)
+void WorkTabs::addTab(uint entry)
 {
     if(tabMap.contains(entry)){
         setCurrentWidget(tabMap[entry]);

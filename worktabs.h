@@ -32,7 +32,8 @@ class WorkTabs : public QTabWidget
 public:
     WorkTabs(QWidget *parent);
 
-    void addTab(unsigned int entry);
+public slots:
+    void addTab(uint entry);
 
 protected:
     void keyPressEvent(QKeyEvent *event);

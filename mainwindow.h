@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QTimer>
 #include <vector>
+#include <QSettings>
 
 class QTableWidget;
 class QLineEdit;
@@ -27,9 +28,9 @@ private slots:
     void onNameSearch();
     void onNameSearchChange(const QString&);
     void onNameSearchTimeout();
-    void onCreatureSelect(int, int);
+
 private:
-    //QTableWidget* searchResults;
+    QSettings settings;
     CreatureSearcher* searcher;
 
     QLineEdit* nameSearch;
@@ -39,7 +40,6 @@ private:
     QString currentDisplayedSearch;
     QTimer nameSearchTimer;
 
-    void SetRows(const std::vector<Creature*>& vec);
 };
 
 #endif // MAINWINDOW_H

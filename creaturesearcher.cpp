@@ -1,5 +1,6 @@
 #include "tables.h"
 #include "creaturesearcher.h"
+#include "warnings.h"
 
 #include <QHeaderView>
 #include <Qdebug>
@@ -7,6 +8,8 @@
 #include <QSettings>
 #include <QSqlField>
 #include <QSqlDriver>
+#include <QModelIndex>
+
 class CreatureSearcherModel : public QSqlTableModel
 {
 private:
@@ -39,6 +42,13 @@ public:
         }
         //select();
     }
+
+public:
+    bool setData(const QModelIndex &, const QVariant &, int) override
+    {
+        // Absofuckinglutely no editing allowed
+        return false;
+    }
 };
 
 CreatureSearcher::CreatureSearcher(QWidget *parent, const QSqlDatabase &db) :
@@ -56,13 +66,24 @@ CreatureSearcher::CreatureSearcher(QWidget *parent, const QSqlDatabase &db) :
         if(i != 0 && i != 7)
             hideColumn(i);
 
-    //connect(this, QTableView::doubleClicked, )
+    connect(this, &QTableView::activated, this, &CreatureSearcher::onActivated);
 
 }
 
 void CreatureSearcher::Search(const QString &s)
 {
     model->Search(s);
+}
+
+void CreatureSearcher::onActivated(const QModelIndex &idx)
+{
+    bool ok;
+    int entry = idx.model()->index(idx.row(), 0).data().toUInt(&ok);
+    if(!ok){
+        Warnings::Warning("Error occured when reading entry on selected line");
+    }else{
+        emit entrySelected(entry);
+    }
 }
 
 
