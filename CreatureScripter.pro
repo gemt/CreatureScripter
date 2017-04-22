@@ -13,34 +13,17 @@ TEMPLATE = app
 
 CONFIG += c++11
 
-SOURCES += main.cpp\
-        mainwindow.cpp \
-    warnings.cpp \
-    worktabs.cpp \
-    creature.cpp \
-    cache.cpp \
-    creaturetemplateraw.cpp \
-    creatureaiscriptsraw.cpp \
-    dbconnectionsettings.cpp \
-    scriptaitab.cpp \
-    eventaidef.cpp \
-    creaturesearcher.cpp \
-    creaturetables.cpp
+INCLUDEPATH += src/ \
+src/CreatureTabs/
 
-HEADERS  += mainwindow.h \
-    config.h \
-    warnings.h \
-    worktabs.h \
-    creature.h \
-    cache.h \
-    creaturetemplateraw.h \
-    creatureaiscriptsraw.h \
-    dbconnectionsettings.h \
-    scriptaitab.h \
-    eventaidef.h \
-    timer.h \
-    creaturesearcher.h \
-    creaturetables.h
+
+
+HEADERS += $$files(src/*.h)
+HEADERS += $$files(src/CreatureTabs/*.h)
+
+SOURCES += $$files(src/*.cpp)
+SOURCES += $$files(src/CreatureTabs/*.cpp)
+
 
 RESOURCES += \
     icons.qrc
