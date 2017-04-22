@@ -19,11 +19,13 @@ src/CreatureTabs/
 
 
 HEADERS += $$files(src/*.h) \
-    src/migration.h
+    src/migration.h \
+    src/CreatureTabs/templatetables.h
 HEADERS += $$files(src/CreatureTabs/*.h)
 
 SOURCES += $$files(src/*.cpp) \
-    src/migration.cpp
+    src/migration.cpp \
+    src/CreatureTabs/templatetables.cpp
 SOURCES += $$files(src/CreatureTabs/*.cpp)
 
 RESOURCES += \

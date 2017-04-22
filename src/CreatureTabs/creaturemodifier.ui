@@ -14,7 +14,7 @@
    <string>TabWidget</string>
   </property>
   <property name="currentIndex">
-   <number>0</number>
+   <number>3</number>
   </property>
   <widget class="QWidget" name="widget">
    <attribute name="title">
@@ -142,6 +142,29 @@
    <attribute name="title">
     <string>Loot</string>
    </attribute>
+  </widget>
+  <widget class="QWidget" name="widget_10">
+   <attribute name="title">
+    <string>Template Tables</string>
+   </attribute>
+   <widget class="QWidget" name="verticalLayoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>30</y>
+      <width>351</width>
+      <height>341</height>
+     </rect>
+    </property>
+    <layout class="QVBoxLayout" name="verticalLayout">
+     <item>
+      <widget class="QLineEdit" name="templateTableSearchEdit"/>
+     </item>
+     <item>
+      <widget class="QTreeView" name="treeView"/>
+     </item>
+    </layout>
+   </widget>
   </widget>
  </widget>
  <resources/>

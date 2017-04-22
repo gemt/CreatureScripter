@@ -3,7 +3,7 @@
 
 #include <QTableView>
 #include <QSqlTableModel>
-#include <memory>
+
 class CreatureSearcherModel;
 class Creature;
 class CreatureSearcher : public QTableView

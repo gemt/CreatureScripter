@@ -7,6 +7,7 @@
 #include "scriptaitab.h"
 #include "creaturetables.h"
 #include "creaturemodifier.h"
+#include "templatetables.h"
 
 #include <QVBoxLayout>
 #include <QHBoxLayout>
@@ -26,6 +27,9 @@ WorkTab::WorkTab(uint entry, QString name, QWidget *parent) :
 
     CreatureModifier* cm = new CreatureModifier(this);
     addTab(cm, "Modifier");
+
+    TemplateTables* templateTable = new TemplateTables(this);
+    addTab(templateTable, "Template Tables");
 
     rawTables = new CreatureTables(entry,this);
     addTab(rawTables, "Raw Tables");

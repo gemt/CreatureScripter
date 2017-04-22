@@ -72,6 +72,5 @@ int main(int argc, char *argv[])
     }
     w.InitWindow();
 
-    Migration mig(Tables::creature_template, "", "", "entry", "30");
     return a.exec();
 }
