@@ -6,6 +6,7 @@
 #include "creatureaiscriptsraw.h"
 #include "scriptaitab.h"
 #include "creaturetables.h"
+#include "creaturemodifier.h"
 
 #include <QVBoxLayout>
 #include <QHBoxLayout>
@@ -22,7 +23,11 @@ WorkTab::WorkTab(uint entry, QString name, QWidget *parent) :
 {
     setMouseTracking(true);
     setContentsMargins(0,0,0,0);
-    CreatureTables* rawTables = new CreatureTables(entry,this);
+
+    CreatureModifier* cm = new CreatureModifier(this);
+    addTab(cm, "Modifier");
+
+    rawTables = new CreatureTables(entry,this);
     addTab(rawTables, "Raw Tables");
 /*
     scriptAITab = new ScriptAITab(fullCreature, this);

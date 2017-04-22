@@ -24,6 +24,7 @@ HEADERS += $$files(src/CreatureTabs/*.h)
 SOURCES += $$files(src/*.cpp)
 SOURCES += $$files(src/CreatureTabs/*.cpp)
 
-
 RESOURCES += \
     icons.qrc
+
+FORMS += $$files(src/CreatureTabs/*.ui)

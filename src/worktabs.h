@@ -6,12 +6,7 @@
 #include <QTabWidget>
 #include <QMap>
 
-class Creature;
-class CreatureSpawnLocations;
-class CreatureTemplateRaw;
-class CreatureAIScriptsRaw;
-class ScriptAITab;
-
+class CreatureTables;
 class WorkTab : public QTabWidget
 {
 public:
@@ -23,10 +18,7 @@ private:
     uint entry;
     QString name;
 
-    ScriptAITab* scriptAITab;
-    CreatureSpawnLocations* locationsTab;
-    CreatureTemplateRaw* rawTemplateTab;
-    CreatureAIScriptsRaw* rawAITab;
+    CreatureTables* rawTables;
 };
 
 class WorkTabs : public QTabWidget
