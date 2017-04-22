@@ -57,6 +57,7 @@ bool CheckConnectionSettings(MainWindow& mw)
     return true;
 }
 
+#include "migration.h"
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
@@ -70,5 +71,7 @@ int main(int argc, char *argv[])
         return 1;
     }
     w.InitWindow();
+
+    Migration mig(Tables::creature_template, "", "", "entry", "30");
     return a.exec();
 }

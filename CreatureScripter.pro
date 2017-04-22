@@ -18,10 +18,12 @@ src/CreatureTabs/
 
 
 
-HEADERS += $$files(src/*.h)
+HEADERS += $$files(src/*.h) \
+    src/migration.h
 HEADERS += $$files(src/CreatureTabs/*.h)
 
-SOURCES += $$files(src/*.cpp)
+SOURCES += $$files(src/*.cpp) \
+    src/migration.cpp
 SOURCES += $$files(src/CreatureTabs/*.cpp)
 
 RESOURCES += \
