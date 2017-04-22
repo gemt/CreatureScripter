@@ -10,39 +10,10 @@
 #include <QSqlRecord>
 #include <QStandardItem>
 
-Cache Cache::instance;
-
 Creature::Creature(const QString& name, unsigned int entry) :
     name(name),
     entry(entry)
 {
-
-}
-
-std::vector<Creature*> Cache::GetCreatures(const QString &name)
-{
-    if(name.isEmpty())
-        return _creatures;
-    QString lName = name;
-    bool isUInt;
-    unsigned int intVal = lName.toUInt(&isUInt);
-    std::vector<Creature*> ret;
-    if(isUInt){
-        for(auto it = _creatures.cbegin(); it != _creatures.cend(); it++){
-            if((*it)->entry == intVal)
-                ret.push_back(*it);
-        }
-        return ret;
-    }else{
-        //QString sn = lName.toLower();
-        std::vector<Creature*> ret;
-        for(auto it = _creatures.cbegin(); it != _creatures.cend(); it++){
-            if((*it)->name.contains(name, Qt::CaseInsensitive))
-                ret.push_back(*it);
-        }
-
-        return ret;
-    }
 
 }
 
@@ -56,9 +27,18 @@ Cache::Cache(){
 }
 
 
+QString Cache::Table(const char *table){
+    QSettings settings;
+    return QString("%1.%2").arg(settings.value("worldDB").toString(), table);
+}
+
+QSqlDatabase Cache::GetDB()
+{
+    return QSqlDatabase::database(settings.value("connectionName").toString(), false);
+}
+
 bool Cache::Connect()
 {
-    QSettings settings;
     qDebug() << "Connecting to database:";
     qDebug() << "connectionName:" << settings.value("connectionName").toString();
     qDebug() << "Hostname: " << settings.value("hostName").toString();
@@ -82,7 +62,6 @@ bool Cache::Connect()
     }
     try{
         Cache::Get();
-        Cache::Get().LoadCreatures();
         Cache::Get().LoadSchemas();
         Cache::Get().LoadMaps();
 
@@ -95,44 +74,13 @@ bool Cache::Connect()
 
 bool Cache::isConnected()
 {
-    QSettings settings;
-    QSqlDatabase db = QSqlDatabase::database(settings.value("connectionName").toString(), false);
+    QSqlDatabase db = GetDB();
     return db.isOpen() && db.isValid();
 }
 
-void Cache::LoadCreatures()
+void Cache::LoadSchema(const QString& table, QStringList& names)
 {
-    QSettings settings;
-    static bool loaded = false;
-    if(loaded) throw std::logic_error("Cache::LoadCreatures called twize");
-    else loaded = true;
-
-
-    QSqlDatabase db = QSqlDatabase::database(settings.value("connectionName").toString());
-    if(!db.isOpen()){
-        throw std::logic_error("Database connection not open");
-    }
-    QSqlQuery q(db);
-    bool ret = q.exec(QString("SELECT entry, name FROM %1.creature_template")
-                 .arg(settings.value("worldDB").toString()));
-    int entryField = q.record().indexOf("entry");
-    int nameField = q.record().indexOf("name");
-    if(!ret){
-        throw std::logic_error("Query failed. Error: " + q.lastError().text().toStdString()
-                               + ", Query:" + q.lastQuery().toStdString());
-    }
-
-    while(q.next()){
-        QString n = q.value(nameField).toString();//.toLower();
-        unsigned int e = q.value(entryField).toUInt();
-        _creatures.push_back(new Creature(n,e));
-    }
-}
-
-static void LoadSchema(const QString& table, QStringList& names)
-{
-    QSettings settings;
-    QSqlDatabase db = QSqlDatabase::database(settings.value("connectionName").toString());
+    QSqlDatabase db = GetDB();
     if(!db.isOpen()){
         throw std::logic_error("Database connection not open");
     }
@@ -164,19 +112,17 @@ void Cache::LoadSchemas()
     if(loaded) throw std::logic_error("Cache::LoadSchemas called twize");
     else loaded = true;
 
-    LoadSchema(CreatureTable::tableName, CreatureTable::names);
     LoadSchema(CreatureTemplate::tableName, CreatureTemplate::names);
     LoadSchema(CreatureAIScripts::tableName, CreatureAIScripts::names);
 }
 
 void Cache::LoadMaps()
 {
-    QSettings settings;
     static bool loaded = false;
     if(loaded) throw std::logic_error("Cache::LoadMaps called twize");
     else loaded = true;
 
-    QSqlDatabase db = QSqlDatabase::database(settings.value("connectionName").toString());
+    QSqlDatabase db = GetDB();
     if(!db.isOpen()){
         throw std::logic_error("Database connection not open");
     }

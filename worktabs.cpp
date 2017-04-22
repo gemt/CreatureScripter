@@ -1,4 +1,3 @@
-#include "creaturespawnlocations.h"
 #include "worktabs.h"
 #include "warnings.h"
 #include "creature.h"
@@ -6,6 +5,7 @@
 #include "creaturetemplateraw.h"
 #include "creatureaiscriptsraw.h"
 #include "scriptaitab.h"
+#include "creaturetables.h"
 
 #include <QVBoxLayout>
 #include <QHBoxLayout>
@@ -14,12 +14,15 @@
 
 #include <QTableWidget>
 
-WorkTab::WorkTab(Creature* pCreature, QWidget *parent) :
+WorkTab::WorkTab(uint entry, QString name, QWidget *parent) :
     QTabWidget(parent),
-    pCreature(pCreature),
-    fullCreature(pCreature->entry)
+    entry(entry),
+    name(name)
+    //fullCreature(pCreature->entry)
 {
-
+    CreatureTables* rawTables = new CreatureTables(entry,this);
+    addTab(rawTables, "Raw Tables");
+/*
     scriptAITab = new ScriptAITab(fullCreature, this);
     addTab(scriptAITab, "Event Modifier");
     locationsTab = new CreatureSpawnLocations(fullCreature.cCreatures, this);
@@ -28,11 +31,12 @@ WorkTab::WorkTab(Creature* pCreature, QWidget *parent) :
     addTab(rawTemplateTab, "Creature Template");
     rawAITab = new CreatureAIScriptsRaw(fullCreature.cAIScripts, this);
     addTab(rawAITab, "AI events");
+    */
 }
 
 unsigned int WorkTab::Entry()
 {
-    return pCreature->entry;
+    return entry;
 }
 
 WorkTabs::WorkTabs(QWidget *parent) :
@@ -45,22 +49,23 @@ WorkTabs::WorkTabs(QWidget *parent) :
     connect(this, &QTabWidget::tabCloseRequested, this, &WorkTabs::onTabCloseRequest);
 }
 
-void WorkTabs::addTab(uint entry)
+void WorkTabs::addTab(uint entry, QString name)
 {
     if(tabMap.contains(entry)){
         setCurrentWidget(tabMap[entry]);
         return;
     }
-
-    std::vector<Creature*> ret = Cache::Get().GetCreatures(QString("%1").arg(entry));
+    /*
+    QVector<Creature*> ret = Cache::Get().GetCreatures(QString("%1").arg(entry));
     if(ret.size() != 1){
         Warnings::Warning("WorkTabs::addTab got entry that returned more than 1 creature. Skipping");
         return;
     }
     Creature* pCreature = ret.at(0);
+    */
     try{
-        WorkTab* wt = new WorkTab(pCreature, nullptr);
-        QTabWidget::addTab(wt, pCreature->name);
+        WorkTab* wt = new WorkTab(entry,name,this);
+        QTabWidget::addTab(wt, name);
         tabMap[wt->Entry()] = wt;
         setCurrentWidget(wt);
         if(QWidget* cw = currentWidget()){

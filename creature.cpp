@@ -115,11 +115,9 @@ const QVector<QString> creature_ai_scripts::rows =
 };
 */
 
-QString CreatureTable::tableName = "creature";
 QString CreatureTemplate::tableName = "creature_template";
 QString CreatureAIScripts::tableName = "creature_ai_scripts";
 
-QStringList CreatureTable::names;
 QStringList CreatureTemplate::names;
 QStringList CreatureAIScripts::names;
 
@@ -176,11 +174,6 @@ QString CreatureTemplate::value(const QString &key)
     throw std::logic_error("CreatureTemplate::value no entry for key: " + key.toStdString());
 }
 
-CreatureTable::CreatureTable(unsigned int entry)
-{
-    SelectStar(tableName, positions, names, entry, "id");
-}
-
 CreatureAIScripts::CreatureAIScripts(unsigned int entry)
 {
     SelectStar(tableName, events, names, entry, "creature_id");
@@ -189,7 +182,6 @@ CreatureAIScripts::CreatureAIScripts(unsigned int entry)
 
 FullCreature::FullCreature(unsigned int entry) :
     cTemplate(entry),
-    cCreatures(entry),
     cAIScripts(entry)
 {
 }

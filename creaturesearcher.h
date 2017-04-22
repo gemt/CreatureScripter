@@ -3,8 +3,9 @@
 
 #include <QTableView>
 #include <QSqlTableModel>
-
+#include <memory>
 class CreatureSearcherModel;
+class Creature;
 class CreatureSearcher : public QTableView
 {
     Q_OBJECT
@@ -13,7 +14,7 @@ public:
     void Search(const QString& s);
 
 signals:
-    void entrySelected(uint entry);
+    void entrySelected(uint entry, QString name);
 
 private slots:
     void onActivated(const QModelIndex& idx);

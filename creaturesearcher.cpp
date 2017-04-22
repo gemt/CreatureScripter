@@ -1,4 +1,4 @@
-#include "tables.h"
+#include "cache.h"
 #include "creaturesearcher.h"
 #include "warnings.h"
 
@@ -34,10 +34,8 @@ public:
         else{
             QSqlField f;
             f.setType(QVariant::String);
-            QString qry = QString("%%1%").arg(s);
-            f.setValue(qry);
+            f.setValue(QString("%%1%").arg(s));
             QString filt = QString("name LIKE %1").arg(_db.driver()->formatValue(f));
-            qDebug() << filt;
             setFilter(filt);
         }
         //select();
@@ -79,10 +77,11 @@ void CreatureSearcher::onActivated(const QModelIndex &idx)
 {
     bool ok;
     int entry = idx.model()->index(idx.row(), 0).data().toUInt(&ok);
+    QString name = idx.model()->index(idx.row(),7).data().toString();
     if(!ok){
         Warnings::Warning("Error occured when reading entry on selected line");
     }else{
-        emit entrySelected(entry);
+        emit entrySelected(entry, name);
     }
 }
 

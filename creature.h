@@ -31,20 +31,6 @@ public:
     static QString tableName;
 };
 
-/* The creature table contains spawn positions of a creature as it's defined in
- * creature_template. One entry from creature_template will potentially have many
- * entries in the creature table
- */
-class CreatureTable
-{
-public:
-    CreatureTable(unsigned int entry);
-    QVector<QStringList> positions;
-
-    static QStringList names;
-    static QString tableName;
-};
-
 /*
  * Creature AI scripts contains ai scripts for creatures. There can be multiple rows
  * for a single creature 'entry', where each row defines an action/ability etc for the creature
@@ -65,7 +51,6 @@ public:
     FullCreature(unsigned int entry);
 
     CreatureTemplate cTemplate;
-    CreatureTable cCreatures;
     CreatureAIScripts cAIScripts;
 };
 

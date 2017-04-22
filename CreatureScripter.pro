@@ -18,21 +18,20 @@ SOURCES += main.cpp\
     warnings.cpp \
     worktabs.cpp \
     creature.cpp \
-    creaturespawnlocations.cpp \
     cache.cpp \
     creaturetemplateraw.cpp \
     creatureaiscriptsraw.cpp \
     dbconnectionsettings.cpp \
     scriptaitab.cpp \
     eventaidef.cpp \
-    creaturesearcher.cpp
+    creaturesearcher.cpp \
+    creaturetables.cpp
 
 HEADERS  += mainwindow.h \
     config.h \
     warnings.h \
     worktabs.h \
     creature.h \
-    creaturespawnlocations.h \
     cache.h \
     creaturetemplateraw.h \
     creatureaiscriptsraw.h \
@@ -41,7 +40,7 @@ HEADERS  += mainwindow.h \
     eventaidef.h \
     timer.h \
     creaturesearcher.h \
-    tables.h
+    creaturetables.h
 
 RESOURCES += \
     icons.qrc

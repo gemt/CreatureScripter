@@ -15,12 +15,14 @@ class ScriptAITab;
 class WorkTab : public QTabWidget
 {
 public:
-    WorkTab(Creature* pCreature, QWidget* parent);
-    FullCreature fullCreature;
+    WorkTab(uint entry, QString name, QWidget* parent);
+    //FullCreature fullCreature;
     unsigned int Entry();
 
 private:
-    Creature* pCreature;
+    uint entry;
+    QString name;
+
     ScriptAITab* scriptAITab;
     CreatureSpawnLocations* locationsTab;
     CreatureTemplateRaw* rawTemplateTab;
@@ -33,7 +35,7 @@ public:
     WorkTabs(QWidget *parent);
 
 public slots:
-    void addTab(uint entry);
+    void addTab(uint entry, QString name);
 
 protected:
     void keyPressEvent(QKeyEvent *event);

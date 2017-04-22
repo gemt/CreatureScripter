@@ -54,6 +54,7 @@ bool CheckConnectionSettings(MainWindow& mw)
             return dbSettings.exec() == QDialog::Accepted;
         }
     }
+    return true;
 }
 
 int main(int argc, char *argv[])
@@ -63,7 +64,6 @@ int main(int argc, char *argv[])
     SetAppInfo();
     MainWindow w;
     w.show();
-
     EventAIDef def;
 
     if(!CheckConnectionSettings(w)){
