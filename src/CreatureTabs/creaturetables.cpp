@@ -107,6 +107,20 @@ CreatureTables::CreatureTables(uint entry, QWidget* parent) :
     setTabShape(TabShape::Rounded);
 }
 
+std::pair<const char*, QSqlRecord> CreatureTables::GetSingleRecord(const char *table)
+{
+    auto it = tables.find(table);
+    if(it == tables.end())
+        throw std::logic_error(QString("CreatureTables::GetSingleRecord - unable to find table %1")
+                               .arg(table).toStdString().c_str());
+
+    CreatureTable* t = it->second;
+    if(t->tableModel->rowCount() > 1)
+        throw std::logic_error(QString("CreatureTables::GetSingleRecord - requested table (%1) contains %2 records")
+                               .arg(table, t->tableModel->rowCount()).toStdString().c_str());
+    return std::make_pair(table,t->tableModel->record(0));
+}
+
 
 
 

@@ -7,6 +7,8 @@
 #include <QSqlRecord>
 #include <QSqlField>
 #include <QTreeView>
+#include <QFormLayout>
+#include <QVBoxLayout>
 
 class TemplateTreeItem
 {
@@ -16,6 +18,7 @@ private:
     const char* _cData;
     TemplateTreeItem *_parentItem;
     QSqlField _itemData;
+    QVariant _editableValue;
     QSqlField _originalData;
     QVector<TemplateTreeItem*> _childItems;
 public:
@@ -28,6 +31,7 @@ public:
         type(FIELD),
         _parentItem(p),
         _itemData(f),
+        _editableValue(f.value()),
         _originalData(f)
     {
         p->appendChild(this);
@@ -46,12 +50,18 @@ public:
 
     int childCount() const{ return _childItems.count(); }
     int columnCount() const {
-        return _itemData.isNull() ? 0 : 2; // XXX not sure if should be 0 or 1
+        switch(type){
+        case ROOT:
+        case TABLE: return 1;
+        case FIELD: return 3;
+        }
+
+        return _itemData.isNull() ? 1 : 2; // XXX not sure if should be 0 or 1
     }
     QVariant data(int column) const{
         switch(type){
-        case ROOT: return QVariant(); break;
-        case TABLE: return _cData; break;
+        case ROOT: return QVariant();
+        case TABLE: return _cData;
         case FIELD: return column ? _itemData.value() : _itemData.name();
         }
     }
@@ -63,7 +73,7 @@ public:
     TemplateTreeItem *parentItem() {return _parentItem; }
     bool SetData(QVariant data){
         Q_ASSERT(type==FIELD);
-        _itemData.setValue(data);
+        _editableValue.setValue(data);
         return true;
     }
 };
@@ -73,7 +83,7 @@ class TemplateTableModel : public QAbstractItemModel
 private:
     TemplateTreeItem* rootItm;
 public:
-    TemplateTableModel(QVector<std::pair<const char*,QSqlRecord>>& records, QWidget* parent) :
+    TemplateTableModel(const QVector<std::pair<const char*,QSqlRecord>>& records, QWidget* parent) :
         QAbstractItemModel(parent),
         rootItm(new TemplateTreeItem)
     {
@@ -176,16 +186,23 @@ public:
     }
 };
 
-TemplateTables::TemplateTables(QWidget *parent) :
+TemplateTables::TemplateTables(const QVector<std::pair<const char*,QSqlRecord>>& records, QWidget *parent) :
     QWidget(parent)
 {
+    QVBoxLayout* l = new QVBoxLayout(this);
+    setLayout(l);
+
+    QFormLayout* fl = new QFormLayout();
+    l->addLayout(fl);
     QLineEdit* searchEdit = new QLineEdit(this);
     connect(searchEdit, &QLineEdit::textChanged, this, &TemplateTables::onTextChange);
+    fl->addRow("Field/value", searchEdit);
 
-    QVector<std::pair<const char*,QSqlRecord>> records;
+
     QTreeView* view = new QTreeView(this);
     TemplateTableModel* model = new TemplateTableModel(records, this);
     view->setModel(model);
+    l->addWidget(view);
 }
 
 void TemplateTables::onTextChange(const QString &s)

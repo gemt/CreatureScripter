@@ -26,13 +26,20 @@ WorkTab::WorkTab(uint entry, QString name, QWidget *parent) :
     setContentsMargins(0,0,0,0);
 
     CreatureModifier* cm = new CreatureModifier(this);
-    addTab(cm, "Modifier");
-
-    TemplateTables* templateTable = new TemplateTables(this);
-    addTab(templateTable, "Template Tables");
-
     rawTables = new CreatureTables(entry,this);
+
+    QVector<std::pair<const char*,QSqlRecord>> templateRecords;
+    templateRecords.push_back(std::move(rawTables->GetSingleRecord(Tables::creature_template)));
+    TemplateTables* templateTable = new TemplateTables(templateRecords, this);
+
+
+    addTab(cm, "Modifier");
+    addTab(templateTable, "Template Tables");
     addTab(rawTables, "Raw Tables");
+
+
+
+
 /*
     scriptAITab = new ScriptAITab(fullCreature, this);
     addTab(scriptAITab, "Event Modifier");
@@ -76,7 +83,8 @@ void WorkTabs::addTab(uint entry, QString name)
     }
     Creature* pCreature = ret.at(0);
     */
-    try{
+    //try
+    {
         WorkTab* wt = new WorkTab(entry,name,this);
         wt->setContentsMargins(0,0,0,0);
         QTabWidget::addTab(wt, name);
@@ -85,9 +93,9 @@ void WorkTabs::addTab(uint entry, QString name)
         if(QWidget* cw = currentWidget()){
             cw->setFocus();
         }
-    }catch(std::exception& e){
-        Warnings::Warning(e.what());
-    }
+    }//catch(std::exception& e){
+     //   Warnings::Warning(e.what());
+    //}
 }
 
 void WorkTabs::onTabCloseRequest(int idx)

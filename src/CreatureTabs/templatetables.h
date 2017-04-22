@@ -2,13 +2,13 @@
 #define TEMPLATETABLES_H
 
 #include <QWidget>
+#include <QSqlRecord>
 
 class TemplateTables : public QWidget
 {
     Q_OBJECT
 public:
-    explicit TemplateTables(QWidget *parent = 0);
-
+    TemplateTables(const QVector<std::pair<const char*,QSqlRecord>>& records, QWidget *parent = 0);
 
 public slots:
     void onTextChange(const QString& s);
