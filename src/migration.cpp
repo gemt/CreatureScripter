@@ -8,8 +8,7 @@
 #include <QSqlField>
 #include <QDebug>
 
-Migration::Migration(const char* table, const QString& key, const QString keyVal,
-                     const QString& field, const QString& fieldVal)
+Migration::Migration(const char* table, const QString& field, const QString& fieldVal)
 {
 
     QSqlDatabase db = Cache::Get().GetDB();

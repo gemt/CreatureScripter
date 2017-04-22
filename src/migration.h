@@ -8,8 +8,7 @@
 class Migration
 {
 public:
-    Migration(const char* table, const QString& key, const QString keyVal,
-              const QString& field, const QString& fieldVal);
+    Migration(const char* table, const QString& field, const QString& fieldVal);
 
 private:
     QSqlRecord record;
