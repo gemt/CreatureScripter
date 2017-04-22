@@ -1,21 +1,18 @@
 #ifndef CREATURETABLES_H
 #define CREATURETABLES_H
 
-#include <QScrollArea>
+#include <QTabWidget>
 #include <QPushButton>
 #include <QMap>
+#include <functional>
+#include <QTableView>
 
 class QSqlTableModel;
-class QTableView;
+class QVBoxLayout;
 
-
-class CreatureTable : public QWidget {
+class CreatureTable : public QTableView {
 public:
     CreatureTable(const QString& table, QString key, QString value, QWidget* parent);
-
-    QTableView* tableView;
-private slots:
-    void OnCollapse();
 
 private:
     QPushButton* collapseBtn;
@@ -23,13 +20,23 @@ private:
 };
 
 
-class CreatureTables : public QScrollArea
+class CreatureTables : public QTabWidget
 {
 public:
     CreatureTables(uint entry, QWidget* parent);
 
 private:
+    template<typename T>
+    void AddTable(const char* table, QString key, QString value){
+        T* cTable;
+        cTable = new T(table, key, QString("%1").arg(value), this);
+        tables[table] = cTable;
+        addTab(cTable, table);
+    }
+
     QMap<const char*,CreatureTable*> tables;
+    QWidget* contentWidget;
+    QVBoxLayout* contentLayout;
 };
 
 #endif // CREATURETABLES_H

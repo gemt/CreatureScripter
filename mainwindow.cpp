@@ -72,7 +72,7 @@ void MainWindow::InitWindow()
 
     splitter->setStretchFactor(0, 0);
     splitter->setStretchFactor(1, 1000);
-
+    splitter->setContentsMargins(0,0,0,0);
 
     QMenu* menu = QMainWindow::menuBar()->addMenu("File");
     QAction* act = new QAction(QIcon(":/icons/ico/Data-Settings-48.png"), "DB Connection");

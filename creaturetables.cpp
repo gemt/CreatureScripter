@@ -10,6 +10,8 @@
 #include <QHeaderView>
 #include <QToolTip>
 #include <QCursor>
+#include <QMouseEvent>
+#include <QSplitter>
 
 class NoEditTableModel : public QSqlTableModel
 {
@@ -24,14 +26,34 @@ public:
     }
 };
 
-class TableView : public QTableView
+class cCreatureTable : public CreatureTable
 {
 public:
+   cCreatureTable(const QString &table, QString key, QString value, QWidget* parent) :
+       CreatureTable(table,key,value,parent){
+       setMouseTracking(true);
+   }
 
+   void mouseMoveEvent(QMouseEvent *event) override
+   {
+       QModelIndex i = QTableView::indexAt(event->pos());
+       static int prevR=-1;
+       if(i.row() == prevR) return;
+       prevR = i.row();
+       if(i.column() == 2){
+           bool ok;
+           int entry = i.data().toInt(&ok);
+           if(!ok) return;
+           //QToolTip::hideText();
+           QToolTip::showText(mapToGlobal(visualRect(i).topRight()), Cache::Get().MapName(entry));
+       }else {
+           QToolTip::hideText();
+       }
+   }
 };
 
 CreatureTable::CreatureTable(const QString &table, QString key, QString value, QWidget* parent) :
-    QWidget(parent)
+    QTableView(parent)
 {
     QSqlDatabase db = Cache::Get().GetDB();
     tableModel = new NoEditTableModel(this, db);
@@ -44,48 +66,50 @@ CreatureTable::CreatureTable(const QString &table, QString key, QString value, Q
     tableModel->setFilter(filt);
     tableModel->select();
 
-    tableView = new QTableView(this);
-    tableView->setModel(tableModel);
-    tableView->setEditTriggers(QAbstractItemView::NoEditTriggers);
-    tableView->verticalHeader()->hide();
-
-    collapseBtn = new QPushButton(table);
-    connect(collapseBtn, &QPushButton::clicked, this, &CreatureTable::OnCollapse);
-
-    QVBoxLayout* l = new QVBoxLayout(this);
-    setLayout(l);
-    l->addWidget(collapseBtn);
-    l->addWidget(tableView);
+    setModel(tableModel);
+    setEditTriggers(QAbstractItemView::NoEditTriggers);
+    verticalHeader()->hide();
+    horizontalHeader()->setStretchLastSection(true);
+    setSizePolicy(QSizePolicy::Minimum,QSizePolicy::Minimum);
 }
 
-void CreatureTable::OnCollapse()
-{
-    tableView->setHidden(!tableView->isHidden());
-}
 
 
 CreatureTables::CreatureTables(uint entry, QWidget* parent) :
-    QScrollArea(parent)
+    QTabWidget(parent)
 {
-    QVBoxLayout* l = new QVBoxLayout(this);
-    setLayout(l);
-    CreatureTable* table;
-    table = new CreatureTable(Tables::creature, "id", QString("%1").arg(entry), this);
-    table->tableView->setMouseTracking(true);
-    connect(table->tableView, &QTableView::entered, [](const QModelIndex& i){
-        static int prevR=-1;
-        if(i.row() == prevR) return;
-        prevR = i.row();
-        if(i.column() == 2){
-            bool ok;
-            int entry = i.data().toInt(&ok);
-            if(!ok) return;
-            QToolTip::hideText();
-            QToolTip::showText(QCursor::pos(), Cache::Get().MapName(entry));
-        }
-    });
-    tables[Tables::creature] = table;
-    l->addWidget(table);
+    setContentsMargins(0,0,0,0);
+    setContentsMargins(0,0,0,0);
+    setMouseTracking(true);
+    QString sEntry = QString("%1").arg(entry);
+    //QTabWidget::tabBar()-
+    AddTable<cCreatureTable>(Tables::creature, "id", sEntry);
+    AddTable<CreatureTable>(Tables::creature_template,              "entry", sEntry);
+
+    //AddTable<CreatureTable>(Tables::creature_addon,                 "entry", sEntry);
+    AddTable<CreatureTable>(Tables::creature_ai_scripts,            "creature_id", sEntry);
+    AddTable<CreatureTable>(Tables::creature_ai_summons,            "id", sEntry);
+    //AddTable<CreatureTable>(Tables::creature_ai_texts,              "entry", sEntry);
+    //AddTable<CreatureTable>(Tables::creature_battleground,          "entry", sEntry);
+    //AddTable<CreatureTable>(Tables::creature_equip_template,        "entry", sEntry);
+    AddTable<CreatureTable>(Tables::creature_equip_template_raw,    "entry", sEntry);
+    //AddTable<CreatureTable>(Tables::creature_groups,                "entry", sEntry);
+    AddTable<CreatureTable>(Tables::creature_involved_relation,     "id", sEntry); //not sure
+    AddTable<CreatureTable>(Tables::creature_loot_template,         "entry", sEntry);
+    //AddTable<CreatureTable>(Tables::creature_model_info,            "entry", sEntry);
+    AddTable<CreatureTable>(Tables::creature_movement,              "id", sEntry);
+    //AddTable<CreatureTable>(Tables::creature_movement_scripts,      "entry", sEntry);
+    AddTable<CreatureTable>(Tables::creature_movement_template,     "entry", sEntry); // not sure
+    AddTable<CreatureTable>(Tables::creature_onkill_reputation,     "creature_id", sEntry);
+    AddTable<CreatureTable>(Tables::creature_questrelation,         "id", sEntry);
+    //AddTable<CreatureTable>(Tables::creature_spells,                "entry", sEntry); //empty
+    AddTable<CreatureTable>(Tables::creature_template_addon,        "entry", sEntry);
+
+    setTabShape(TabShape::Rounded);
+    //setStyleSheet(QString("QTabBar::tab { width: %200px; } ").arg(size().width()/count()));
+
 }
+
+
 
 

@@ -20,6 +20,8 @@ WorkTab::WorkTab(uint entry, QString name, QWidget *parent) :
     name(name)
     //fullCreature(pCreature->entry)
 {
+    setMouseTracking(true);
+    setContentsMargins(0,0,0,0);
     CreatureTables* rawTables = new CreatureTables(entry,this);
     addTab(rawTables, "Raw Tables");
 /*
@@ -42,6 +44,8 @@ unsigned int WorkTab::Entry()
 WorkTabs::WorkTabs(QWidget *parent) :
     QTabWidget(parent)
 {
+    setMouseTracking(true);
+    setContentsMargins(0,0,0,0);
     setTabsClosable(true);
     connect(this, &QTabWidget::tabBarClicked, [this](){
         currentWidget()->setFocus();
@@ -65,6 +69,7 @@ void WorkTabs::addTab(uint entry, QString name)
     */
     try{
         WorkTab* wt = new WorkTab(entry,name,this);
+        wt->setContentsMargins(0,0,0,0);
         QTabWidget::addTab(wt, name);
         tabMap[wt->Entry()] = wt;
         setCurrentWidget(wt);
