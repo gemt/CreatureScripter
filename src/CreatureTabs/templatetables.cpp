@@ -9,6 +9,7 @@
 #include <QTreeView>
 #include <QFormLayout>
 #include <QVBoxLayout>
+#include <QDebug>
 
 class TemplateTreeItem
 {
@@ -51,17 +52,15 @@ public:
     int childCount() const{ return _childItems.count(); }
     int columnCount() const {
         switch(type){
-        case ROOT:
-        case TABLE: return 1;
-        case FIELD: return 3;
+        case ROOT: return 2;
+        case TABLE: return 2;
+        case FIELD: return 2;
         }
-
-        return _itemData.isNull() ? 1 : 2; // XXX not sure if should be 0 or 1
     }
     QVariant data(int column) const{
         switch(type){
-        case ROOT: return QVariant();
-        case TABLE: return _cData;
+        case ROOT: return column ? "Value" : "Field";
+        case TABLE: return column ? "" : _cData;
         case FIELD: return column ? _itemData.value() : _itemData.name();
         }
     }
@@ -202,6 +201,9 @@ TemplateTables::TemplateTables(const QVector<std::pair<const char*,QSqlRecord>>&
     QTreeView* view = new QTreeView(this);
     TemplateTableModel* model = new TemplateTableModel(records, this);
     view->setModel(model);
+    view->expandAll();
+    view->resizeColumnToContents(0);
+    view->resizeColumnToContents(1);
     l->addWidget(view);
 }
 

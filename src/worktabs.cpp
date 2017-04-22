@@ -30,6 +30,7 @@ WorkTab::WorkTab(uint entry, QString name, QWidget *parent) :
 
     QVector<std::pair<const char*,QSqlRecord>> templateRecords;
     templateRecords.push_back(std::move(rawTables->GetSingleRecord(Tables::creature_template)));
+    templateRecords.push_back(std::move(rawTables->GetSingleRecord(Tables::creature_template_addon)));
     TemplateTables* templateTable = new TemplateTables(templateRecords, this);
 
 
