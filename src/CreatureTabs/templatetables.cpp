@@ -11,10 +11,10 @@
 #include <QVBoxLayout>
 #include <QDebug>
 #include <functional>
+#include <QFile>
 
 class TemplateTreeItem
 {
-//private:
 public:
     enum itemType{ROOT,TABLE,FIELD};
     itemType type;
@@ -81,7 +81,6 @@ public:
     {
         Q_ASSERT(type==FIELD);
         if(match.isEmpty()) return true;
-
         return _originalData.name().contains(match, Qt::CaseInsensitive)
                 || _editableValue.toString().contains(match,Qt::CaseInsensitive);
     }
@@ -161,26 +160,22 @@ public:
         if (!index.isValid())
             return QVariant();
 
-        if (role != Qt::DisplayRole)
+        if (role == Qt::BackgroundRole || role == Qt::BackgroundColorRole) {
+            return index.row() % 2 ? QBrush(QColor(50,50,50,100)) : QVariant();
+        }
+        if (role != Qt::DisplayRole && role != Qt::EditRole){
             return QVariant();
-
+        }
         TemplateTreeItem *item = static_cast<TemplateTreeItem*>(index.internalPointer());
-
         return item->data(index.column());
     }
     Qt::ItemFlags flags(const QModelIndex &index) const
     {
-        if(index.column() == 1)
-            return Qt::ItemIsEditable | Qt::ItemIsSelectable;
-        else
-            return Qt::NoItemFlags;
-        /*
-        //todo: currently readonly
-        if (!index.isValid())
-            return 0;
+        Qt::ItemFlags f = QAbstractItemModel::flags(index);
+        if(static_cast<TemplateTreeItem*>(index.internalPointer())->type == TemplateTreeItem::FIELD && index.column()==1)
+            f |= Qt::ItemIsEditable;// | Qt::ItemIsSelectable;
 
-        return QAbstractItemModel::flags(index);
-        */
+        return f;
     }
     QVariant headerData(int section, Qt::Orientation orientation, int role) const
     {
@@ -207,10 +202,18 @@ TemplateTables::TemplateTables(const QVector<std::pair<const char*,QSqlRecord>>&
     connect(searchEdit, &QLineEdit::textChanged, this, &TemplateTables::onTextChange);
     fl->addRow("Field/value", searchEdit);
 
-
     view = new QTreeView(this);
+    QFile f(":/css/css/treeview.css");
+    if(f.open(QFile::ReadOnly)){
+        QString sheet = QLatin1String(f.readAll());
+        view->setStyleSheet(sheet);
+    }else{
+        qDebug() << "TemplateTables: Unable to open treeview css. Err: " << f.errorString();
+    }
+
     model = new TemplateTableModel(records, this);
     view->setModel(model);
+    view->setEditTriggers(QTreeView::EditTrigger::CurrentChanged);
     view->expandAll();
     view->resizeColumnToContents(0);
     view->resizeColumnToContents(1);

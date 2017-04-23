@@ -28,7 +28,7 @@ void SetStyle()
     darkPalette.setColor(QPalette::AlternateBase, QColor(53,53,53));
     darkPalette.setColor(QPalette::ToolTipBase, QColor(215,215,215));
     darkPalette.setColor(QPalette::Button, QColor(53,53,53));
-    darkPalette.setColor(QPalette::Highlight, QColor(18, 56, 94).light(200));
+    darkPalette.setColor(QPalette::Highlight, QColor(150, 156, 150));
     qApp->setPalette(darkPalette);
 }
 

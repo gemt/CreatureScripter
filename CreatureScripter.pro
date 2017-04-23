@@ -29,6 +29,7 @@ SOURCES += $$files(src/*.cpp) \
 SOURCES += $$files(src/CreatureTabs/*.cpp)
 
 RESOURCES += \
-    icons.qrc
+    icons.qrc \
+    css.qrc
 
 FORMS += $$files(src/CreatureTabs/*.ui)

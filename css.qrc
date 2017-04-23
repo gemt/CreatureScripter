@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/css">
+        <file>css/treeview.css</file>
+    </qresource>
+</RCC>

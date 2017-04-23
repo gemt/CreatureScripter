@@ -2,5 +2,10 @@
     <qresource prefix="/icons">
         <file>ico/Data-Settings-32.png</file>
         <file>ico/Data-Settings-48.png</file>
+        <file>ico/branch-closed.png</file>
+        <file>ico/branch-end.png</file>
+        <file>ico/branch-more.png</file>
+        <file>ico/branch-open.png</file>
+        <file>ico/vline.png</file>
     </qresource>
 </RCC>
