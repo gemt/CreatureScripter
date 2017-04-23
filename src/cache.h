@@ -50,6 +50,10 @@ private:
 };
 
 namespace Tables{
+namespace creature{
+static const QString t(){return Cache::Get().Table("creature");}
+static const QString entry = "id";
+}
 namespace creature_template{
 static const QString t(){return Cache::Get().Table("creature_template");}
 static const QString entry   = "entry";
@@ -63,16 +67,19 @@ namespace creature_model_info{
 static const QString t(){return Cache::Get().Table("creature_model_info");}
 static const QString modelid = "modelid";
 }
-namespace creature{
-static const QString t(){return Cache::Get().Table("creature");}
+namespace creature_equip_template{
+static const QString t(){return Cache::Get().Table("creature_equip_template");}
+static const QString entry = "entry";
+}
+namespace creature_equip_template_raw{
+static const QString t(){return Cache::Get().Table("creature_equip_template_raw");}
+static const QString entry = "entry";
 }
 static const QString creature_addon              = "creature_addon";
 static const QString creature_ai_scripts         = "creature_ai_scripts";
 static const QString creature_ai_summons         = "creature_ai_summons";
 static const QString creature_ai_texts           = "creature_ai_texts";
 static const QString creature_battleground       = "creature_battleground";
-static const QString creature_equip_template     = "creature_equip_template";
-static const QString creature_equip_template_raw = "creature_equip_template_raw";
 static const QString creature_groups             = "creature_groups";
 static const QString creature_involved_relation  = "creature_involved_relation";
 static const QString creature_loot_template      = "creature_loot_template";

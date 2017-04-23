@@ -22,17 +22,19 @@ WorkTab::WorkTab(uint entry, QString name, QWidget *parent) :
     setMouseTracking(true);
     setContentsMargins(0,0,0,0);
 
-    CreatureModifier* cm = new CreatureModifier(this);
+    //CreatureModifier* cm = new CreatureModifier(this);
     rawTables = new CreatureTables(entry,this);
 
     QVector<std::pair<QString,QSqlRecord>> templateRecords;
     templateRecords.push_back(std::move(rawTables->GetSingleRecord(Tables::creature_template::t())));
     templateRecords.push_back(std::move(rawTables->GetSingleRecord(Tables::creature_template_addon::t())));
+    templateRecords.push_back(std::move(rawTables->GetSingleRecord(Tables::creature_equip_template::t())));
+    templateRecords.push_back(std::move(rawTables->GetSingleRecord(Tables::creature_equip_template_raw::t())));
     //templateRecords.push_back(std::move(rawTables->GetSingleRecord(Tables::)));
     TemplateTables* templateTable = new TemplateTables(templateRecords, this);
 
 
-    addTab(cm, "Modifier");
+    //addTab(cm, "Modifier");
     addTab(templateTable, "Template Tables");
     addTab(rawTables, "Raw Tables");
 
@@ -61,14 +63,6 @@ void WorkTabs::addTab(uint entry, QString name)
         setCurrentWidget(tabMap[entry]);
         return;
     }
-    /*
-    QVector<Creature*> ret = Cache::Get().GetCreatures(QString("%1").arg(entry));
-    if(ret.size() != 1){
-        Warnings::Warning("WorkTabs::addTab got entry that returned more than 1 creature. Skipping");
-        return;
-    }
-    Creature* pCreature = ret.at(0);
-    */
     try
     {
         WorkTab* wt = new WorkTab(entry,name,this);

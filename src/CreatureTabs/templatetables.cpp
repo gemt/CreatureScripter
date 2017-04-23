@@ -105,7 +105,6 @@ class TemplateTableModel : public QAbstractItemModel
 private:
     QBrush oddbrush,evenbrush,editedbrush;
     QStack<std::pair<QModelIndex,QVariant>> changeStack;
-
 public:
     TemplateTreeItem* rootItm;
     TemplateTableModel(const QVector<std::pair<QString,QSqlRecord>>& records, QWidget* parent) :

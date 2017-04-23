@@ -20,12 +20,16 @@ src/CreatureTabs/
 
 HEADERS += $$files(src/*.h) \
     src/migration.h \
-    src/CreatureTabs/templatetables.h
+    src/CreatureTabs/templatetables.h \
+    src/mangosrecord.h \
+    src/mangoscreature.h
 HEADERS += $$files(src/CreatureTabs/*.h)
 
 SOURCES += $$files(src/*.cpp) \
     src/migration.cpp \
-    src/CreatureTabs/templatetables.cpp
+    src/CreatureTabs/templatetables.cpp \
+    src/mangosrecord.cpp \
+    src/mangoscreature.cpp
 SOURCES += $$files(src/CreatureTabs/*.cpp)
 
 RESOURCES += \
