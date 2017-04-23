@@ -2,9 +2,6 @@
 #include "warnings.h"
 #include "creature.h"
 #include "cache.h"
-#include "creaturetemplateraw.h"
-#include "creatureaiscriptsraw.h"
-#include "scriptaitab.h"
 #include "creaturetables.h"
 #include "creaturemodifier.h"
 #include "templatetables.h"
@@ -31,6 +28,7 @@ WorkTab::WorkTab(uint entry, QString name, QWidget *parent) :
     QVector<std::pair<QString,QSqlRecord>> templateRecords;
     templateRecords.push_back(std::move(rawTables->GetSingleRecord(Tables::creature_template::t())));
     templateRecords.push_back(std::move(rawTables->GetSingleRecord(Tables::creature_template_addon::t())));
+    //templateRecords.push_back(std::move(rawTables->GetSingleRecord(Tables::)));
     TemplateTables* templateTable = new TemplateTables(templateRecords, this);
 
 
@@ -38,19 +36,6 @@ WorkTab::WorkTab(uint entry, QString name, QWidget *parent) :
     addTab(templateTable, "Template Tables");
     addTab(rawTables, "Raw Tables");
 
-
-
-
-/*
-    scriptAITab = new ScriptAITab(fullCreature, this);
-    addTab(scriptAITab, "Event Modifier");
-    locationsTab = new CreatureSpawnLocations(fullCreature.cCreatures, this);
-    addTab(locationsTab, "Spawn Locations");
-    rawTemplateTab = new CreatureTemplateRaw(fullCreature.cTemplate, this);
-    addTab(rawTemplateTab, "Creature Template");
-    rawAITab = new CreatureAIScriptsRaw(fullCreature.cAIScripts, this);
-    addTab(rawAITab, "AI events");
-    */
 }
 
 unsigned int WorkTab::Entry()

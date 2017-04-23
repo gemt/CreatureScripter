@@ -9,6 +9,7 @@
 #include <QSqlResult>
 #include <QSqlRecord>
 #include <QStandardItem>
+#include <QSqlDriver>
 
 Creature::Creature(const QString& name, unsigned int entry) :
     name(name),
@@ -127,10 +128,13 @@ void Cache::LoadMaps()
         throw std::logic_error("Database connection not open");
     }
     QSqlQuery q(db);
-    bool ret = q.exec(QString("SELECT Entry, MapName FROM %1.map_template")
-                 .arg(settings.value("worldDB").toString()));
-    int entryField = q.record().indexOf("Entry");
-    int nameField = q.record().indexOf("MapName");
+    QString qry = QString("SELECT %1, %2 FROM %3").arg(
+                db.driver()->escapeIdentifier(Tables::map_template::entry, QSqlDriver::FieldName),
+                db.driver()->escapeIdentifier(Tables::map_template::mapname, QSqlDriver::FieldName),
+                db.driver()->escapeIdentifier(Tables::map_template::t(),QSqlDriver::TableName));
+    bool ret = q.exec(qry);
+    int entryField = q.record().indexOf(Tables::map_template::entry);
+    int nameField = q.record().indexOf(Tables::map_template::mapname);
     if(!ret){
         throw std::logic_error("Query failed. Error: " + q.lastError().text().toStdString()
                                + ", Query:" + q.lastQuery().toStdString());

@@ -40,6 +40,7 @@ public:
 
     QString MapName(unsigned int entry);
 
+
 private:
     Cache();
     QSettings settings;
@@ -58,6 +59,10 @@ namespace creature_template_addon{
 static const QString t(){return Cache::Get().Table("creature_template_addon");}
 static const QString entry   = "entry";
 }
+namespace creature_model_info{
+static const QString t(){return Cache::Get().Table("creature_model_info");}
+static const QString modelid = "modelid";
+}
 namespace creature{
 static const QString t(){return Cache::Get().Table("creature");}
 }
@@ -71,13 +76,17 @@ static const QString creature_equip_template_raw = "creature_equip_template_raw"
 static const QString creature_groups             = "creature_groups";
 static const QString creature_involved_relation  = "creature_involved_relation";
 static const QString creature_loot_template      = "creature_loot_template";
-static const QString creature_model_info         = "creature_model_info";
 static const QString creature_movement           = "creature_movement";
 static const QString creature_movement_scripts   = "creature_movement_scripts";
 static const QString creature_movement_template  = "creature_movement_template";
 static const QString creature_onkill_reputation  = "creature_onkill_reputation";
 static const QString creature_questrelation      = "creature_questrelation";
 static const QString creature_spells             = "creature_spells";
-//static constexpr char creature_template[]           = "creature_template";
+
+namespace map_template{
+static const QString t(){return Cache::Get().Table("map_template");}
+static const QString entry = "Entry";
+static const QString mapname = "MapName";
+}
 }
 #endif // CREATURECACHE_H

@@ -19,7 +19,7 @@ Migrations::Migration::Migration(const QString& table, const QString& pKey, cons
     fv.setValue(pVal);
     fv.setType(QVariant::String);
     QString qry = QString("SELECT * from %1 WHERE %2=%3")
-            .arg(db.driver()->escapeIdentifier(Cache::Get().Table(table), QSqlDriver::TableName),
+            .arg(db.driver()->escapeIdentifier(table, QSqlDriver::TableName),
                  db.driver()->escapeIdentifier(pKey, QSqlDriver::FieldName),
                  db.driver()->formatValue(fv));
 
