@@ -6,7 +6,7 @@
 
 class QTreeView;
 class TemplateTableModel;
-
+class TemplateTreeView;
 class TemplateTables : public QWidget
 {
     Q_OBJECT
@@ -19,7 +19,7 @@ public slots:
 
 private:
     void SetHideRow(const QModelIndex& idx, int row, bool hide);
-    QTreeView* view;
+    TemplateTreeView* view;
     TemplateTableModel* model;
 };
 

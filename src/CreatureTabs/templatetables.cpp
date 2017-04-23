@@ -12,6 +12,10 @@
 #include <QDebug>
 #include <functional>
 #include <QFile>
+#include <QFont>
+#include <QStack>
+#include <utility>
+#include <QKeyEvent>
 
 class TemplateTreeItem
 {
@@ -24,6 +28,7 @@ public:
     QVariant _editableValue;
     QSqlField _originalData;
     QVector<TemplateTreeItem*> _childItems;
+
     TemplateTreeItem() : type(ROOT),_parentItem(nullptr){}
     TemplateTreeItem(const char* n,TemplateTreeItem* p) : type(TABLE), _cData(n),_parentItem(p)
     {
@@ -38,6 +43,7 @@ public:
     {
         p->appendChild(this);
     }
+
     ~TemplateTreeItem(){
         qDeleteAll(_childItems);
         _childItems.clear();
@@ -62,7 +68,7 @@ public:
         switch(type){
         case ROOT: return column ? "Value" : "Field";
         case TABLE: return column ? "" : _cData;
-        case FIELD: return column ? _itemData.value() : _itemData.name();
+        case FIELD: return column ? _editableValue : _itemData.name();
         }
     }
     int row() const {
@@ -71,10 +77,17 @@ public:
         return 0;
     }
     TemplateTreeItem *parentItem() {return _parentItem; }
-    bool SetData(QVariant data){
+    QVariant SetData(QVariant data){
         Q_ASSERT(type==FIELD);
-        _editableValue.setValue(data);
-        return true;
+        if(_editableValue != data){
+            QVariant tmp = _editableValue;
+            _editableValue.setValue(data);
+            return tmp;
+        }
+        return QVariant(QVariant::Invalid);
+    }
+    bool Changed(){
+        return _originalData.value() != _editableValue;
     }
 
     bool Match(const QString& match)
@@ -89,11 +102,17 @@ public:
 class TemplateTableModel : public QAbstractItemModel
 {
 private:
+    QBrush oddbrush,evenbrush,editedbrush;
+    QStack<std::pair<QModelIndex,QVariant>> changeStack;
+
 public:
     TemplateTreeItem* rootItm;
     TemplateTableModel(const QVector<std::pair<const char*,QSqlRecord>>& records, QWidget* parent) :
         QAbstractItemModel(parent),
-        rootItm(new TemplateTreeItem)
+        rootItm(new TemplateTreeItem),
+        oddbrush(QBrush(QColor(50,50,50,100))),
+        evenbrush(QBrush(QColor(50,50,50,100).darker())),
+        editedbrush(QBrush(QColor(200,100,100)))
     {
         for(auto r = records.begin(); r != records.end(); r++){
             TemplateTreeItem* itm = new TemplateTreeItem(r->first, rootItm);
@@ -103,6 +122,20 @@ public:
         }
     }
     ~TemplateTableModel() { rootItm; }
+
+    void PushChange(const QModelIndex &index,const QVariant& v){
+        changeStack.push(std::make_pair(index,v));
+    }
+    QModelIndex PopChange(){
+        if(changeStack.isEmpty()) return QModelIndex();
+        auto itm = changeStack.pop();
+        TemplateTreeItem* tItem = static_cast<TemplateTreeItem*>(itm.first.internalPointer());
+        QVariant ret = tItem->SetData(itm.second);
+        if(ret.isValid()){
+            return itm.first;
+        }
+        return QModelIndex();
+    }
 
     QModelIndex index(int row, int column, const QModelIndex &parent) const override
     {
@@ -160,13 +193,44 @@ public:
         if (!index.isValid())
             return QVariant();
 
-        if (role == Qt::BackgroundRole || role == Qt::BackgroundColorRole) {
-            return index.row() % 2 ? QBrush(QColor(50,50,50,100)) : QVariant();
-        }
-        if (role != Qt::DisplayRole && role != Qt::EditRole){
+        TemplateTreeItem *item = static_cast<TemplateTreeItem*>(index.internalPointer());
+        /*switch(role)
+        {
+        case Qt::DisplayRole:
+        case Qt::DecorationRole:
+            return QVariant();
+        case Qt::EditRole:
+            break;
+        case Qt::ToolTipRole:
+        case Qt::StatusTipRole:
+        case Qt::WhatsThisRole:
+        // Metadata
+        case Qt::FontRole:
+        case Qt::TextAlignmentRole:
+            return QVariant();
+        case Qt::BackgroundColorRole: // Qt::BackgroundRole both 8
+            return index.row() % 2 ? oddbrush : evenbrush;
+        case Qt::TextColorRole: //Qt::ForegroundRole both 9
+        case Qt::CheckStateRole:
+        // Accessibility
+        case Qt::AccessibleTextRole:
+        case Qt::AccessibleDescriptionRole:
+        // More general purpose
+        case Qt::SizeHintRole:
+        case Qt::InitialSortOrderRole:
             return QVariant();
         }
-        TemplateTreeItem *item = static_cast<TemplateTreeItem*>(index.internalPointer());
+        */
+
+        if(role == Qt::BackgroundColorRole){
+            if(item->Changed()){
+                return editedbrush;
+            }
+            return index.row() % 2 ? oddbrush : evenbrush;
+        }
+        else if (role != Qt::DisplayRole && role != Qt::EditRole){
+            return QVariant();
+        }
         return item->data(index.column());
     }
     Qt::ItemFlags flags(const QModelIndex &index) const
@@ -184,9 +248,54 @@ public:
 
         return QVariant();
     }
-    bool setData(const QModelIndex &index, const QVariant &value, int /*role*/) override
+    bool setData(const QModelIndex &index, const QVariant &value, int role) override
     {
-        return static_cast<TemplateTreeItem*>(index.internalPointer())->SetData(value);
+        if (role != Qt::EditRole)
+            return false;
+        TemplateTreeItem* itm = static_cast<TemplateTreeItem*>(index.internalPointer());
+        QVariant oldVal = itm->SetData(value);
+        if(oldVal.isValid()){
+            PushChange(index, oldVal);
+            return true;
+        }
+        return false;
+    }
+};
+
+class TemplateTreeView : public QTreeView
+{
+public:
+    TemplateTreeView(QWidget* parent):QTreeView(parent)
+    {
+        QFile f(":/css/css/treeview.css");
+        if(f.open(QFile::ReadOnly)){
+            QString sheet = QLatin1String(f.readAll());
+            setStyleSheet(sheet);
+        }else{
+            qDebug() << "TemplateTables: Unable to open treeview css. Err: " << f.errorString();
+        }
+    }
+
+    // QWidget interface
+protected:
+    void keyPressEvent(QKeyEvent *event)
+    {
+        TemplateTableModel* m = static_cast<TemplateTableModel*>(model());
+        Q_ASSERT(m);
+        if(event->matches(QKeySequence::Undo)){
+            QModelIndex idx = m->PopChange();
+            if(idx.isValid()){
+                scrollTo(idx);
+                selectionModel()->select(idx,QItemSelectionModel::SelectCurrent);
+                viewport()->repaint();
+            }
+            /*
+            if(m->PopChange()){
+                indexAt()
+                //scroll();
+                viewport()->repaint();
+            }*/
+        }
     }
 };
 
@@ -202,15 +311,7 @@ TemplateTables::TemplateTables(const QVector<std::pair<const char*,QSqlRecord>>&
     connect(searchEdit, &QLineEdit::textChanged, this, &TemplateTables::onTextChange);
     fl->addRow("Field/value", searchEdit);
 
-    view = new QTreeView(this);
-    QFile f(":/css/css/treeview.css");
-    if(f.open(QFile::ReadOnly)){
-        QString sheet = QLatin1String(f.readAll());
-        view->setStyleSheet(sheet);
-    }else{
-        qDebug() << "TemplateTables: Unable to open treeview css. Err: " << f.errorString();
-    }
-
+    view = new TemplateTreeView(this);
     model = new TemplateTableModel(records, this);
     view->setModel(model);
     view->setEditTriggers(QTreeView::EditTrigger::CurrentChanged);
