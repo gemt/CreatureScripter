@@ -9,43 +9,37 @@
 #include <QSqlField>
 #include <QSqlDriver>
 #include <QModelIndex>
-
-class CreatureSearcherModel : public QSqlTableModel
+#include <QSqlQueryModel>
+class CreatureSearcherModel : public QSqlQueryModel
 {
 private:
     QSqlDatabase _db;
     QSettings settings;
+    QString baseQuery;
+    QString filter;
 public:
     CreatureSearcherModel(QObject* parent, const QSqlDatabase& db) :
-        QSqlTableModel(parent, db),
+        QSqlQueryModel(parent),
         _db(db)
     {
-        setTable(Tables::creature_template);
-        setEditStrategy(QSqlTableModel::OnManualSubmit);
+        baseQuery = QString("SELECT %1, %2 FROM %3").arg("entry", "name", Cache::Get().Table(Tables::creature_template));
+        setQuery(baseQuery, _db);
         setHeaderData(0, Qt::Horizontal, tr("Entry"));
         setHeaderData(1, Qt::Horizontal, tr("Name"));
-        select();
     }
 
     void Search(const QString &s)
     {
-        if(s.isEmpty())
-            setFilter(s);
-        else{
+        if(s.isEmpty() && !filter.isEmpty())
+            setQuery(baseQuery, _db);
+        else if(s != filter){
             QSqlField f;
             f.setType(QVariant::String);
             f.setValue(QString("%%1%").arg(s));
-            QString filt = QString("name LIKE %1").arg(_db.driver()->formatValue(f));
-            setFilter(filt);
+            QString filt = QString("WHERE name LIKE %1 OR entry LIKE %1").arg(_db.driver()->formatValue(f));
+            setQuery(baseQuery + " " + filt, _db);
         }
-        //select();
-    }
-
-public:
-    bool setData(const QModelIndex &, const QVariant &, int) override
-    {
-        // Absofuckinglutely no editing allowed
-        return false;
+        filter = s;
     }
 };
 
@@ -58,12 +52,6 @@ CreatureSearcher::CreatureSearcher(QWidget *parent, const QSqlDatabase &db) :
     setModel(model);
     horizontalHeader()->setStretchLastSection(true);
     verticalHeader()->hide();
-
-    // only showing entry and name columns
-    for(int i = 0; i < model->columnCount(); i++)
-        if(i != 0 && i != 7)
-            hideColumn(i);
-
     connect(this, &QTableView::activated, this, &CreatureSearcher::onActivated);
 
 }
@@ -77,7 +65,7 @@ void CreatureSearcher::onActivated(const QModelIndex &idx)
 {
     bool ok;
     int entry = idx.model()->index(idx.row(), 0).data().toUInt(&ok);
-    QString name = idx.model()->index(idx.row(),7).data().toString();
+    QString name = idx.model()->index(idx.row(),1).data().toString();
     if(!ok){
         Warnings::Warning("Error occured when reading entry on selected line");
     }else{
