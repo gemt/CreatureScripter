@@ -27,7 +27,7 @@ Cache::Cache(){
 }
 
 
-QString Cache::Table(const char *table){
+QString Cache::Table(const QString& table) const{
     QSettings settings;
     return QString("%1.%2").arg(settings.value("worldDB").toString(), table);
 }

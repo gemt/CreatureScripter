@@ -1,5 +1,6 @@
 #include "templatetables.h"
 #include "cache.h"
+#include "migration.h"
 
 #include <QVector>
 #include <QLineEdit>
@@ -22,7 +23,7 @@ class TemplateTreeItem
 public:
     enum itemType{ROOT,TABLE,FIELD};
     itemType type;
-    const char* _cData;
+    QString _table;
     TemplateTreeItem *_parentItem;
     QSqlField _itemData;
     QVariant _editableValue;
@@ -30,7 +31,7 @@ public:
     QVector<TemplateTreeItem*> _childItems;
 
     TemplateTreeItem() : type(ROOT),_parentItem(nullptr){}
-    TemplateTreeItem(const char* n,TemplateTreeItem* p) : type(TABLE), _cData(n),_parentItem(p)
+    TemplateTreeItem(QString t,TemplateTreeItem* p) : type(TABLE), _table(t),_parentItem(p)
     {
         p->appendChild(this);
     }
@@ -67,7 +68,7 @@ public:
     QVariant data(int column) const{
         switch(type){
         case ROOT: return column ? "Value" : "Field";
-        case TABLE: return column ? "" : _cData;
+        case TABLE: return column ? "" : _table;
         case FIELD: return column ? _editableValue : _itemData.name();
         }
     }
@@ -107,7 +108,7 @@ private:
 
 public:
     TemplateTreeItem* rootItm;
-    TemplateTableModel(const QVector<std::pair<const char*,QSqlRecord>>& records, QWidget* parent) :
+    TemplateTableModel(const QVector<std::pair<QString,QSqlRecord>>& records, QWidget* parent) :
         QAbstractItemModel(parent),
         rootItm(new TemplateTreeItem),
         oddbrush(QBrush(QColor(50,50,50,100))),
@@ -260,6 +261,25 @@ public:
         }
         return false;
     }
+
+    Migrations GetMigrations()
+    {
+        Migrations mig;
+        if(!rootItm) return mig;
+        for(int i = 0; i < rootItm->childCount(); i++){
+            TemplateTreeItem* tableItem = rootItm->child(i);
+            Q_ASSERT(tableItem->type==TemplateTreeItem::TABLE);
+            for(int j = 0; j < tableItem->childCount(); j++){
+                TemplateTreeItem* fieldItem = tableItem->child(j);
+                Q_ASSERT(tableItem->type==TemplateTreeItem::FIELD);
+                if(fieldItem->Changed()){
+                    mig.AddMigration(tableItem->_table,
+                                     fieldItem->_originalData.name(), fieldItem->_editableValue.toString()
+                                     );
+                }
+            }
+        }
+    }
 };
 
 class TemplateTreeView : public QTreeView
@@ -299,7 +319,7 @@ protected:
     }
 };
 
-TemplateTables::TemplateTables(const QVector<std::pair<const char*,QSqlRecord>>& records, QWidget *parent) :
+TemplateTables::TemplateTables(const QVector<std::pair<QString,QSqlRecord>>& records, QWidget *parent) :
     QWidget(parent)
 {
     QVBoxLayout* l = new QVBoxLayout(this);

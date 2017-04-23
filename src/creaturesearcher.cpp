@@ -22,10 +22,14 @@ public:
         QSqlQueryModel(parent),
         _db(db)
     {
-        baseQuery = QString("SELECT %1, %2 FROM %3").arg("entry", "name", Cache::Get().Table(Tables::creature_template));
+        baseQuery = QString("SELECT %1, %2 FROM %3")
+                .arg(Tables::creature_template::entry,
+                     Tables::creature_template::name,
+                     Tables::creature_template::t());
+                     //Cache::Get().Table(Tables::creature_template::t));
         setQuery(baseQuery, _db);
-        setHeaderData(0, Qt::Horizontal, tr("Entry"));
-        setHeaderData(1, Qt::Horizontal, tr("Name"));
+        //setHeaderData(0, Qt::Horizontal, tr("Entry"));
+        //setHeaderData(1, Qt::Horizontal, tr("Name"));
     }
 
     void Search(const QString &s)

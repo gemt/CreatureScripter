@@ -13,16 +13,21 @@
 #include <QMouseEvent>
 #include <QSplitter>
 
-class NoEditTableModel : public QSqlTableModel
+class NoEditTableModel : public QSqlQueryModel
 {
 public:
-    NoEditTableModel(QWidget* parent, QSqlDatabase db) :
-        QSqlTableModel(parent, db)
-    { }
-    bool setData(const QModelIndex &, const QVariant &, int) override
+    NoEditTableModel(const QString &table, QString key, QString value, QWidget* parent) :
+        QSqlQueryModel(parent)
     {
-        //no editing!
-        return false;
+        QSqlDatabase db = Cache::Get().GetDB();
+        QSqlField f;
+        f.setType(QVariant::String);
+        f.setValue(value);
+        QString qry = QString("SELECT * FROM %1 WHERE %2=%3")
+                .arg(db.driver()->escapeIdentifier(table, QSqlDriver::TableName),
+                     db.driver()->escapeIdentifier(key, QSqlDriver::FieldName),
+                     db.driver()->formatValue(f));
+        setQuery(qry, db);
     }
 };
 
@@ -56,21 +61,10 @@ CreatureTable::CreatureTable(const QString &table, QString key, QString value, Q
     QTableView(parent)
 {
     QSqlDatabase db = Cache::Get().GetDB();
-    tableModel = new NoEditTableModel(this, db);
-    tableModel->setTable(table);
-    tableModel->setEditStrategy(QSqlTableModel::OnManualSubmit);
-    QSqlField f;
-    f.setType(QVariant::String);
-    f.setValue(value);
-    QString filt = QString("%1=%2").arg(key, db.driver()->formatValue(f));
-    tableModel->setFilter(filt);
-    tableModel->select();
-
+    tableModel = new NoEditTableModel(table, key, value, this);
     setModel(tableModel);
     setEditTriggers(QAbstractItemView::NoEditTriggers);
-    verticalHeader()->hide();
     horizontalHeader()->setStretchLastSection(true);
-    setSizePolicy(QSizePolicy::Minimum,QSizePolicy::Minimum);
 }
 
 
@@ -82,8 +76,8 @@ CreatureTables::CreatureTables(uint entry, QWidget* parent) :
     setContentsMargins(0,0,0,0);
     setMouseTracking(true);
     QString sEntry = QString("%1").arg(entry);
-    AddTable<cCreatureTable>(Tables::creature, "id", sEntry);
-    AddTable<CreatureTable>(Tables::creature_template,              "entry", sEntry);
+    AddTable<cCreatureTable>(Tables::creature::t(), "id", sEntry);
+    AddTable<CreatureTable>(Tables::creature_template::t(),              "entry", sEntry);
 
     //AddTable<CreatureTable>(Tables::creature_addon,                 "entry", sEntry);
     AddTable<CreatureTable>(Tables::creature_ai_scripts,            "creature_id", sEntry);
@@ -102,12 +96,12 @@ CreatureTables::CreatureTables(uint entry, QWidget* parent) :
     AddTable<CreatureTable>(Tables::creature_onkill_reputation,     "creature_id", sEntry);
     AddTable<CreatureTable>(Tables::creature_questrelation,         "id", sEntry);
     //AddTable<CreatureTable>(Tables::creature_spells,                "entry", sEntry); //empty
-    AddTable<CreatureTable>(Tables::creature_template_addon,        "entry", sEntry);
+    AddTable<CreatureTable>(Tables::creature_template_addon::t(),        "entry", sEntry);
 
     setTabShape(TabShape::Rounded);
 }
 
-std::pair<const char*, QSqlRecord> CreatureTables::GetSingleRecord(const char *table)
+std::pair<QString, QSqlRecord> CreatureTables::GetSingleRecord(const QString& table)
 {
     auto it = tables.find(table);
     if(it == tables.end())
@@ -118,7 +112,10 @@ std::pair<const char*, QSqlRecord> CreatureTables::GetSingleRecord(const char *t
     if(t->tableModel->rowCount() > 1)
         throw std::logic_error(QString("CreatureTables::GetSingleRecord - requested table (%1) contains %2 records")
                                .arg(table, t->tableModel->rowCount()).toStdString().c_str());
-    return std::make_pair(table,t->tableModel->record(0));
+    if(t->tableModel->rowCount())
+        return std::make_pair(table,t->tableModel->record(0));
+    else
+        return std::make_pair(table,QSqlRecord());
 }
 
 

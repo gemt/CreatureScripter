@@ -17,28 +17,7 @@ public:
     unsigned int entry;
     QString name;
 };
-namespace Tables{
-static constexpr char creature[]                    = "creature";
-static constexpr char creature_addon[]              = "creature_addon";
-static constexpr char creature_ai_scripts[]         = "creature_ai_scripts";
-static constexpr char creature_ai_summons[]         = "creature_ai_summons";
-static constexpr char creature_ai_texts[]           = "creature_ai_texts";
-static constexpr char creature_battleground[]       = "creature_battleground";
-static constexpr char creature_equip_template[]     = "creature_equip_template";
-static constexpr char creature_equip_template_raw[] = "creature_equip_template_raw";
-static constexpr char creature_groups[]             = "creature_groups";
-static constexpr char creature_involved_relation[]  = "creature_involved_relation";
-static constexpr char creature_loot_template[]      = "creature_loot_template";
-static constexpr char creature_model_info[]         = "creature_model_info";
-static constexpr char creature_movement[]           = "creature_movement";
-static constexpr char creature_movement_scripts[]   = "creature_movement_scripts";
-static constexpr char creature_movement_template[]  = "creature_movement_template";
-static constexpr char creature_onkill_reputation[]  = "creature_onkill_reputation";
-static constexpr char creature_questrelation[]      = "creature_questrelation";
-static constexpr char creature_spells[]             = "creature_spells";
-static constexpr char creature_template[]           = "creature_template";
-static constexpr char creature_template_addon[]     = "creature_template_addon";
-}
+
 
 class Cache
 {
@@ -50,7 +29,7 @@ public:
         static Cache* instance = new Cache();
         return *instance;
     }
-    QString Table(const char* table);
+    QString Table(const QString& table) const;
     QSqlDatabase GetDB();
 
     bool Connect();
@@ -69,5 +48,36 @@ private:
     void LoadSchema(const QString& table, QStringList& names);
 };
 
-
+namespace Tables{
+namespace creature_template{
+static const QString t(){return Cache::Get().Table("creature_template");}
+static const QString entry   = "entry";
+static const QString name    = "name";
+}
+namespace creature_template_addon{
+static const QString t(){return Cache::Get().Table("creature_template_addon");}
+static const QString entry   = "entry";
+}
+namespace creature{
+static const QString t(){return Cache::Get().Table("creature");}
+}
+static const QString creature_addon              = "creature_addon";
+static const QString creature_ai_scripts         = "creature_ai_scripts";
+static const QString creature_ai_summons         = "creature_ai_summons";
+static const QString creature_ai_texts           = "creature_ai_texts";
+static const QString creature_battleground       = "creature_battleground";
+static const QString creature_equip_template     = "creature_equip_template";
+static const QString creature_equip_template_raw = "creature_equip_template_raw";
+static const QString creature_groups             = "creature_groups";
+static const QString creature_involved_relation  = "creature_involved_relation";
+static const QString creature_loot_template      = "creature_loot_template";
+static const QString creature_model_info         = "creature_model_info";
+static const QString creature_movement           = "creature_movement";
+static const QString creature_movement_scripts   = "creature_movement_scripts";
+static const QString creature_movement_template  = "creature_movement_template";
+static const QString creature_onkill_reputation  = "creature_onkill_reputation";
+static const QString creature_questrelation      = "creature_questrelation";
+static const QString creature_spells             = "creature_spells";
+//static constexpr char creature_template[]           = "creature_template";
+}
 #endif // CREATURECACHE_H

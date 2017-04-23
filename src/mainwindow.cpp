@@ -92,7 +92,9 @@ void MainWindow::onNameSearch()
 
 void MainWindow::onNameSearchChange(const QString&)
 {
-    nameSearchTimer.start(100);
+    //if query ends up slow it's possible to set this to something higher
+    // so we don't do a new search for every keypress in the searchfield
+    nameSearchTimer.start(0);
 }
 
 void MainWindow::onNameSearchTimeout()

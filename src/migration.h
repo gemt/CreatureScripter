@@ -4,25 +4,28 @@
 #include <QString>
 #include <QSqlRecord>
 #include <QMap>
-
+#include <QDebug>
 class Migrations
 {
 private:
     class Migration
     {
     public:
-        Migration(const char* table, const QString& field, const QString& fieldVal,
-                  const QString& pKey, const QString pVal);
+        Migration(const QString& table, const QString& pKey, const QString pVal);
 
         void Update(const QString& field, const QString& fieldVal);
+        QString ToString();
 
     private:
+        QString _key;
         QSqlRecord record;
-
+        QSqlRecord origRecord;
     };
+
 public:
-    void AddMigration(const char* table, const QString& field, const QString& fieldVal,
+    void AddMigration(const QString& table, const QString& field, const QString& fieldVal,
                       const QString& pKey = QString(), const QString pVal = QString());
+    QString toString();
 
 private:
     QMap<QString, Migration> _migrations;

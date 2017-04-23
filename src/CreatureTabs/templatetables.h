@@ -11,7 +11,7 @@ class TemplateTables : public QWidget
 {
     Q_OBJECT
 public:
-    TemplateTables(const QVector<std::pair<const char*,QSqlRecord>>& records, QWidget *parent = 0);
+    TemplateTables(const QVector<std::pair<QString,QSqlRecord>>& records, QWidget *parent = 0);
 
 
 public slots:
