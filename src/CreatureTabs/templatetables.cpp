@@ -10,10 +10,12 @@
 #include <QFormLayout>
 #include <QVBoxLayout>
 #include <QDebug>
+#include <functional>
 
 class TemplateTreeItem
 {
-private:
+//private:
+public:
     enum itemType{ROOT,TABLE,FIELD};
     itemType type;
     const char* _cData;
@@ -22,7 +24,6 @@ private:
     QVariant _editableValue;
     QSqlField _originalData;
     QVector<TemplateTreeItem*> _childItems;
-public:
     TemplateTreeItem() : type(ROOT),_parentItem(nullptr){}
     TemplateTreeItem(const char* n,TemplateTreeItem* p) : type(TABLE), _cData(n),_parentItem(p)
     {
@@ -66,8 +67,8 @@ public:
     }
     int row() const {
         if (_parentItem)
-               return _parentItem->_childItems.indexOf(const_cast<TemplateTreeItem*>(this));
-           return 0;
+            return _parentItem->_childItems.indexOf(const_cast<TemplateTreeItem*>(this));
+        return 0;
     }
     TemplateTreeItem *parentItem() {return _parentItem; }
     bool SetData(QVariant data){
@@ -75,13 +76,22 @@ public:
         _editableValue.setValue(data);
         return true;
     }
+
+    bool Match(const QString& match)
+    {
+        Q_ASSERT(type==FIELD);
+        if(match.isEmpty()) return true;
+
+        return _originalData.name().contains(match, Qt::CaseInsensitive)
+                || _editableValue.toString().contains(match,Qt::CaseInsensitive);
+    }
 };
 
 class TemplateTableModel : public QAbstractItemModel
 {
 private:
-    TemplateTreeItem* rootItm;
 public:
+    TemplateTreeItem* rootItm;
     TemplateTableModel(const QVector<std::pair<const char*,QSqlRecord>>& records, QWidget* parent) :
         QAbstractItemModel(parent),
         rootItm(new TemplateTreeItem)
@@ -198,8 +208,8 @@ TemplateTables::TemplateTables(const QVector<std::pair<const char*,QSqlRecord>>&
     fl->addRow("Field/value", searchEdit);
 
 
-    QTreeView* view = new QTreeView(this);
-    TemplateTableModel* model = new TemplateTableModel(records, this);
+    view = new QTreeView(this);
+    model = new TemplateTableModel(records, this);
     view->setModel(model);
     view->expandAll();
     view->resizeColumnToContents(0);
@@ -209,5 +219,13 @@ TemplateTables::TemplateTables(const QVector<std::pair<const char*,QSqlRecord>>&
 
 void TemplateTables::onTextChange(const QString &s)
 {
-
+    for(int r = 0; r < model->rootItm->childCount(); r++) {
+        QModelIndex root = model->index(r,0,QModelIndex());
+        TemplateTreeItem* rootItm = static_cast<TemplateTreeItem*>(root.internalPointer());
+        for(int r0 = 0; r0 < rootItm->childCount(); r0++){
+            QModelIndex r0Idx = root.child(r0,0);
+            TemplateTreeItem* r0Itm = static_cast<TemplateTreeItem*>(r0Idx.internalPointer());
+            view->setRowHidden(r0, root, !r0Itm->Match(s));
+        }
+    }
 }
