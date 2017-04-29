@@ -1,14 +1,14 @@
 {
-	"keywords"	: [
-		{"CO"			:	"COMBAT ONLY"},
-		{"OOCO"			:	"OUT OF COMBAT ONLY"},
-		{"BOTH"			:	"BOTH"},		
-		{"t"				:	"Triggers"},
-		{"tn"			:	"Trigger note"},
-		{"n"				:	"NOTE"},
-		{"d1"			:	"Description"},
-		{"d2"			:	"Detailed Description"}
-	],
+	"keywords"	: {
+		"CO"			:	"COMBAT ONLY",
+		"OOCO"			:	"OUT OF COMBAT ONLY",
+		"BOTH"			:	"BOTH",		
+		"t"				:	"Triggers",
+		"tn"			:	"Trigger note",
+		"n"				:	"NOTE",
+		"d1"			:	"Description",
+		"d2"			:	"Detailed Description"
+	},
 	
 	"paramTypes" : [
 		{
@@ -18,7 +18,7 @@
 		},
 		{
 			"type" 	: "ms",
-			"name"	: "InitialMax ",
+			"name"	: "InitialMax",
 			"desc"	: "Maximum Time used to calculate Random Initial Expire"
 		},
 		{
@@ -52,8 +52,8 @@
 			"desc"	: "Minimum Mana% That will trigger this Event to Expire"
 		},
 		{
-			"type" 	: "spellid",
-			"name"	: "SpellID",
+			"type" 	: "SpellId",
+			"name"	: "SpellId",
 			"desc"	: "The Spell ID that will trigger the Event."
 		},
 		{
@@ -113,8 +113,28 @@
 		},
 		{
 			"type" 	: "entry",
-			"name"	: "Sender-Entryu",
+			"name"	: "Sender-Entry",
 			"desc"	: "If != 0 then only expire when the AIEvent is received from a creature of this entry."
+		},
+		{
+			"type" : "entry",
+			"name" : "EmoteId",
+			"desc" : "Valid text emote ID from Mangos source (SharedDefines.h - enum TextEmotes)"
+		},
+		{
+			"type" : "condition",
+			"name" : "Condition",
+			"desc" : "Conditions based on <MaNGOS>/src/game/ObjectMgr.h - enum ConditionType"
+		},
+		{
+			"type" : "event",
+			"name" : "AIEventType",
+			"desc" : "Only expire when an AIEvent of this type is received. Supported types see CreatureAI.h enum AIEventType"
+		},
+		{
+			"type" : "DispellType",
+			"name" : "DispellType",
+			"desc" : "Dispel Type to trigger the event"
 		}
 	],
 				
@@ -207,7 +227,7 @@
 			"d1" 	: "Expires upon Spell Hit of the NPC. When (param1) is set, it is the specific Spell ID used as the trigger. With (param2) specified, the expiration is limited to specific spell schools (-1 for all) and Spell ID value is ignored. Will repeat Event Conditions Check between every (Param3) and (Param4). Only A Spell ID or Spell School may be Specified but NOT both.",
 			"t"		: "BOTH",
 			"params":[
-				"SpellID",
+				"SpellId",
 				"School",
 				"RepeatMin",
 				"RepeatMax"
@@ -339,9 +359,7 @@
 			"d1" 	: "Expires when a creature receives an emote with emote text id (enum TextEmotes from SharedDefines.h in Mangos Source) in (Param1). Conditions can be defined (Param2) with optional values (Param3,Param4), see (enum ConditionType) in ObjectMgr.h (Mangos Source).",
 			"params":[
 				"EmoteId",
-				"Condition",
-				"CondValue1",
-				"CondValue2"
+				"Condition"
 			]
 		},
 		{

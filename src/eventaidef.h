@@ -34,16 +34,19 @@
 namespace EventAI{
 
 struct event_param{
-    QString identifier;
+    QString type;
     QString name;
     QString description;
-    QString triggerNote;
+    static event_param unimplemented(const QString& n){
+        return event_param{"unimplemented", n + " - unimplemented", "unimplemented"};
+    }
 };
 
 struct EventAI_event{
     quint8 id;
     QString name;
     QString description;
+    QString triggerNote;
     QVector<event_param> params;
 };
 
@@ -60,8 +63,9 @@ public:
 
 private:
     EventAIStorage();
-    QVector<event_param> event_paramTypes;
     QMap<QString,QString> keywords;
+    QMap<QString,event_param> event_paramTypes_map;
+    QMap<int, EventAI_event> events;
 };
 
 }

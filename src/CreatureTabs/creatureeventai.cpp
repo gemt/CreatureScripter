@@ -2,12 +2,15 @@
 #include "tables.h"
 
 #include <QSqlRecord>
+namespace EventAI{
 
 CreatureEventAI::CreatureEventAI(Tables::creature_template *creature, QWidget *parent) :
     QWidget(parent),
     _creature(creature)
 {
-    foreach(QSqlRecord& r, _creature->scripts->records){
+    QVector<QSqlRecord>& records = _creature->scripts->records;
+    for(QVector<QSqlRecord>::iterator it = records.begin(); it != records.end(); it++){
+        QSqlRecord& r = *it;
         EventEntry* ew = new EventEntry(r);
         entryWidgets.push_back(ew);
     }
@@ -65,7 +68,6 @@ QString EventEntry::EventName()
     }
 }
 
-EventAI::EventAIJson::EventAIJson()
-{
 
 }
+

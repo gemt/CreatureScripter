@@ -35,6 +35,27 @@ const QString creature_addon::t = "creature_addon";
 
 const QString creature_ai_scripts::t = "creature_ai_scripts";
 const QString creature_ai_scripts::creature_id = "creature_id";
+const QString creature_ai_scripts::event_type = "event_type";
+const QString creature_ai_scripts::event_inverse_phase_mask = "event_inverse_phase_mask";
+const QString creature_ai_scripts::event_chance = "event_chance";
+const QString creature_ai_scripts::event_flags = "event_flags";
+const QString creature_ai_scripts::event_param1 = "event_param1";
+const QString creature_ai_scripts::event_param2 = "event_param2";
+const QString creature_ai_scripts::event_param3 = "event_param3";
+const QString creature_ai_scripts::event_param4 = "event_param4";
+const QString creature_ai_scripts::action_type = "action_type";
+const QString creature_ai_scripts::action1_param1 = "action1_param1";
+const QString creature_ai_scripts::action1_param2 = "action1_param2";
+const QString creature_ai_scripts::action1_param3 = "action1_param3";
+const QString creature_ai_scripts::action2_type = "action2_type";
+const QString creature_ai_scripts::action2_param1 = "action2_param1";
+const QString creature_ai_scripts::action2_param2 = "action2_param2";
+const QString creature_ai_scripts::action2_param3 = "action2_param3";
+const QString creature_ai_scripts::action3_type = "action3_type";
+const QString creature_ai_scripts::action3_param1 = "action3_param1";
+const QString creature_ai_scripts::action3_param2 = "action3_param2";
+const QString creature_ai_scripts::action3_param3 = "action3_param3";
+const QString creature_ai_scripts::comment = "comment";
 
 const QString item_template::t = "item_template";
 

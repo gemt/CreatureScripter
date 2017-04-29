@@ -65,7 +65,11 @@ int main(int argc, char *argv[])
     SetAppInfo();
     MainWindow w;
     w.show();
-    EventAIDef def;
+    try {
+        EventAI::EventAIStorage::Get();
+    }catch(std::exception& e){
+        Warnings::Warning(e.what(), QMessageBox::Critical);
+    }
 
     if(!CheckConnectionSettings(w)){
         return 1;
