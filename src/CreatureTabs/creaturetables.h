@@ -10,7 +10,7 @@
 
 class QSqlQueryModel;
 class QVBoxLayout;
-
+#if 0
 class CreatureTable : public QTableView {
 public:
     CreatureTable(const QString& table, QString key, QString value, QWidget* parent);
@@ -41,5 +41,5 @@ private:
     QWidget* contentWidget;
     QVBoxLayout* contentLayout;
 };
-
+#endif
 #endif // CREATURETABLES_H

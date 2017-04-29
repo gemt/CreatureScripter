@@ -1,6 +1,7 @@
 #include "cache.h"
 #include "creaturesearcher.h"
 #include "warnings.h"
+#include "tables.h"
 
 #include <QHeaderView>
 #include <Qdebug>

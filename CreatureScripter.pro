@@ -22,14 +22,16 @@ HEADERS += $$files(src/*.h) \
     src/migration.h \
     src/CreatureTabs/templatetables.h \
     src/mangosrecord.h \
-    src/mangoscreature.h
+    src/mangoscreature.h \
+    src/tables.h
 HEADERS += $$files(src/CreatureTabs/*.h)
 
 SOURCES += $$files(src/*.cpp) \
     src/migration.cpp \
     src/CreatureTabs/templatetables.cpp \
     src/mangosrecord.cpp \
-    src/mangoscreature.cpp
+    src/mangoscreature.cpp \
+    src/tables.cpp
 SOURCES += $$files(src/CreatureTabs/*.cpp)
 
 RESOURCES += \

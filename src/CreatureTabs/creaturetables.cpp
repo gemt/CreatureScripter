@@ -12,7 +12,7 @@
 #include <QCursor>
 #include <QMouseEvent>
 #include <QSplitter>
-
+#if 0
 class NoEditTableModel : public QSqlQueryModel
 {
 public:
@@ -121,3 +121,4 @@ std::pair<QString, QSqlRecord> CreatureTables::GetSingleRecord(const QString& ta
 
 
 
+#endif

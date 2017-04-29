@@ -19,6 +19,7 @@ private:
     QString name;
 
     CreatureTables* rawTables;
+    CreatureData data;
 };
 
 class WorkTabs : public QTabWidget

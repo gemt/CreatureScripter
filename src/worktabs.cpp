@@ -16,14 +16,15 @@
 WorkTab::WorkTab(uint entry, QString name, QWidget *parent) :
     QTabWidget(parent),
     entry(entry),
-    name(name)
+    name(name),
+    data(entry,name)
     //fullCreature(pCreature->entry)
 {
     setMouseTracking(true);
     setContentsMargins(0,0,0,0);
 
     //CreatureModifier* cm = new CreatureModifier(this);
-    rawTables = new CreatureTables(entry,this);
+    //rawTables = new CreatureTables(entry,this);
 
     QVector<std::pair<QString,QSqlRecord>> templateRecords;
     //templateRecords.push_back(std::move(rawTables->GetSingleRecord(Tables::creature_template::dbTable())));
@@ -36,7 +37,7 @@ WorkTab::WorkTab(uint entry, QString name, QWidget *parent) :
 
     //addTab(cm, "Modifier");
     addTab(templateTable, "Template Tables");
-    addTab(rawTables, "Raw Tables");
+    //addTab(rawTables, "Raw Tables");
 
 }
 
