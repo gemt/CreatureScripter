@@ -23,7 +23,8 @@ HEADERS += $$files(src/*.h) \
     src/CreatureTabs/templatetables.h \
     src/mangosrecord.h \
     src/mangoscreature.h \
-    src/tables.h
+    src/tables.h \
+    src/CreatureTabs/creatureeventai.h
 HEADERS += $$files(src/CreatureTabs/*.h)
 
 SOURCES += $$files(src/*.cpp) \
@@ -31,11 +32,13 @@ SOURCES += $$files(src/*.cpp) \
     src/CreatureTabs/templatetables.cpp \
     src/mangosrecord.cpp \
     src/mangoscreature.cpp \
-    src/tables.cpp
+    src/tables.cpp \
+    src/CreatureTabs/creatureeventai.cpp
 SOURCES += $$files(src/CreatureTabs/*.cpp)
 
 RESOURCES += \
     icons.qrc \
-    css.qrc
+    css.qrc \
+    json.qrc
 
 FORMS += $$files(src/CreatureTabs/*.ui)

@@ -32,3 +32,8 @@ EventAIDef::EventAIDef()
     }
 
 }
+
+EventAI::EventAIDef::EventAIDef()
+{
+
+}

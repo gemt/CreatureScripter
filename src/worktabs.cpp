@@ -17,7 +17,7 @@ WorkTab::WorkTab(uint entry, QString name, QWidget *parent) :
     QTabWidget(parent),
     entry(entry),
     name(name),
-    data(entry,name)
+    data(new CreatureData(entry, name))
     //fullCreature(pCreature->entry)
 {
     setMouseTracking(true);
@@ -39,6 +39,11 @@ WorkTab::WorkTab(uint entry, QString name, QWidget *parent) :
     addTab(templateTable, "Template Tables");
     //addTab(rawTables, "Raw Tables");
 
+}
+
+WorkTab::~WorkTab()
+{
+    delete data;
 }
 
 unsigned int WorkTab::Entry()

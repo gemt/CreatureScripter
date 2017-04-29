@@ -1,0 +1,446 @@
+{
+	"keywords"	: {
+		"CO"			:	"COMBAT ONLY",
+		"OOCO"			:	"OUT OF COMBAT ONLY",
+		"BOTH"			:	"BOTH",		
+		"t"				:	"Triggers",
+		"tn"			:	"Trigger note",
+		"n"				:	"NOTE",
+		"d1"			:	"Description",
+		"d2"			:	"Detailed Description"
+	},
+	
+	"paramTypes" : [
+		{
+			"type" 	: "ms",
+			"name"	: "InitialMin",
+			"desc"	: "Minumum Time used to calculate Random Initial Expire"
+		},
+		{
+			"type" 	: "ms",
+			"name"	: "InitialMax ",
+			"desc"	: "Maximum Time used to calculate Random Initial Expire"
+		},
+		{
+			"type" 	: "ms",
+			"name"	: "RepeatMin",
+			"desc"	: "Minimum Time used to calculate Random Repeat Expire"
+		},
+		{
+			"type" 	: "ms",
+			"name"	: "RepeatMax",
+			"desc"	: "Maximum Time used to calculate Random Repeat Expire"
+		},
+		{
+			"type" 	: "pct",
+			"name"	: "HPMax%",
+			"desc"	: "Maximum HP% That will trigger this Event to Expire"
+		},
+		{
+			"type" 	: "pct",
+			"name"	: "HPMin%",
+			"desc"	: "Minimum HP% That will trigger this Event to Expire"
+		},
+		{
+			"type" 	: "pct",
+			"name"	: "ManaMax%",
+			"desc"	: "Maximum Mana% That will trigger this Event to Expire"
+		},
+		{
+			"type" 	: "pct",
+			"name"	: "ManaMin%",
+			"desc"	: "Minimum Mana% That will trigger this Event to Expire"
+		},
+		{
+			"type" 	: "spellid",
+			"name"	: "SpellID",
+			"desc"	: "The Spell ID that will trigger the Event."
+		},
+		{
+			"type" 	: "spellschool",
+			"name"	: "School",
+			"desc"	: "Spell School to trigger the Event."
+		},
+		{
+			"type" 	: "dist",
+			"name"	: "MinDist",
+			"desc"	: "This Distance is the Minimum Distance between the NPC and it's target to allow this Event to Expire"
+		},
+		{
+			"type" 	: "dist",
+			"name"	: "MaxDist",
+			"desc"	: "This Distance is the Maximum Distance between the NPC and it's target to allow this Event to Expire"
+		},
+		{
+			"type" 	: "bool",
+			"name"	: "Hostile-or-Not",
+			"desc"	: "This will expire if Unit are hostile. If Param1=1 it will only expire if Unit are not Hostile(generally determined by faction)"
+		},
+		{
+			"type" 	: "dist",
+			"name"	: "MaxAllowedRange",
+			"desc"	: "Expires when a Unit moves within this distance to creature"
+		},
+		{
+			"type" 	: "hp",
+			"name"	: "HPDeficit",
+			"desc"	: "This is the Amount of HP Missing from Full HP to trigger this event (You would need to calculate the amount of HP the event happens and subtract that from Full HP Value to get this number)"
+		},
+		{
+			"type" 	: "dist",
+			"name"	: "Radius",
+			"desc"	: "This is the Range in Yards the NPC will scan for nearby Friendlies (Faction is Friendly To) for the missing amount of HP in Param1."
+		},
+		{
+			"type" 	: "entry",
+			"name"	: "CreatureId",
+			"desc"	: "The CreatureID that the NPC is watching to spawn to trigger this event."
+		},
+		{
+			"type" 	: "num",
+			"name"	: "Amount",
+			"desc"	: "This is the amount of SpellID's auras at creature required for event expire."
+		},
+		{
+			"type" 	: "pct",
+			"name"	: "EnergyMax%",
+			"desc"	: "Maximum Energy% That will trigger this Event to Expire."
+		},
+		{
+			"type" 	: "pct",
+			"name"	: "EnergyMin%",
+			"desc"	: "Minimum Energy% That will trigger this Event to Expire."
+		},
+		{
+			"type" 	: "entry",
+			"name"	: "Sender-Entryu",
+			"desc"	: "If != 0 then only expire when the AIEvent is received from a creature of this entry."
+		}
+	],
+				
+	"events": [
+		{
+			"id"	: 0,
+			"name"	: "EVENT_T_TIMER_IN_COMBAT",
+			"d1" 	: "Expires at first between (Param1) and (Param2) and then will repeat between every (Param3) and (Param4),  EXPIRES ONLY IN COMBAT.",
+			"t"		: "CO",
+			"params":[
+				"InitialMin",
+				"InitialMax",
+				"RepeatMin",
+				"RepeatMax"
+			]
+		},
+		{
+			"id"	: 1,
+			"name"	: "EVENT_T_TIMER_OOC",
+			"d1" 	: "Expires at first between (Param1) and (Param2) and then will repeat between every (Param3) and (Param4),  EXPIRES ONLY OUT OF COMBAT BUT NOT DURING EVADE.",
+			"t"		: "OOCO",
+			"params":[
+				"InitialMin",
+				"InitialMax",
+				"RepeatMin",
+				"RepeatMax"
+			]
+		},
+		{
+			"id"	: 2,
+			"name"	: "EVENT_T_HP",
+			"d1" 	: "Expires when the NPC's HP% is between (Param1) and (Param2). Will repeat between every (Param3) and (Param4) If Event Conditions Are Still Met.",
+			"t"		: "BOTH",
+			"params":[
+				"HPMax%",
+				"HPMin%",
+				"RepeatMin",
+				"RepeatMax"
+			]
+		},
+		{
+			"id"	: 3,
+			"name"	: "EVENT_T_MANA",
+			"d1" 	: "Expires when the NPC's Mana% is between (Param1) and (Param2). Will repeat between every (Param3) and (Param4) If Event Conditions Are Still Met.",
+			"t"		: "BOTH",
+			"params":[
+				"ManaMax%",
+				"ManaMin%",
+				"RepeatMin",
+				"RepeatMax"
+			]
+		},
+		{
+			"id"	: 4,
+			"name"	: "EVENT_T_AGGRO",
+			"d1" 	: "Expires ONLY upon the NPC's INITIAL Aggro at the Start of Combat (Does NOT Repeat) and Only Resets on Spawn or Evade.",
+			"t"		: "CO",
+			"params":[
+			]
+		},
+		{
+			"id"	: 5,
+			"name"	: "EVENT_T_KILL",
+			"d1" 	: "Expires upon Killing a Player. Will Repeat Check between (Param1) and (Param2). This Event Will Not Trigger Again Until Repeat Timer Expires.",
+			"t"		: "CO",
+			"params":[
+				"RepeatMin",
+				"RepeatMax"
+			]
+		},
+		{
+			"id"	: 6,
+			"name"	: "EVENT_T_DEATH",
+			"d1" 	: "Expires on the NPC's Death. (This Triggers At The Moment The NPC Dies).",
+			"t"		: "BOTH",
+			"params":[
+			]
+		},
+		{
+			"id"	: 7,
+			"name"	: "EVENT_T_EVADE",
+			"d1" 	: "Expires at the moment the Creature EnterEvadeMode() and Exits Combat.",
+			"t"		: "CO",
+			"params":[
+			]
+		},
+		{
+			"id"	: 8,
+			"name"	: "EVENT_T_SPELLHIT",
+			"d1" 	: "Expires upon Spell Hit of the NPC. When (param1) is set, it is the specific Spell ID used as the trigger. With (param2) specified, the expiration is limited to specific spell schools (-1 for all) and Spell ID value is ignored. Will repeat Event Conditions Check between every (Param3) and (Param4). Only A Spell ID or Spell School may be Specified but NOT both.",
+			"t"		: "BOTH",
+			"params":[
+				"SpellID",
+				"School",
+				"RepeatMin",
+				"RepeatMax"
+			]
+		},
+		{
+			"id"	: 9,
+			"name"	: "EVENT_T_RANGE",
+			"d1" 	: "Expires when the Highest Threat Target Distance is Greater than (Param1) and Less than (Param2). Will repeat between every (Param3) and (Param4) if Event Conditions Are Still Met.",
+			"t"		: "CO",
+			"params":[
+				"MinDist",
+				"MaxDist",
+				"RepeatMin",
+				"RepeatMax"
+			]
+		},
+		{
+			"id"	: 10,
+			"name"	: "EVENT_T_OOC_LOS",
+			"d1" 	: "Expires when a unit moves within distance (MaxAllowedRange) of the NPC. If (Param1) is 0 it will expire only when unit is hostile, If (Param1) is 1 it will expire only when unit is friendly. This depends generally on faction relations. Will repeat every (Param3) and (Param4). Does NOT expire when the NPC is in combat.",
+			"t"		: "OOCO",
+			"params":[
+				"Hostile-or-Not",
+				"MaxAllowedRange",
+				"RepeatMin",
+				"RepeatMax"
+			]
+		},
+		{
+			"id"	: 11,
+			"name"	: "EVENT_T_SPAWNED",
+			"d1" 	: "Expires on initial spawn and respawn of the NPC (Useful for setting Ranged Movement/Summoning Pets/Applying Buffs).",
+			"t"		: "BOTH",
+			"params":[
+			]
+		},
+		{
+			"id"	: 12,
+			"name"	: "EVENT_T_TARGET_HP",
+			"d1" 	: "Expires when current target's HP% is between (Param1) and (Param2). Will repeat every (Param3) and (Param4)If Event Conditions Are Still Met.",
+			"t"		: "CO",
+			"params":[
+				"HPMax%",
+				"HPMin%",
+				"RepeatMin",
+				"RepeatMax"
+			]
+		},
+		{
+			"id"	: 13,
+			"name"	: "EVENT_T_TARGET_CASTING",
+			"d1" 	: "Expires when the current target is casting a spell. Will repeat every (Param1) and (Param2) If Event Conditions Are Still Met.",
+			"t"		: "CO",
+			"params":[
+				"RepeatMin",
+				"RepeatMax"
+			]
+		},
+		{
+			"id"	: 14,
+			"name"	: "EVENT_T_FRIENDLY_HP",
+			"d1" 	: "Expires when a friendly unit in (Radius) has at least (Param1) HP points missing. Will repeat every (Param3) and (Param4) If Event Conditions Are Still Met.",
+			"t"		: "CO",
+			"params":[
+				"HPDeficit",
+				"Radius",
+				"RepeatMin",
+				"RepeatMax"
+			]
+		},
+		{
+			"id"	: 15,
+			"name"	: "EVENT_T_FRIENDLY_IS_CC",
+			"d1" 	: "Expires when a friendly unit is crowd controlled within the given Radius (Param2). Will repeat every (Param3) and (Param4).",
+			"t"		: "CO",
+			"params":[
+				"DispellType",
+				"Radius",
+				"RepeatMin",
+				"RepeatMax"
+			]
+		},
+		{
+			"id"	: 16,
+			"name"	: "EVENT_T_FRIENDLY_MISSING_BUFF",
+			"d1" 	: "Expires when a friendly unit is missing aura(s) given by a spell (Param1) within Radius (Param2). Will repeat every (Param3) and (Param4) If Event Conditions Are Still Met.",
+			"t"		: "BOTH",
+			"params":[
+				"SpellId",
+				"Radius",
+				"RepeatMin",
+				"RepeatMax"
+			]
+		},
+		{
+			"id"	: 17,
+			"name"	: "EVENT_T_SUMMONED_UNIT",
+			"d1" 	: "Expires after creature with entry = (Param1) is spawned (Param1 = 0 means all spawns). Will repeat every (Param2) and (Param3).",
+			"t"		: "BOTH",
+			"params":[
+				"CreatureId",
+				"RepeatMin",
+				"RepeatMax"
+			]
+		},
+		{
+			"id"	: 18,
+			"name"	: "EVENT_T_TARGET_MANA",
+			"d1" 	: "Expires when current target's Mana% is between (Param1) and (Param2). Will repeat every (Param3) and (Param4) If Event Conditions Are Still Met.",
+			"t"		: "BOTH",
+			"params":[
+				"ManaMin%",
+				"ManaMax%",
+				"RepeatMin",
+				"RepeatMax"
+			]
+		},
+		{
+			"id"	: 21,
+			"name"	: "EVENT_T_REACHED_HOME",
+			"d1" 	: "Expires when a creature reaches it's home (spawn) location after evade. This is commonly used for NPC's who Stealth once reaching their Spawn Location.",
+			"params":[
+			]
+		},
+		{
+			"id"	: 22,
+			"name"	: "EVENT_T_RECEIVE_EMOTE",
+			"d1" 	: "Expires when a creature receives an emote with emote text id (enum TextEmotes from SharedDefines.h in Mangos Source) in (Param1). Conditions can be defined (Param2) with optional values (Param3,Param4), see (enum ConditionType) in ObjectMgr.h (Mangos Source).",
+			"params":[
+				"EmoteId",
+				"Condition",
+				"CondValue1",
+				"CondValue2"
+			]
+		},
+		{
+			"id"	: 23,
+			"name"	: "EVENT_T_AURA",
+			"d1" 	: "Expires when a creature has spell (Param1) auras applied in a stack greater or equal to value provided in (Param2). Will repeat every (Param3) and (Param4) If Event Conditions Are Still Met.",
+			"params":[
+				"SpellId",
+				"Amount",
+				"RepeatMin",
+				"RepeatMax"
+			]
+		},
+		{
+			"id"	: 24,
+			"name"	: "EVENT_T_TARGET_BUFFED",
+			"d1" 	: "Expires when a target unit has spell (Param1) auras applied in a stack greater or equal to value provided in (Param2). Will repeat every (Param3) and (Param4) If Event Conditions Are Still Met.",
+			"params":[
+				"SpellId",
+				"Amount",
+				"RepeatMin",
+				"RepeatMax"
+			]
+		},
+		{
+			"id"	: 25,
+			"name"	: "EVENT_T_SUMMONED_JUST_DIED",
+			"d1" 	: "Expires after creature with entry = (Param1) is die (Param1 = 0 means all spawns). Will repeat every (Param2) and (Param3).",
+			"params":[
+				"CreatureId",
+				"RepeatMin",
+				"RepeatMax"
+			]
+		},
+		{
+			"id"	: 26,
+			"name"	: "EVENT_T_SUMMONED_JUST_DESPAWN",
+			"d1" 	: "Expires before creature with entry = (Param1) is despawn (Param1 = 0 means all spawns). Will repeat every (Param2) and (Param3).",
+			"t"		: "BOTH",
+			"params":[
+				"CreatureId",
+				"RepeatMin",
+				"RepeatMax"
+			]
+		},
+		{
+			"id"	: 27,
+			"name"	: "EVENT_T_MISSING_AURA",
+			"d1" 	: "Expires when a creature not has aura (Param1) auras applied in a stack greater or equal to value provided in (Param2). Will repeat every (Param3) and (Param4).",
+			"params":[
+				"SpellId",
+				"Amount",
+				"RepeatMin",
+				"RepeatMax"
+			]
+		},
+		{
+			"id"	: 28,
+			"name"	: "EVENT_T_TARGET_MISSING_AURA",
+			"d1" 	: "Expires when a target unit not has spell (Param1) auras applied in a stack greater or equal to value provided in (Param2). Will repeat every (Param3) and (Param4).",
+			"params":[
+				"SpellId",
+				"Amount",
+				"RepeatMin",
+				"RepeatMax"
+			]
+		},
+		{
+			"id"	: 29,
+			"name"	: "EVENT_T_TIMER_GENERIC",
+			"d1" 	: "Expires at first between (Param1) and (Param2) and then will repeat between every (Param3) and (Param4).",
+			"t"		: "BOTH",
+			"params":[
+				"InitialMin",
+				"InitialMax",
+				"RepeatMin",
+				"RepeatMax"
+			]
+		},
+		{
+			"id"	: 30,
+			"name"	: "EVENT_T_RECEIVE_AI_EVENT",
+			"d1" 	: "Expires when the creature receives an AIEvent of type (Param1), sent by creature (Param2 != 0). If (Param2 = 0) then sent by any creature.",
+			"params":[
+				"AIEventType",
+				"Sender-Entry"
+			]
+		},
+		{
+			"id"	: 31,
+			"name"	: "EVENT_T_ENERGY",
+			"d1" 	: "Expires when the NPC's Energy% is between (Param1) and (Param2). Will repeat between every (Param3) and (Param4) If Event Conditions Are Still Met.",
+			"t"		: "BOTH",
+			"params":[
+				"EnergyMax%",
+				"EnergyMin%",
+				"RepeatMin",
+				"RepeatMax"
+			]
+		}
+	]
+}

@@ -28,10 +28,22 @@
  * EVENT_T_TARGET_BUFFED defines some enum stuff, look at it.
  *
  */
+namespace EventAI{
+
 class EventAIDef
 {
 public:
+    static EventAIDef& Get(){
+        static EventAIDef* instance = nullptr;
+        if(!instance)
+            instance = new EventAIDef();
+        return instance;
+    }
+
+private:
     EventAIDef();
 };
+
+}
 
 #endif // EVENTAIDEF_H

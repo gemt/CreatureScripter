@@ -5,23 +5,18 @@
 #include "tables.h"
 
 #include <QSqlRecord>
+#include <memory>
 
-class CreatureTable{
-public:
-    CreatureTable(Tables::Table* t, const QString& k, const QString& v);
-    ~CreatureTable();
-
-    QMap<QSqlRecord*, CreatureTable*> records;
-    QVector<CreatureTable*> children;
-    Tables::Table* table;
-};
+namespace Tables{
+struct creature_template;
+}
 
 class CreatureData{
 public:
     CreatureData(quint32 entry, const QString& name);
 
 private:
-    CreatureTable table;
+    std::shared_ptr<Tables::creature_template> creature;
     quint32 entry;
     QString name;
 };

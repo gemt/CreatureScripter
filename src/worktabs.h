@@ -11,7 +11,7 @@ class WorkTab : public QTabWidget
 {
 public:
     WorkTab(uint entry, QString name, QWidget* parent);
-    //FullCreature fullCreature;
+    ~WorkTab();
     unsigned int Entry();
 
 private:
@@ -19,7 +19,7 @@ private:
     QString name;
 
     CreatureTables* rawTables;
-    CreatureData data;
+    CreatureData* data;
 };
 
 class WorkTabs : public QTabWidget
