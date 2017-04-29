@@ -12,127 +12,127 @@
 	
 	"paramTypes" : [
 		{
-			"type" 	: "ms",
+			"type" 	: 1,
 			"name"	: "InitialMin",
 			"desc"	: "Minumum Time used to calculate Random Initial Expire"
 		},
 		{
-			"type" 	: "ms",
+			"type" 	: 1,
 			"name"	: "InitialMax",
 			"desc"	: "Maximum Time used to calculate Random Initial Expire"
 		},
 		{
-			"type" 	: "ms",
+			"type" 	: 1,
 			"name"	: "RepeatMin",
 			"desc"	: "Minimum Time used to calculate Random Repeat Expire"
 		},
 		{
-			"type" 	: "ms",
+			"type" 	: 1,
 			"name"	: "RepeatMax",
 			"desc"	: "Maximum Time used to calculate Random Repeat Expire"
 		},
 		{
-			"type" 	: "pct",
+			"type" 	: 2,
 			"name"	: "HPMax%",
 			"desc"	: "Maximum HP% That will trigger this Event to Expire"
 		},
 		{
-			"type" 	: "pct",
+			"type" 	: 2,
 			"name"	: "HPMin%",
 			"desc"	: "Minimum HP% That will trigger this Event to Expire"
 		},
 		{
-			"type" 	: "pct",
+			"type" 	: 2,
 			"name"	: "ManaMax%",
 			"desc"	: "Maximum Mana% That will trigger this Event to Expire"
 		},
 		{
-			"type" 	: "pct",
+			"type" 	: 2,
 			"name"	: "ManaMin%",
 			"desc"	: "Minimum Mana% That will trigger this Event to Expire"
 		},
 		{
-			"type" 	: "SpellId",
+			"type" 	: 3,
 			"name"	: "SpellId",
 			"desc"	: "The Spell ID that will trigger the Event."
 		},
 		{
-			"type" 	: "spellschool",
+			"type" 	: 4,
 			"name"	: "School",
 			"desc"	: "Spell School to trigger the Event."
 		},
 		{
-			"type" 	: "dist",
+			"type" 	: 5,
 			"name"	: "MinDist",
 			"desc"	: "This Distance is the Minimum Distance between the NPC and it's target to allow this Event to Expire"
 		},
 		{
-			"type" 	: "dist",
+			"type" 	: 5,
 			"name"	: "MaxDist",
 			"desc"	: "This Distance is the Maximum Distance between the NPC and it's target to allow this Event to Expire"
 		},
 		{
-			"type" 	: "bool",
+			"type" 	: 6,
 			"name"	: "Hostile-or-Not",
 			"desc"	: "This will expire if Unit are hostile. If Param1=1 it will only expire if Unit are not Hostile(generally determined by faction)"
 		},
 		{
-			"type" 	: "dist",
+			"type" 	: 5,
 			"name"	: "MaxAllowedRange",
 			"desc"	: "Expires when a Unit moves within this distance to creature"
 		},
 		{
-			"type" 	: "hp",
+			"type" 	: 7,
 			"name"	: "HPDeficit",
 			"desc"	: "This is the Amount of HP Missing from Full HP to trigger this event (You would need to calculate the amount of HP the event happens and subtract that from Full HP Value to get this number)"
 		},
 		{
-			"type" 	: "dist",
+			"type" 	: 5,
 			"name"	: "Radius",
 			"desc"	: "This is the Range in Yards the NPC will scan for nearby Friendlies (Faction is Friendly To) for the missing amount of HP in Param1."
 		},
 		{
-			"type" 	: "entry",
+			"type" 	: 12,
 			"name"	: "CreatureId",
 			"desc"	: "The CreatureID that the NPC is watching to spawn to trigger this event."
 		},
 		{
-			"type" 	: "num",
+			"type" 	: 8,
 			"name"	: "Amount",
 			"desc"	: "This is the amount of SpellID's auras at creature required for event expire."
 		},
 		{
-			"type" 	: "pct",
+			"type" 	: 2,
 			"name"	: "EnergyMax%",
 			"desc"	: "Maximum Energy% That will trigger this Event to Expire."
 		},
 		{
-			"type" 	: "pct",
+			"type" 	: 2,
 			"name"	: "EnergyMin%",
 			"desc"	: "Minimum Energy% That will trigger this Event to Expire."
 		},
 		{
-			"type" 	: "entry",
+			"type" 	: 10,
 			"name"	: "Sender-Entry",
 			"desc"	: "If != 0 then only expire when the AIEvent is received from a creature of this entry."
 		},
 		{
-			"type" : "entry",
+			"type" : 9,
 			"name" : "EmoteId",
 			"desc" : "Valid text emote ID from Mangos source (SharedDefines.h - enum TextEmotes)"
 		},
 		{
-			"type" : "condition",
+			"type" : 13,
 			"name" : "Condition",
 			"desc" : "Conditions based on <MaNGOS>/src/game/ObjectMgr.h - enum ConditionType"
 		},
 		{
-			"type" : "event",
+			"type" : 10,
 			"name" : "AIEventType",
 			"desc" : "Only expire when an AIEvent of this type is received. Supported types see CreatureAI.h enum AIEventType"
 		},
 		{
-			"type" : "DispellType",
+			"type" : 11,
 			"name" : "DispellType",
 			"desc" : "Dispel Type to trigger the event"
 		}

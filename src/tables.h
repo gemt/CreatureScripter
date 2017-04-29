@@ -107,7 +107,7 @@ struct creature_ai_scripts : public Table{
     static const QString event_param2;
     static const QString event_param3;
     static const QString event_param4;
-    static const QString action_type;
+    static const QString action1_type;
     static const QString action1_param1;
     static const QString action1_param2;
     static const QString action1_param3;
@@ -120,6 +120,7 @@ struct creature_ai_scripts : public Table{
     static const QString action3_param2;
     static const QString action3_param3;
     static const QString comment;
+    static const int num_cols = 23;
 
     creature_ai_scripts(quint32 entry);
     QVector<QSqlRecord> records;

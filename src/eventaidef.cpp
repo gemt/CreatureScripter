@@ -11,6 +11,10 @@
 #include <QDebug>
 
 namespace EventAI{
+const QMap<int, EventAI_event> &EventAIStorage::Events()
+{
+    return events;
+}
 
 EventAIStorage::EventAIStorage()
 {
@@ -38,10 +42,13 @@ EventAIStorage::EventAIStorage()
         QJsonArray eParams = obj["paramTypes"].toArray();
         foreach(const QJsonValue& v, eParams){
             QJsonObject o = v.toObject();
-            QString t = o["type"].toString();
+            int t = o["type"].toInt();
+            if(t <=event_param::TYPE_MIN || t >= event_param::UNKNOWN){
+                throw std::runtime_error(QString("Parsed unknown paramTypes with id: %1").arg(t).toStdString());
+            }
             QString n = o["name"].toString();
             QString d = o["desc"].toString();
-            event_paramTypes_map[n] = event_param{t, n, d};
+            event_paramTypes_map[n] = event_param{(event_param::Type)t, n, d};
         }
     }
 
@@ -58,9 +65,9 @@ EventAIStorage::EventAIStorage()
         QJsonArray params = o["params"].toArray();
         foreach(const QJsonValue& v, params){
             qDebug() << v.toString();
-            auto it = event_paramTypes_map.find(v.toString());
+            auto it = EventAIStorage::event_paramTypes_map.find(v.toString());
             if(it == event_paramTypes_map.end()){
-                event.params.push_back(event_param::unimplemented(v.toString()));
+                throw std::runtime_error(QString("unknown event param type: %1").arg(v.toString()).toStdString());
             }else{
                 event.params.push_back(*it);
             }

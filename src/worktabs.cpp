@@ -5,6 +5,7 @@
 #include "creaturetables.h"
 #include "creaturemodifier.h"
 #include "templatetables.h"
+#include "creatureeventai.h"
 
 #include <QVBoxLayout>
 #include <QHBoxLayout>
@@ -22,6 +23,9 @@ WorkTab::WorkTab(uint entry, QString name, QWidget *parent) :
 {
     setMouseTracking(true);
     setContentsMargins(0,0,0,0);
+
+    EventAI::CreatureEventAI* event_ai = new EventAI::CreatureEventAI(data->creature, this);
+    addTab(event_ai, "EventAI");
 
     //CreatureModifier* cm = new CreatureModifier(this);
     //rawTables = new CreatureTables(entry,this);

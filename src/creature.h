@@ -15,7 +15,6 @@ class CreatureData{
 public:
     CreatureData(quint32 entry, const QString& name);
 
-private:
     std::shared_ptr<Tables::creature_template> creature;
     quint32 entry;
     QString name;

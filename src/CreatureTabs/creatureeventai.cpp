@@ -1,72 +1,81 @@
 #include "creatureeventai.h"
 #include "tables.h"
+#include "eventaidef.h"
 
 #include <QSqlRecord>
+#include <QFormLayout>
+#include <QPushButton>
+#include <QHeaderView>
+
 namespace EventAI{
 
-CreatureEventAI::CreatureEventAI(Tables::creature_template *creature, QWidget *parent) :
-    QWidget(parent),
-    _creature(creature)
-{
-    QVector<QSqlRecord>& records = _creature->scripts->records;
-    for(QVector<QSqlRecord>::iterator it = records.begin(); it != records.end(); it++){
-        QSqlRecord& r = *it;
-        EventEntry* ew = new EventEntry(r);
-        entryWidgets.push_back(ew);
-    }
-}
-
-EventEntry::EventEntry(QSqlRecord &record) :
+EventEntry::EventEntry(QSqlRecord &record, QWidget* parent) :
+    QTableWidget(parent),
     record(record)
 {
+    Q_ASSERT(record.count() == Tables::creature_ai_scripts::num_cols);
+    horizontalHeader()->setHidden(true);
+    verticalHeader()->setHidden(true);
+    setRowCount(1);
+}
+
+void EventEntry::Remake()
+{
+    clear();
+    EventAIStorage& s = EventAIStorage::Get();
+    s.Events();
+    bool ok;
+    quint32 eventId = record.value(Tables::creature_ai_scripts::event_type).toUInt(&ok); Q_ASSERT(ok);
+    quint32 action1Id = record.value(Tables::creature_ai_scripts::action1_type).toUInt(&ok);Q_ASSERT(ok);
+    quint32 action2Id = record.value(Tables::creature_ai_scripts::action1_type).toUInt(&ok);Q_ASSERT(ok);
+    quint32 action3Id = record.value(Tables::creature_ai_scripts::action1_type).toUInt(&ok);Q_ASSERT(ok);
+
+    auto it = s.Events().find(eventId);
+    if(it == EventAIStorage::Get().Events().end())
+        throw std::runtime_error(QString("EventEntry::Remake() eventID %1 is unknown").arg(eventId).toStdString());
+    const EventAI_event& event = *it;
+    for(const event_param& p : event.params){
+        p;
+    }
 
 }
 
-QString EventEntry::EventName()
+const EventAI_event &EventEntry::Event()
 {
     bool ok;
     quint32 et = record.value(Tables::creature_ai_scripts::event_type).toUInt(&ok);
     if(!ok)
         throw std::runtime_error("EventEntry::EventName() could not parse event_type");
 
-    switch(et){
-        case 0: return "EVENT_T_TIMER_IN_COMBAT";
-        case 1: return "EVENT_T_TIMER_OOC";
-        case 2: return "";
-        case 3: return "";
-        case 4: return "";
-        case 5: return "";
-        case 6: return "";
-        case 7: return "";
-        case 8: return "";
-        case 9: return "";
-        case 10: return "";
-        case 11: return "";
-        case 12: return "";
-        case 13: return "";
-        case 14: return "";
-        case 15: return "";
-        case 16: return "";
-        case 17: return "";
-        case 18: return "";
-        case 19: return "";
-        case 20: return "";
-        case 21: return "";
-        case 22: return "";
-        case 23: return "";
-        case 24: return "";
-        case 25: return "";
-        case 26: return "";
-        case 27: return "";
-        case 28: return "";
-        case 29: return "";
-        case 30: return "";
-        case 31: return "";
-    default:
-        throw std::runtime_error(QString("EventEntry::EventName() got unrecognized event_type: %1")
-                                 .arg(et).toStdString());
+    auto it = EventAIStorage::Get().Events().find(et);
+    if(it == EventAIStorage::Get().Events().end()){
+        throw std::runtime_error(QString("EventEntry::EventName() eventID %1 is unknown").arg(et).toStdString());
+    }else{
+        return (*it);
     }
 }
+
+
+
+
+
+
+CreatureEventAI::CreatureEventAI(std::shared_ptr<Tables::creature_template> creature, QWidget *parent) :
+    QWidget(parent),
+    _creature(creature)
+{
+    QFormLayout* l = new QFormLayout(this);
+    setLayout(l);
+
+    QVector<QSqlRecord>& records = _creature->scripts->records;
+    for(QVector<QSqlRecord>::iterator it = records.begin(); it != records.end(); it++){
+        QSqlRecord& r = *it;
+        EventEntry* ew = new EventEntry(r, this);
+        l->addRow(new QPushButton(), ew);
+        entryWidgets.push_back(ew);
+    }
+}
+
 
 
 }

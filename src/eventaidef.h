@@ -33,13 +33,26 @@
 #include <QMap>
 namespace EventAI{
 
-struct event_param{
-    QString type;
+struct event_param {
+    enum Type{TYPE_MIN,
+              ms = 1,
+              pct = 2,
+              SpellId = 3,
+              SpellSchool = 4,
+              dist = 5,
+              _bool = 6,
+              hp = 7,
+              num = 8,
+              EmoteId = 9,
+              EventEntry = 10,
+              DispellType = 11,
+              CreatureID = 12,
+              Condition = 13,
+              UNKNOWN
+             };
+    Type type;
     QString name;
     QString description;
-    static event_param unimplemented(const QString& n){
-        return event_param{"unimplemented", n + " - unimplemented", "unimplemented"};
-    }
 };
 
 struct EventAI_event{
@@ -60,6 +73,7 @@ public:
         return *instance;
     }
 
+    const QMap<int,EventAI_event>& Events();
 
 private:
     EventAIStorage();

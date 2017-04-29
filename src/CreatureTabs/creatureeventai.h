@@ -1,31 +1,40 @@
 #ifndef CREATUREEVENTAI_H
 #define CREATUREEVENTAI_H
 
+#include "eventaidef.h"
+
 #include <QWidget>
 #include <QSqlRecord>
+#include <QTableWidget>
+#include <memory>
 
 namespace Tables{
 struct creature_template;
 }
 namespace EventAI{
 
-class EventEntry : public QWidget {
+class EventEntry : public QTableWidget {
 private:
     QSqlRecord& record;
 public:
-    EventEntry(QSqlRecord& record);
-    QString EventName();
+    EventEntry(QSqlRecord& record, QWidget* parent);
+
+private:
+    void Remake();
+    const EventAI_event& Event();
 };
+
 
 class CreatureEventAI : public QWidget
 {
 public:
-    CreatureEventAI(Tables::creature_template* creature, QWidget* parent);
+    CreatureEventAI(std::shared_ptr<Tables::creature_template> creature, QWidget* parent);
 
 private:
-    Tables::creature_template* _creature;
+    std::shared_ptr<Tables::creature_template> _creature;
     QVector<EventEntry*> entryWidgets;
 };
+
 
 }
 
