@@ -8,20 +8,23 @@
 #include <QDebug>
 #include <QMap>
 
-EventAIDef::EventAIDef()
+namespace EventAI{
+
+EventAIStorage::EventAIStorage()
 {
-    QString path("C:/Users/G3m7/Documents/git/CreatureScripter/CreatureScripter/EventAI.json");
+    QString path(":/eventai/json/EventAI.json");
     QFile f(path);
     if(!f.open(QIODevice::ReadOnly)){
-        qDebug() << f.errorString();
-        return;
+        throw std::runtime_error(QString("Unable to open file: %1").arg(path).toStdString());
     }
 
     auto data = f.readAll();
     QJsonParseError err;
     QJsonDocument doc = QJsonDocument::fromJson(data, &err);
-    qDebug() << err.errorString();
-
+    if(err.error != QJsonParseError::NoError){
+        throw std::runtime_error(QString("Error (%1) when parsing json from file: %2")
+                                 .arg(err.errorString(), path).toStdString());
+    }
     QJsonObject obj = doc.object();
     QMap<QString,QString> keywords;
     QJsonValue v = obj.value("keywords");
@@ -32,8 +35,5 @@ EventAIDef::EventAIDef()
     }
 
 }
-
-EventAI::EventAIDef::EventAIDef()
-{
 
 }

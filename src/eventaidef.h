@@ -28,20 +28,40 @@
  * EVENT_T_TARGET_BUFFED defines some enum stuff, look at it.
  *
  */
+
+#include <QVector>
+#include <QMap>
 namespace EventAI{
 
-class EventAIDef
+struct event_param{
+    QString identifier;
+    QString name;
+    QString description;
+    QString triggerNote;
+};
+
+struct EventAI_event{
+    quint8 id;
+    QString name;
+    QString description;
+    QVector<event_param> params;
+};
+
+class EventAIStorage
 {
 public:
-    static EventAIDef& Get(){
-        static EventAIDef* instance = nullptr;
+    static EventAIStorage& Get(){
+        static EventAIStorage* instance = nullptr;
         if(!instance)
-            instance = new EventAIDef();
-        return instance;
+            instance = new EventAIStorage();
+        return *instance;
     }
 
+
 private:
-    EventAIDef();
+    EventAIStorage();
+    QVector<event_param> event_paramTypes;
+    QMap<QString,QString> keywords;
 };
 
 }

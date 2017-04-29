@@ -1,14 +1,14 @@
 {
-	"keywords"	: {
-		"CO"			:	"COMBAT ONLY",
-		"OOCO"			:	"OUT OF COMBAT ONLY",
-		"BOTH"			:	"BOTH",		
-		"t"				:	"Triggers",
-		"tn"			:	"Trigger note",
-		"n"				:	"NOTE",
-		"d1"			:	"Description",
-		"d2"			:	"Detailed Description"
-	},
+	"keywords"	: [
+		{"CO"			:	"COMBAT ONLY"},
+		{"OOCO"			:	"OUT OF COMBAT ONLY"},
+		{"BOTH"			:	"BOTH"},		
+		{"t"				:	"Triggers"},
+		{"tn"			:	"Trigger note"},
+		{"n"				:	"NOTE"},
+		{"d1"			:	"Description"},
+		{"d2"			:	"Detailed Description"}
+	],
 	
 	"paramTypes" : [
 		{
