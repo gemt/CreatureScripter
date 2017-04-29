@@ -25,7 +25,8 @@ public:
         baseQuery = QString("SELECT %1, %2 FROM %3")
                 .arg(Tables::creature_template::entry,
                      Tables::creature_template::name,
-                     Tables::creature_template::t());
+                     Tables::dbtable<Tables::creature_template>());
+                     //Tables::creature_template::t);
                      //Cache::Get().Table(Tables::creature_template::t));
         setQuery(baseQuery, _db);
         //setHeaderData(0, Qt::Horizontal, tr("Entry"));

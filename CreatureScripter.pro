@@ -11,7 +11,7 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets sql gui
 TARGET = CreatureScripter
 TEMPLATE = app
 
-CONFIG += c++11
+CONFIG += c++14
 
 INCLUDEPATH += src/ \
 src/CreatureTabs/

@@ -55,6 +55,7 @@ class Loot{
 };
 
 class CreatureTemplate {
+    CreatureTemplate(quint32 entry);
     Record creature_template;
 
     QMap<qint64,Creature> creature;

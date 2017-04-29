@@ -6,6 +6,7 @@
 #include <QString>
 #include <QSettings>
 #include <QSqlDatabase>
+#include <QSqlRecord>
 
 class Creature
 {
@@ -18,6 +19,38 @@ public:
     QString name;
 };
 
+namespace Tables{
+struct relation{
+    const QString& table;
+    const QString& myKey;
+    const QString& relationKey;
+    const QString& relationName;
+};
+
+template<typename T>
+static QString dbtable(){
+    return QString("%1.%2").arg(Cache::Get().settings.value("worldDB").toString(), T::t);
+}
+struct Table{
+private:
+    const QString _t;
+public:
+    Table(const QString& t) : _t(t){}
+
+    QString table() const {return _t;}
+
+    QString Query(const QString& k, const QString& v) const;
+
+    QString dbTable();
+
+    virtual QVector<relation> Relations() {return QVector<relation>();}
+
+    template<typename T>
+    relation makeRelation(const QString& myKey, const QString& otherKey, const QString& optName = QString()){
+        return relation{T::t, myKey, otherKey, optName};
+    }
+};
+}
 
 class Cache
 {
@@ -39,44 +72,83 @@ public:
     void LoadMaps();
 
     QString MapName(unsigned int entry);
-
+    QSettings settings;
 
 private:
     Cache();
-    QSettings settings;
     QMap<unsigned int, QString> maps;
-
+    QMap<QString,Tables::Table*> table_definitions;
     void LoadSchema(const QString& table, QStringList& names);
 };
 
 namespace Tables{
-namespace creature{
-static const QString t(){return Cache::Get().Table("creature");}
-static const QString entry = "id";
-}
-namespace creature_template{
-static const QString t(){return Cache::Get().Table("creature_template");}
-static const QString entry   = "entry";
-static const QString name    = "name";
-}
-namespace creature_template_addon{
-static const QString t(){return Cache::Get().Table("creature_template_addon");}
-static const QString entry   = "entry";
-}
-namespace creature_model_info{
-static const QString t(){return Cache::Get().Table("creature_model_info");}
-static const QString modelid = "modelid";
-}
-namespace creature_equip_template{
-static const QString t(){return Cache::Get().Table("creature_equip_template");}
-static const QString entry = "entry";
-}
-namespace creature_equip_template_raw{
-static const QString t(){return Cache::Get().Table("creature_equip_template_raw");}
-static const QString entry = "entry";
-}
+
+struct creature : public Table{
+    static const QString t;
+    static const QString id;
+    creature():Table(t){}
+};
+
+
+struct creature_template : public Table{
+    static const QString t;
+    static const QString entry;
+    static const QString name;
+    static const QString modelid_1;
+    static const QString modelid_2;
+    static const QString modelid_3;
+    static const QString modelid_4;
+    static const QString equipment_id;
+    creature_template():Table(t){}
+    QVector<relation> Relations() override;
+};
+
+
+struct creature_template_addon : public Table{
+    static const QString t;
+    static const QString entry;
+    creature_template_addon():Table(t){}
+};
+
+
+struct creature_model_info : public Table{
+    static const QString t;
+    static const QString modelid;
+    creature_model_info():Table(t){}
+};
+
+
+struct creature_equip_template : public Table{
+    static const QString t;
+    static const QString entry;
+    creature_equip_template():Table(t){}
+    QVector<relation> Relations() override;
+};
+
+
+struct creature_equip_template_raw : public Table{
+    static const QString t;
+    creature_equip_template_raw():Table(t){}
+};
+
+struct creature_addon : public Table{
+    static const QString t;
+    creature_addon():Table(t){}
+};
+
+struct creature_ai_scripts : public Table{
+    static const QString t;
+    static const QString creature_id;
+    creature_ai_scripts():Table(t){}
+};
+
+
+struct item_template : public Table{
+    static const QString t;
+    item_template():Table(t){}
+};
+
 static const QString creature_addon              = "creature_addon";
-static const QString creature_ai_scripts         = "creature_ai_scripts";
 static const QString creature_ai_summons         = "creature_ai_summons";
 static const QString creature_ai_texts           = "creature_ai_texts";
 static const QString creature_battleground       = "creature_battleground";

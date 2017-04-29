@@ -76,13 +76,13 @@ CreatureTables::CreatureTables(uint entry, QWidget* parent) :
     setContentsMargins(0,0,0,0);
     setMouseTracking(true);
     QString sEntry = QString("%1").arg(entry);
-    AddTable<cCreatureTable>(Tables::creature::t(),                   Tables::creature::entry, sEntry);
-    AddTable<CreatureTable>(Tables::creature_template::t(),           Tables::creature_template::entry, sEntry);
-    AddTable<CreatureTable>(Tables::creature_equip_template::t(),     Tables::creature_equip_template::entry, sEntry);
-    AddTable<CreatureTable>(Tables::creature_equip_template_raw::t(), Tables::creature_equip_template_raw::entry, sEntry);
+    //AddTable<cCreatureTable>(Tables::creature::t(),                   Tables::creature::entry, sEntry);
+    //AddTable<CreatureTable>(Tables::creature_template::t(),           Tables::creature_template::entry, sEntry);
+    //AddTable<CreatureTable>(Tables::creature_equip_template::t(),     Tables::creature_equip_template::entry, sEntry);
+    //AddTable<CreatureTable>(Tables::creature_equip_template_raw::t(), Tables::creature_equip_template_raw::entry, sEntry);
 
     //AddTable<CreatureTable>(Tables::creature_addon,                 "entry", sEntry);
-    AddTable<CreatureTable>(Tables::creature_ai_scripts,            "creature_id", sEntry);
+    //AddTable<CreatureTable>(Tables::creature_ai_scripts,            "creature_id", sEntry);
     AddTable<CreatureTable>(Tables::creature_ai_summons,            "id", sEntry);
     //AddTable<CreatureTable>(Tables::creature_ai_texts,              "entry", sEntry);
     //AddTable<CreatureTable>(Tables::creature_battleground,          "entry", sEntry);
@@ -96,7 +96,7 @@ CreatureTables::CreatureTables(uint entry, QWidget* parent) :
     AddTable<CreatureTable>(Tables::creature_onkill_reputation,     "creature_id", sEntry);
     AddTable<CreatureTable>(Tables::creature_questrelation,         "id", sEntry);
     //AddTable<CreatureTable>(Tables::creature_spells,                "entry", sEntry); //empty
-    AddTable<CreatureTable>(Tables::creature_template_addon::t(),        "entry", sEntry);
+    //AddTable<CreatureTable>(Tables::creature_template_addon::t(),        "entry", sEntry);
 
     setTabShape(TabShape::Rounded);
 }
