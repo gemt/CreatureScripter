@@ -24,7 +24,8 @@ HEADERS += $$files(src/*.h) \
     src/mangosrecord.h \
     src/mangoscreature.h \
     src/tables.h \
-    src/CreatureTabs/creatureeventai.h
+    src/CreatureTabs/creatureeventai.h \
+    src/eventwidgetclasses.h
 HEADERS += $$files(src/CreatureTabs/*.h)
 
 SOURCES += $$files(src/*.cpp) \
@@ -33,7 +34,8 @@ SOURCES += $$files(src/*.cpp) \
     src/mangosrecord.cpp \
     src/mangoscreature.cpp \
     src/tables.cpp \
-    src/CreatureTabs/creatureeventai.cpp
+    src/CreatureTabs/creatureeventai.cpp \
+    src/eventwidgetclasses.cpp
 SOURCES += $$files(src/CreatureTabs/*.cpp)
 
 RESOURCES += \

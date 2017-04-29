@@ -21,7 +21,6 @@ public:
 
 private:
     void Remake();
-    const EventAI_event& Event();
 };
 
 

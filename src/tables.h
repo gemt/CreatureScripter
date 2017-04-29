@@ -103,6 +103,7 @@ struct creature_ai_scripts : public Table{
     static const QString event_inverse_phase_mask;
     static const QString event_chance;
     static const QString event_flags;
+    static QString event_paramN(int n){QString s = event_param1; return s.replace("1", QString::number(n));}
     static const QString event_param1;
     static const QString event_param2;
     static const QString event_param3;
