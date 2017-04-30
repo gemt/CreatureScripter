@@ -32,6 +32,13 @@
 #include <QVector>
 #include <QMap>
 namespace EventAI{
+enum ParameterType{
+    // decides the returned widget-type
+    PT_UNKNOWN
+};
+struct Parameter{
+
+};
 
 enum EventAIParamType{TYPE_MIN,
           MILLISECONDS = 1,
@@ -61,7 +68,6 @@ enum ActionParamTypes{
     A_TEXT_ID = 5,
     FACTION_FLAGS = 6,
     FACTION_ID = 7,
-
     A_UNKNOWN
 };
 

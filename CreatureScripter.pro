@@ -13,35 +13,23 @@ TEMPLATE = app
 
 CONFIG += c++14
 
-INCLUDEPATH += src/ \
-src/CreatureTabs/
-
-
-
-HEADERS += $$files(src/*.h) \
-    src/migration.h \
-    src/CreatureTabs/templatetables.h \
-    src/mangosrecord.h \
-    src/mangoscreature.h \
-    src/tables.h \
-    src/CreatureTabs/creatureeventai.h \
-    src/eventwidgetclasses.h \
-    src/EventAI_Actions.h
-HEADERS += $$files(src/CreatureTabs/*.h)
-
-SOURCES += $$files(src/*.cpp) \
-    src/migration.cpp \
-    src/CreatureTabs/templatetables.cpp \
-    src/mangosrecord.cpp \
-    src/mangoscreature.cpp \
-    src/tables.cpp \
-    src/CreatureTabs/creatureeventai.cpp \
-    src/eventwidgetclasses.cpp
-SOURCES += $$files(src/CreatureTabs/*.cpp)
-
 RESOURCES += \
     icons.qrc \
     css.qrc \
     json.qrc
 
-FORMS += $$files(src/CreatureTabs/*.ui)
+INCLUDEPATH += src/ \
+src/CreatureTabs/ \
+src/ScriptAI/ \
+src/ScriptAI/widgets/
+
+
+HEADERS += $$files(src/*.h)
+HEADERS += $$files(src/CreatureTabs/*.h)
+HEADERS += $$files(src/ScriptAI/*.h)
+HEADERS += $$files(src/ScriptAI/widgets/*.h)
+
+SOURCES += $$files(src/*.cpp)
+SOURCES += $$files(src/CreatureTabs/*.cpp)
+SOURCES += $$files(src/ScriptAI/*.cpp)
+SOURCES += $$files(src/ScriptAI/widgets/*.cpp)
