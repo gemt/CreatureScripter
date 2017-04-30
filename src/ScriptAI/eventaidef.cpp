@@ -107,9 +107,31 @@ void EventAIStorage::LoadActions()
     }
     QJsonObject obj = doc.object();
 
-    //todo add simliar dictionary of parameter types as events have. Must be created in json
+    QJsonArray paramInfo = obj["paramInfo"].toArray();
+    QMap<int,QStringList> loadedParamDescs;
+    QMap<int,QStringList> loadedParamNames;
+    foreach(const QJsonValue& v, paramInfo){
+        QJsonObject paramInfoObj = v.toObject();
+        int id = paramInfoObj["actionId"].toInt();
+        Q_ASSERT(!loadedParamDescs.contains(id));
+        Q_ASSERT(!loadedParamNames.contains(id));
+        QJsonArray names = paramInfoObj["names"].toArray();
+        foreach(const QJsonValue& d, names){
+            loadedParamNames[id].push_back(d.toString());
+        }
+        Q_ASSERT(loadedParamNames[id].size() == 4);
+
+        QJsonArray descs = paramInfoObj["descs"].toArray();
+        foreach(const QJsonValue& d, descs){
+            loadedParamDescs[id].push_back(d.toString());
+        }
+        Q_ASSERT(loadedParamDescs[id].size() == 4);
+    }
 
     QJsonArray eActions = obj["actions"].toArray();
+    qDebug() << eActions.count() << paramInfo.count();
+    Q_ASSERT(eActions.count() == paramInfo.count());
+
     foreach(const QJsonValue& v, eActions){
         QJsonObject o = v.toObject();
         EventAI_Action action;
@@ -119,10 +141,16 @@ void EventAIStorage::LoadActions()
         action.description = o["desc"].toString();
 
         QJsonArray params = o["params"].toArray();
+        int paramNum = 0;
         foreach(const QJsonValue& v, params){
             qDebug() << v.toString();
             ParameterType type = (ParameterType)v.toInt(PT_UNKNOWN);
-            action.params.push_back(Parameter{type, "", ""});
+            action.params.push_back(
+                        Parameter{type,
+                                  loadedParamNames[action.id][paramNum],
+                                  loadedParamDescs[action.id][paramNum]});
+
+            paramNum++;
         }
         actions.insert(action.id, std::move(action));
     }
