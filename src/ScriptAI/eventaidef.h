@@ -111,6 +111,7 @@ TypeValue{8 , "CAST_NO_MELEE_IF_OOM"    , "Prevents creature from entering melee
 TypeValue{16, "CAST_FORCE_TARGET_SELF"  , "Forces the target to cast this spell on itself"},
 TypeValue{32, "CAST_AURA_NOT_PRESENT"   , "Only casts the spell on the target if the target does not have the aura from that spell on itself already."}
 };
+
 static const QVector<TypeValue> EventTypeMask =
 {
     TypeValue{0x01, "AI_EVENT_JUST_DIED",       "Sender = Killed Npc, Invoker = Killer - Sent when npc dies"},
@@ -119,6 +120,7 @@ static const QVector<TypeValue> EventTypeMask =
     TypeValue{0x08, "AI_EVENT_LOST_SOME_HEALTH","Sender = Hurt Npc, Invoker = DamageDealer - Sent when damaged below 90% health"},
     TypeValue{0x10, "AI_EVENT_GOT_FULL_HEALTH", "Sender = Healed Npc, Invoker = Healer - Sent when healed to full health"},
 };
+
 static const QVector<TypeValue> EventFlags =
 {
 TypeValue{1         ,"EFLAG_REPEATABLE"     ,"Event repeats (Does not repeat if this flag is not set)"},
@@ -130,6 +132,8 @@ TypeValue{32        ,"EFLAG_RANDOM_ACTION"  ,"At event occur execute one random 
 TypeValue{64        ,""                     ,""},
 TypeValue{128       ,"EFLAG_DEBUG_ONLY"     ,"Prevents events from occuring on Release builds. Useful for testing new features."}
 };
+
+// referenced in description of 44   ACTION_T_CHANCED_TEXT, but cant see how it should be used. Not used yet
 static const QVector<TypeValue> TextTypes =
 {
 TypeValue{0,    "CHAT_TYPE_SAY"                 ,"This type sets the text to be displayed as a Say (Speech Bubble)."},
@@ -140,6 +144,9 @@ TypeValue{4,    "CHAT_TYPE_WHISPER"             ,"This type sets the text to be 
 TypeValue{5,    "CHAT_TYPE_BOSS_WHISPER"        ,"This type sets the text to be displayed as a whisper to the player in the chat log (Used only for specific Bosses)."},
 TypeValue{6,    "CHAT_TYPE_ZONE_YELL"           ,"Same as CHAT_TYPE_YELL but will display to all players in current zone."}
 };
+
+
+// Not used yet, not sure if it will be either
 static const QVector<TypeValue> LanguageTypes =
 {
 TypeValue{0 ,   "UNIVERSAL"                    ,"Text in this language is understood by ALL Races."},
@@ -161,6 +168,7 @@ TypeValue{36,   "ZOMBIE"                       ,"(not currently used?)"},
 TypeValue{37,   "GNOMISH BINARY"               ,"Binary language used by Alliance when drinking Binary Brew"},
 TypeValue{38,   "GOBLIN BINARY"                ,"Binary language used by Horce when drinking Binary Brew"}
 };
+
 static const QVector<TypeValue> StandState =
 {
     TypeValue{0, "UNIT_STAND_STATE_STAND", ""},
@@ -173,18 +181,21 @@ static const QVector<TypeValue> StandState =
     TypeValue{7, "UNIT_STAND_STATE_DEAD", ""},
     TypeValue{8, "UNIT_STAND_STATE_KNEEL", ""}
 };
+
 static const QVector<TypeValue> MovementType =
 {
     TypeValue{0, "Idle", ""},
     TypeValue{1, "Random", ""},
     TypeValue{2, "Waypoint", ""}
 };
+
 static const QVector<TypeValue> ReactState =
 {
     TypeValue{0, "Passive", ""},
     TypeValue{1, "Defensive", ""},
     TypeValue{2, "Aggressive", ""}
 };
+
 static const QVector<TypeValue> factionFlags = {
     TypeValue{0x00, "TEMPFACTION_NONE", "A persistent faction change and will require manual change to default/another faction when changed once"},
     TypeValue{0x01, "TEMPFACTION_RESTORE_RESPAWN", "Default faction will be restored at respawn"},

@@ -64,6 +64,9 @@ static const EventAI_Action& GetEventAction(int actionId)
 
 void EventEntry::Remake()
 {
+    //TODO: missing columns/info: event_flags, event_chance, event_inverse_phase_mask, comment
+    // and alternatively some creature id/event id
+
     clear();
     setRowCount(1);
     EventAIStorage& s = EventAIStorage::Get();
@@ -129,7 +132,7 @@ void EventEntry::Remake()
         for(int p = 0; p < eventAction.params.size(); p++){
             const Parameter& actParam = eventAction.params.at(p);
             setHorizontalHeaderItem(cur_col, HeaderItem(actParam));
-            setCellWidget(0, cur_col, ActionWidget(actParam, record, Tables::creature_ai_scripts::actionX_paramY(i+1,p+1)));
+            setCellWidget(0, cur_col, GetParameterWidget(actParam, record, Tables::creature_ai_scripts::actionX_paramY(i+1,p+1)));
             cur_col++;
         }
     }
@@ -140,6 +143,7 @@ void EventEntry::Remake()
 
 
     resizeColumnsToContents();
+    resizeRowsToContents();
 }
 
 

@@ -94,6 +94,7 @@ void WorkTabs::onTabCloseRequest(int idx)
                              QStringList{yes, "Cancel"}, this);
     if(ret == yes) {
         WorkTab* wt = static_cast<WorkTab*>(QTabWidget::widget(idx));
+        tabMap.remove(wt->Entry());
         removeTab(idx);
         wt->deleteLater();
         if(QWidget* cw = currentWidget()){
