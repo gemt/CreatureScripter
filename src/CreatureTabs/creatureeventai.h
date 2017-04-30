@@ -7,11 +7,14 @@
 #include <QSqlRecord>
 #include <QTableWidget>
 #include <memory>
+#include <QVector>
 
 namespace Tables{
 struct creature_template;
 }
-namespace EventAI{
+
+namespace EventAI
+{
 
 class EventEntry : public QTableWidget {
 private:

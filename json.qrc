@@ -1,5 +1,6 @@
 <RCC>
     <qresource prefix="/eventai">
         <file>json/EventAI.json</file>
+        <file>json/Actions.json</file>
     </qresource>
 </RCC>

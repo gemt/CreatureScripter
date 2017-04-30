@@ -25,7 +25,8 @@ HEADERS += $$files(src/*.h) \
     src/mangoscreature.h \
     src/tables.h \
     src/CreatureTabs/creatureeventai.h \
-    src/eventwidgetclasses.h
+    src/eventwidgetclasses.h \
+    src/EventAI_Actions.h
 HEADERS += $$files(src/CreatureTabs/*.h)
 
 SOURCES += $$files(src/*.cpp) \

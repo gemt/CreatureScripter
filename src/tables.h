@@ -108,6 +108,8 @@ struct creature_ai_scripts : public Table{
     static const QString event_param2;
     static const QString event_param3;
     static const QString event_param4;
+    static QString actionN_type(int n){QString s = action1_type; return s.replace("1", QString::number(n));}
+    static QString actionX_paramY(int x, int y){QString s = action1_param2; return s.replace("1", QString::number(x)).replace("2", QString::number(y));}
     static const QString action1_type;
     static const QString action1_param1;
     static const QString action1_param2;
