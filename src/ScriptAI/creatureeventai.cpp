@@ -2,6 +2,7 @@
 #include "tables.h"
 #include "eventaidef.h"
 #include "eventwidgetclasses.h"
+#include "widgetFactory.h"
 
 #include <QSqlRecord>
 #include <QFormLayout>
@@ -35,21 +36,21 @@ QTableWidgetItem* HeaderItem(const action_param& type){
 static QWidget* EventWidget(const event_param& type, QSqlRecord& r, const QString& f){
     int idx = r.indexOf(f);
     switch(type.type){
-    case EventAIParamType::MILLISECONDS:
+    case ParameterType::MILLISECONDS:
         return new type_MS(r, idx);
-    case EventAIParamType::PERCENTAGE:
-    case EventAIParamType::SPELL_ID:
-    case EventAIParamType::SPELL_SCHOOL:
-    case EventAIParamType::DISTANCE:
-    case EventAIParamType::BOOL:
-    case EventAIParamType::HP:
-    case EventAIParamType::NUMBER:
-    case EventAIParamType::EMOTE_ID:
-    case EventAIParamType::EVENT_TYPE:
-    case EventAIParamType::DISPELL_TYPE:
-    case EventAIParamType::CREATURE_ID:
-    case EventAIParamType::CONDITION:
-    case EventAIParamType::UNKNOWN:
+    case ParameterType::PERCENTAGE:
+    case ParameterType::SPELL_ID:
+    case ParameterType::SPELL_SCHOOL:
+    case ParameterType::DISTANCE:
+    case ParameterType::BOOL:
+    case ParameterType::HP:
+    case ParameterType::NUMBER:
+    case ParameterType::EMOTE_ID:
+    case ParameterType::EVENT_TYPE:
+    case ParameterType::DISPELL_TYPE:
+    case ParameterType::CREATURE_ID:
+    case ParameterType::CONDITION:
+    case ParameterType::PT_UNKNOWN:
         return new QLineEdit(r.value(idx).toString());
     }
 }

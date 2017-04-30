@@ -54,12 +54,12 @@ void EventAIStorage::LoadEvents()
         foreach(const QJsonValue& v, eParams){
             QJsonObject o = v.toObject();
             int t = o["type"].toInt();
-            if(t <=TYPE_MIN || t >= UNKNOWN){
+            if(t <=PT_MIN || t >= PT_UNKNOWN){
                 throw std::runtime_error(QString("Parsed unknown paramTypes with id: %1").arg(t).toStdString());
             }
             QString n = o["name"].toString();
             QString d = o["desc"].toString();
-            event_paramTypes_map[n] = event_param{(EventAIParamType)t, n, d};
+            event_paramTypes_map[n] = event_param{(ParameterType)t, n, d};
         }
     }
 

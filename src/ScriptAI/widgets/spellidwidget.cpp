@@ -8,11 +8,12 @@
 #include <QPushButton>
 #include <QLabel>
 
-SpellIDWidget::SpellIDWidget(QSqlRecord& r, int idx, QWidget* parent)
+SpellIDWidget::SpellIDWidget(QSqlRecord& r, const QString fieldName, const EventAI::Parameter& param, QWidget* parent)
  : QWidget(parent),
    record(r),
-   rIdx(idx)
+   parameter(param)
 {
+    rIdx = record.indexOf(fieldName);
     QHBoxLayout* l = new QHBoxLayout(this);
     setLayout(l);
     QFormLayout* form = new QFormLayout();

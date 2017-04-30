@@ -3,7 +3,6 @@
 #include "creature.h"
 #include "cache.h"
 #include "creaturetables.h"
-#include "creaturemodifier.h"
 #include "templatetables.h"
 #include "creatureeventai.h"
 

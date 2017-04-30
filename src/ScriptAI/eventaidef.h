@@ -33,29 +33,26 @@
 #include <QMap>
 namespace EventAI{
 enum ParameterType{
+    PT_MIN,
     // decides the returned widget-type
+    MILLISECONDS = 1,
+    PERCENTAGE = 2,
+    SPELL_ID = 3,
+    SPELL_SCHOOL = 4,
+    DISTANCE = 5,
+    BOOL = 6,
+    HP = 7,
+    NUMBER = 8,
+    EMOTE_ID = 9,
+    EVENT_TYPE = 10,
+    DISPELL_TYPE = 11,
+    CREATURE_ID = 12,
+    CONDITION = 13,
     PT_UNKNOWN
 };
 struct Parameter{
-
+    ParameterType type;
 };
-
-enum EventAIParamType{TYPE_MIN,
-          MILLISECONDS = 1,
-          PERCENTAGE = 2,
-          SPELL_ID = 3,
-          SPELL_SCHOOL = 4,
-          DISTANCE = 5,
-          BOOL = 6,
-          HP = 7,
-          NUMBER = 8,
-          EMOTE_ID = 9,
-          EVENT_TYPE = 10,
-          DISPELL_TYPE = 11,
-          CREATURE_ID = 12,
-          CONDITION = 13,
-          UNKNOWN
-         };
 
 enum ActionParamTypes{
     A_TYPE_MIN,
@@ -98,7 +95,7 @@ struct event_action{
 };
 
 struct event_param {
-    EventAIParamType type;
+    ParameterType type;
     QString name;
     QString description;
 };
