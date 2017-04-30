@@ -16,7 +16,7 @@ const QMap<int, EventAI_event> &EventAIStorage::Events()
     return events;
 }
 
-const QMap<int, event_action> &EventAIStorage::Actions()
+const QMap<int, EventAI_Action> &EventAIStorage::Actions()
 {
     return actions;
 }
@@ -49,17 +49,19 @@ void EventAIStorage::LoadEvents()
             keywords[it.key()] = it.value().toString();
         }
     }
+
+    QMap<QString,Parameter> eventParameters;
     {
         QJsonArray eParams = obj["paramTypes"].toArray();
         foreach(const QJsonValue& v, eParams){
             QJsonObject o = v.toObject();
-            int t = o["type"].toInt();
+            ParameterType t = (ParameterType)o["type"].toInt();
             if(t <=PT_MIN || t >= PT_UNKNOWN){
                 throw std::runtime_error(QString("Parsed unknown paramTypes with id: %1").arg(t).toStdString());
             }
             QString n = o["name"].toString();
             QString d = o["desc"].toString();
-            event_paramTypes_map[n] = event_param{(ParameterType)t, n, d};
+            eventParameters[n] = Parameter{t, n, d};
         }
     }
 
@@ -76,9 +78,10 @@ void EventAIStorage::LoadEvents()
         QJsonArray params = o["params"].toArray();
         foreach(const QJsonValue& v, params){
             qDebug() << v.toString();
-            auto it = EventAIStorage::event_paramTypes_map.find(v.toString());
-            if(it == event_paramTypes_map.end()){
-                throw std::runtime_error(QString("unknown event param type: %1").arg(v.toString()).toStdString());
+            auto it = eventParameters.find(v.toString());
+            if(it == eventParameters.end()){
+                event.params.push_back(Parameter{PT_UNKNOWN, "UNKNOWN", ""});
+                Q_ASSERT(0);
             }else{
                 event.params.push_back(*it);
             }
@@ -103,10 +106,13 @@ void EventAIStorage::LoadActions()
                                  .arg(err.errorString(), f.fileName()).toStdString());
     }
     QJsonObject obj = doc.object();
+
+    //todo add simliar dictionary of parameter types as events have. Must be created in json
+
     QJsonArray eActions = obj["actions"].toArray();
     foreach(const QJsonValue& v, eActions){
         QJsonObject o = v.toObject();
-        event_action action;
+        EventAI_Action action;
 
         action.id = o["id"].toInt();
         action.name = o["Name"].toString();
@@ -115,15 +121,8 @@ void EventAIStorage::LoadActions()
         QJsonArray params = o["params"].toArray();
         foreach(const QJsonValue& v, params){
             qDebug() << v.toString();
-            action.params.push_back(action_param{A_UNKNOWN, v.toString(), "todo"});
-            /*
-            auto it = EventAIStorage::event_paramTypes_map.find(v.toString());
-            if(it == event_paramTypes_map.end()){
-                throw std::runtime_error(QString("unknown event param type: %1").arg(v.toString()).toStdString());
-            }else{
-                event.params.push_back(*it);
-            }
-            */
+            ParameterType type = (ParameterType)v.toInt(PT_UNKNOWN);
+            action.params.push_back(Parameter{type, "", ""});
         }
         actions.insert(action.id, std::move(action));
     }

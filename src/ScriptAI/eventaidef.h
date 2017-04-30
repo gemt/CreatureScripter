@@ -78,6 +78,7 @@ struct TypeValue{
     QString name;
     QString description;
 };
+
 static const QVector<TypeValue> SheetState =
 {
     TypeValue{0, "No Weapon", "Sheets the weapons of the creature"},
@@ -129,7 +130,6 @@ TypeValue{32        ,"EFLAG_RANDOM_ACTION"  ,"At event occur execute one random 
 TypeValue{64        ,""                     ,""},
 TypeValue{128       ,"EFLAG_DEBUG_ONLY"     ,"Prevents events from occuring on Release builds. Useful for testing new features."}
 };
-
 static const QVector<TypeValue> TextTypes =
 {
 TypeValue{0,    "CHAT_TYPE_SAY"                 ,"This type sets the text to be displayed as a Say (Speech Bubble)."},
@@ -140,7 +140,6 @@ TypeValue{4,    "CHAT_TYPE_WHISPER"             ,"This type sets the text to be 
 TypeValue{5,    "CHAT_TYPE_BOSS_WHISPER"        ,"This type sets the text to be displayed as a whisper to the player in the chat log (Used only for specific Bosses)."},
 TypeValue{6,    "CHAT_TYPE_ZONE_YELL"           ,"Same as CHAT_TYPE_YELL but will display to all players in current zone."}
 };
-
 static const QVector<TypeValue> LanguageTypes =
 {
 TypeValue{0 ,   "UNIVERSAL"                    ,"Text in this language is understood by ALL Races."},
@@ -162,7 +161,6 @@ TypeValue{36,   "ZOMBIE"                       ,"(not currently used?)"},
 TypeValue{37,   "GNOMISH BINARY"               ,"Binary language used by Alliance when drinking Binary Brew"},
 TypeValue{38,   "GOBLIN BINARY"                ,"Binary language used by Horce when drinking Binary Brew"}
 };
-
 static const QVector<TypeValue> StandState =
 {
     TypeValue{0, "UNIT_STAND_STATE_STAND", ""},
@@ -175,7 +173,6 @@ static const QVector<TypeValue> StandState =
     TypeValue{7, "UNIT_STAND_STATE_DEAD", ""},
     TypeValue{8, "UNIT_STAND_STATE_KNEEL", ""}
 };
-
 static const QVector<TypeValue> MovementType =
 {
     TypeValue{0, "Idle", ""},
@@ -188,57 +185,25 @@ static const QVector<TypeValue> ReactState =
     TypeValue{1, "Defensive", ""},
     TypeValue{2, "Aggressive", ""}
 };
+static const QVector<TypeValue> factionFlags = {
+    TypeValue{0x00, "TEMPFACTION_NONE", "A persistent faction change and will require manual change to default/another faction when changed once"},
+    TypeValue{0x01, "TEMPFACTION_RESTORE_RESPAWN", "Default faction will be restored at respawn"},
+    TypeValue{0x02, "TEMPFACTION_RESTORE_COMBAT_STOP", "... at CombatStop() (happens at creature death, at evade or custom scripte among others)"},
+    TypeValue{0x04, "TEMPFACTION_RESTORE_REACH_HOME", "... at reaching home in home movement (evade), if not already done at CombatStop()"}
+};
 
 struct Parameter{
+    //Parameter() : type(PT_UNKNOWN),name("UNKNOWN"){}
     ParameterType type;
     QString name;
     QString description;
 };
 
-enum ActionParamTypes{
-    A_TYPE_MIN,
-    TEXT_ID = 1,
-
-    MODEL_ID = 1,
-    QUEST_ID = 2,
-    REACT_STATE = 3,
-    MOVEMENT_TYPE = 4,
-    A_TEXT_ID = 5,
-    FACTION_FLAGS = 6,
-    FACTION_ID = 7,
-    A_UNKNOWN
-};
-
-struct FactionFlag{
-    int num;
-    QString name;
-    QString description;
-};
-
-static QVector<FactionFlag> factionFlags = {
-    FactionFlag{0x00, "TEMPFACTION_NONE", "A persistent faction change and will require manual change to default/another faction when changed once"},
-    FactionFlag{0x01, "TEMPFACTION_RESTORE_RESPAWN", "Default faction will be restored at respawn"},
-    FactionFlag{0x02, "TEMPFACTION_RESTORE_COMBAT_STOP", "... at CombatStop() (happens at creature death, at evade or custom scripte among others)"},
-    FactionFlag{0x04, "TEMPFACTION_RESTORE_REACH_HOME", "... at reaching home in home movement (evade), if not already done at CombatStop()"}
-};
-
-struct action_param{
-    ActionParamTypes type;
-    QString name;
-    QString description;
-};
-
-struct event_action{
+struct EventAI_Action{
     int id;
     QString name;
     QString description;
-    QVector<action_param> params;
-};
-
-struct event_param {
-    ParameterType type;
-    QString name;
-    QString description;
+    QVector<Parameter> params;
 };
 
 struct EventAI_event{
@@ -246,7 +211,7 @@ struct EventAI_event{
     QString name;
     QString description;
     QString triggerNote;
-    QVector<event_param> params;
+    QVector<Parameter> params;
 };
 
 class EventAIStorage
@@ -260,13 +225,12 @@ public:
     }
 
     const QMap<int,EventAI_event>& Events();
-    const QMap<int,event_action>& Actions();
+    const QMap<int,EventAI_Action>& Actions();
 private:
     EventAIStorage();
     QMap<QString,QString> keywords;
-    QMap<QString,event_param> event_paramTypes_map;
     QMap<int, EventAI_event> events;
-    QMap<int, event_action> actions;
+    QMap<int, EventAI_Action> actions;
 
     void LoadEvents();
     void LoadActions();

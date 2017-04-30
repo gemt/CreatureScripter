@@ -41,7 +41,7 @@ type_MS::type_MS(QSqlRecord &r, int idx) : r(r),idx(idx)
 type_ActionType::type_ActionType(int currType)
 {
     EventAIStorage& s = EventAIStorage::Get();
-    foreach(const event_action& a, s.Actions()){
+    foreach(const EventAI_Action& a, s.Actions()){
         addItem(a.name, a.id);
     }
     bool ok;

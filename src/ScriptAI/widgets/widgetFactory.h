@@ -3,6 +3,8 @@
 #include <QWidget>
 #include <QSqlRecord>
 #include <QLineEdit>
+#include <QDebug>
+
 #include "eventaidef.h"
 #include "spellidwidget.h"
 #include "defaultlineedit.h"

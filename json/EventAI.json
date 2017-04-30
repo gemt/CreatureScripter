@@ -145,11 +145,11 @@
 			"d1" 	: "Expires at first between (Param1) and (Param2) and then will repeat between every (Param3) and (Param4),  EXPIRES ONLY IN COMBAT.",
 			"t"		: "CO",
 			"params":[
-				"InitialMin",
+                "InitialMin",
 				"InitialMax",
 				"RepeatMin",
 				"RepeatMax"
-			]
+            ]
 		},
 		{
 			"id"	: 1,

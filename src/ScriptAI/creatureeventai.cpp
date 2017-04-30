@@ -22,18 +22,13 @@ EventEntry::EventEntry(QSqlRecord &record, QWidget* parent) :
     Remake();
 }
 
-QTableWidgetItem* HeaderItem(const event_param& type){
-    QTableWidgetItem* itm = new QTableWidgetItem(type.name);
-    itm->setToolTip(type.description);
-    return itm;
-}
-QTableWidgetItem* HeaderItem(const action_param& type){
+QTableWidgetItem* HeaderItem(const Parameter& type){
     QTableWidgetItem* itm = new QTableWidgetItem(type.name);
     itm->setToolTip(type.description);
     return itm;
 }
 
-static QWidget* EventWidget(const event_param& type, QSqlRecord& r, const QString& f){
+static QWidget* EventWidget(const Parameter& type, QSqlRecord& r, const QString& f){
     int idx = r.indexOf(f);
     switch(type.type){
     case ParameterType::MILLISECONDS:
@@ -54,12 +49,12 @@ static QWidget* EventWidget(const event_param& type, QSqlRecord& r, const QStrin
         return new QLineEdit(r.value(idx).toString());
     }
 }
-static QWidget* ActionWidget(const action_param& type, QSqlRecord& r, const QString& f){
+static QWidget* ActionWidget(const Parameter& type, QSqlRecord& r, const QString& f){
     int idx = r.indexOf(f);
     return new QLineEdit(r.value(idx).toString());
 }
 
-static const event_action& GetEventAction(int actionId)
+static const EventAI_Action& GetEventAction(int actionId)
 {
     auto aIt = EventAIStorage::Get().Actions().find(actionId);
     if(aIt == EventAIStorage::Get().Actions().end())
@@ -121,7 +116,7 @@ void EventEntry::Remake()
         setHorizontalHeaderItem(cur_col, new QTableWidgetItem(QString("Action %1").arg(i+1)));
         int actionId = record.value(Tables::creature_ai_scripts::actionN_type(i+1)).toInt(&ok);
         Q_ASSERT(ok);
-        const event_action& eventAction = GetEventAction(actionId);
+        const EventAI_Action& eventAction = GetEventAction(actionId);
         type_ActionType* at = new type_ActionType(eventAction.id);
         connect(at, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), [this, at, i](int isig){
             bool ok;
@@ -132,7 +127,7 @@ void EventEntry::Remake()
         setCellWidget(0, cur_col, at);
         cur_col++;
         for(int p = 0; p < eventAction.params.size(); p++){
-            const action_param& actParam = eventAction.params.at(p);
+            const Parameter& actParam = eventAction.params.at(p);
             setHorizontalHeaderItem(cur_col, HeaderItem(actParam));
             setCellWidget(0, cur_col, ActionWidget(actParam, record, Tables::creature_ai_scripts::actionX_paramY(i+1,p+1)));
             cur_col++;
