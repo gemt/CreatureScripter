@@ -10,10 +10,11 @@
 #include "defaultlineedit.h"
 #include "typevaluewidget.h"
 #include "eventwidgetclasses.h"
+#include "MillisecondsWidget.h"
 
 static QWidget* GetParameterWidget(const EventAI::Parameter& param, QSqlRecord& record, const QString& field, QWidget* parent = nullptr){
     switch(param.type){
-    case EventAI::MILLISECONDS: return new EventAI::type_MS(r, idx);
+    case EventAI::MILLISECONDS: return new MillisecondsWidget(record, field, param, parent);
     case EventAI::PERCENTAGE: return new DefaultLineEdit(record, field, param, parent);
     case EventAI::SPELL_ID: return new SpellIDWidget(record, field, param, parent);
     case EventAI::FACTION_ID_FLAGS: return new TypeValueWidget(EventAI::factionFlags, record, field, param, parent);

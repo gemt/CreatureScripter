@@ -24,20 +24,6 @@ type_EventType::type_EventType(int currType)
     }
 }
 
-type_MS::type_MS(QSqlRecord &r, int idx) : r(r),idx(idx)
-{
-    setMaximum(std::numeric_limits<int>::max());
-    setMinimum(0);
-    setSuffix("ms");
-
-    bool ok;
-    setValue(r.value(idx).toInt(&ok));
-    Q_ASSERT(ok);
-    connect(this, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), [this](int v){
-        this->r.setValue(this->idx, v);
-    });
-}
-
 type_ActionType::type_ActionType(int currType)
 {
     EventAIStorage& s = EventAIStorage::Get();

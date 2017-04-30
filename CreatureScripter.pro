@@ -26,14 +26,16 @@ src/ScriptAI/widgets/
 
 HEADERS += $$files(src/*.h) \
     src/ScriptAI/widgets/defaultlineedit.h \
-    src/ScriptAI/widgets/typevaluewidget.h
+    src/ScriptAI/widgets/typevaluewidget.h \
+    src/ScriptAI/widgets/millisecondswidget.h
 HEADERS += $$files(src/CreatureTabs/*.h)
 HEADERS += $$files(src/ScriptAI/*.h)
 HEADERS += $$files(src/ScriptAI/widgets/*.h)
 
 SOURCES += $$files(src/*.cpp) \
     src/ScriptAI/widgets/defaultlineedit.cpp \
-    src/ScriptAI/widgets/typevaluewidget.cpp
+    src/ScriptAI/widgets/typevaluewidget.cpp \
+    src/ScriptAI/widgets/millisecondswidget.cpp
 SOURCES += $$files(src/CreatureTabs/*.cpp)
 SOURCES += $$files(src/ScriptAI/*.cpp)
 SOURCES += $$files(src/ScriptAI/widgets/*.cpp)

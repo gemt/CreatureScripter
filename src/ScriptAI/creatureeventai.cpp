@@ -28,27 +28,6 @@ QTableWidgetItem* HeaderItem(const Parameter& type){
     return itm;
 }
 
-static QWidget* EventWidget(const Parameter& type, QSqlRecord& r, const QString& f){
-    int idx = r.indexOf(f);
-    switch(type.type){
-    case ParameterType::MILLISECONDS:
-        return new type_MS(r, idx);
-    case ParameterType::PERCENTAGE:
-    case ParameterType::SPELL_ID:
-    case ParameterType::SPELL_SCHOOL:
-    case ParameterType::DISTANCE:
-    case ParameterType::BOOL:
-    case ParameterType::HP:
-    case ParameterType::NUMBER:
-    case ParameterType::EMOTE_ID:
-    case ParameterType::EVENT_TYPE:
-    case ParameterType::DISPELL_TYPE:
-    case ParameterType::CREATURE_ID:
-    case ParameterType::CONDITION:
-    case ParameterType::PT_UNKNOWN:
-        return new QLineEdit(r.value(idx).toString());
-    }
-}
 static QWidget* ActionWidget(const Parameter& type, QSqlRecord& r, const QString& f){
     int idx = r.indexOf(f);
     return new QLineEdit(r.value(idx).toString());
@@ -110,7 +89,8 @@ void EventEntry::Remake()
     //adding event params
     for(int i = 0; i < event.params.size(); i++){
         setHorizontalHeaderItem(cur_col, HeaderItem(event.params.at(i)));
-        setCellWidget(0, cur_col, EventWidget(event.params.at(i), record, Tables::creature_ai_scripts::event_paramN(i+1)));
+        setCellWidget(0, cur_col, GetParameterWidget(event.params.at(i), record, Tables::creature_ai_scripts::event_paramN(i+1)));
+                      //EventWidget(event.params.at(i), record, Tables::creature_ai_scripts::event_paramN(i+1)));
         cur_col++;
     }
 

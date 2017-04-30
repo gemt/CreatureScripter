@@ -15,13 +15,6 @@ public:
     type_ActionType(int currType);
 };
 
-class type_MS : public QSpinBox {
-    QSqlRecord& r;
-    int idx;
-public:
-    type_MS(QSqlRecord& r, int idx);
-};
-
 }
 
 #endif // EVENTWIDGETCLASSES_H

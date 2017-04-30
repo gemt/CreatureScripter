@@ -20,12 +20,12 @@ TypeValueWidget::TypeValueWidget(const QVector<EventAI::TypeValue> &values, QSql
         }
         vIdx++;
     }
-    /*
-    for(int i = 0; i < count(); i++){
-        if(itemData(i).toInt() == currVal){
-            setCurrentIndex(i);
-            break;
-        }
-    }
-    */
+
+    connect(this, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
+            [this](int i){
+        bool ok;
+        int currentVal = currentData().toInt(&ok);
+        Q_ASSERT(ok);
+        record.setValue(rIdx, currentVal);
+    });
 }
