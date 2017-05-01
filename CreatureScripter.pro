@@ -6,7 +6,7 @@
 
 QT       += core gui
 
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets sql gui xml
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets sql gui xml webenginewidgets webengine
 
 TARGET = CreatureScripter
 TEMPLATE = app
@@ -42,6 +42,7 @@ HEADERS += QSpellWork/QSW/qsw.h \
            QSpellWork/QSW/dbc/DBC.h \
            QSpellWork/QSW/mpq/MPQ.h \
            QSpellWork/QSW/wov/texture.h \
+           QSpellWork/QSW/mustache/mustache.h \
            QSpellWork/QSW/plugins/spellinfo/pre-tbc/spellinfo.h \
            QSpellWork/QSW/plugins/spellinfo/pre-tbc/structure.h
 
@@ -50,6 +51,7 @@ SOURCES += QSpellWork/QSW/qsw.cpp \
            QSpellWork/QSW/dbc/DBC.cpp \
            QSpellWork/QSW/mpq/MPQ.cpp \
            QSpellWork/QSW/wov/texture.cpp \
+           QSpellWork/QSW/mustache/mustache.cpp \
            QSpellWork/QSW/plugins/spellinfo/pre-tbc/spellinfo.cpp \
            QSpellWork/QSW/plugins/spellinfo/pre-tbc/structure.cpp \
 

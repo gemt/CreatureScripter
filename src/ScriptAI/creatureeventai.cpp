@@ -51,14 +51,11 @@ void EventEntry::Remake()
     EventAIStorage& s = EventAIStorage::Get();
     s.Events();
     bool ok;
-    quint32 eventId = record.value(Tables::creature_ai_scripts::event_type).toUInt(&ok);
-    Q_ASSERT(ok);
-    quint32 action1Id = record.value(Tables::creature_ai_scripts::action1_type).toUInt(&ok);
-    Q_ASSERT(ok);
-    quint32 action2Id = record.value(Tables::creature_ai_scripts::action2_type).toUInt(&ok);
-    Q_ASSERT(ok);
-    quint32 action3Id = record.value(Tables::creature_ai_scripts::action3_type).toUInt(&ok);
-    Q_ASSERT(ok);
+    quint32 eventId = record.value(Tables::creature_ai_scripts::event_type).toUInt(&ok);Q_ASSERT(ok);
+    quint32 action1Id = record.value(Tables::creature_ai_scripts::action1_type).toUInt(&ok);Q_ASSERT(ok);
+    quint32 action2Id = record.value(Tables::creature_ai_scripts::action2_type).toUInt(&ok);Q_ASSERT(ok);
+    quint32 action3Id = record.value(Tables::creature_ai_scripts::action3_type).toUInt(&ok);Q_ASSERT(ok);
+
     int col_count = 1;
     auto eIt = s.Events().find(eventId);
     if(eIt == EventAIStorage::Get().Events().end())

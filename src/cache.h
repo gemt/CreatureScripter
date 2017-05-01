@@ -7,7 +7,9 @@
 #include <QSettings>
 #include <QSqlDatabase>
 #include <QSqlRecord>
+#include <QByteArray>
 
+class SpellInfoInterface;
 class Cache
 {
 public:
@@ -28,7 +30,9 @@ public:
 
     QString MapName(unsigned int entry);
     QSettings settings;
-
+    SpellInfoInterface* spellInfo;
+    QByteArray m_templateHtml;
+    QByteArray m_styleCss;
 private:
     Cache();
     QMap<unsigned int, QString> maps;

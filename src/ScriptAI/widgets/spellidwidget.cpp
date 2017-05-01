@@ -7,13 +7,130 @@
 #include <QFormLayout>
 #include <QPushButton>
 #include <QLabel>
+#include <QDebug>
+#include <QMouseEvent>
+#include <QDialog>
+#include <QLabel>
+#include <QPixmap>
+#include <QIcon>
+#include <QWebEngineView>
 
 #include "QSpellWork/QSW/plugins/spellinfo/interface.h"
 #include "plugins/spellinfo/pre-tbc/spellinfo.h"
 #include "plugins/spellinfo/pre-tbc/structure.h"
-#include <QLabel>
-#include <QPixmap>
-#include <QIcon>
+#include "mustache/mustache.h"
+#include "MainForm.h"
+
+class QSWPageCopy : public QWebEnginePage
+{
+    public:
+        QSWPageCopy(int id, QObject* parent = nullptr)
+            : QWebEnginePage(parent),  m_spellId(0)
+        {
+            setInfo(id);
+        }
+
+        quint32 getSpellId() const { return m_spellId; }
+        QString getSourceHtml() const { return m_sourceHtml; }
+
+        void setCompareInfo(const QString &html)
+        {
+            setHtml(html, QUrl(QString("http://spellwork/%0").arg(m_spellId)));
+        }
+
+        void setInfo(quint32 id)
+        {
+            QVariantHash values = Cache::Get().spellInfo->getValues(id);
+            values["style"] = Cache::Get().m_styleCss;
+            Mustache::Renderer renderer;
+            Mustache::QtVariantContext context(values);
+
+            QString html;
+            QTextStream stream(&html);
+            stream << renderer.render(Cache::Get().m_templateHtml, &context);
+
+            html.replace("\n",  "");
+            html.replace("><", ">\n<");
+
+            if (id)
+                m_spellId = id;
+
+            m_sourceHtml = html;
+            setHtml(html, QUrl(QString("http://spellwork/%0").arg(id)));
+        }
+        bool acceptNavigationRequest(const QUrl& url, QWebEnginePage::NavigationType type, bool)
+        {
+            if (type == QWebEnginePage::NavigationTypeLinkClicked)
+            {
+                qint32 id = url.toString().section('/', -1).toUInt();
+                history.push(m_spellId);
+                setInfo(id);
+                return false;
+            }else if(type == QWebEnginePage::NavigationTypeBackForward){
+
+            }
+            return true;
+        }
+        void triggerAction(WebAction action, bool b) {
+            if(action == WebAction::Back){
+                if(history.size() > 0){
+                    setInfo(history.pop());
+                }
+            }else{
+                QWebEnginePage::triggerAction(action, b);
+            }
+        }
+
+    private:
+        quint32 m_spellId;
+        QString m_sourceHtml;
+        QStack<int> history;
+};
+
+SpellIconWidget::SpellIconWidget(const QImage &img, QWidget *parent)
+    :QLabel(parent)
+{
+    setPixmap(QPixmap::fromImage(img));
+    setScaledContents(true);
+}
+
+void SpellIconWidget::mouseDoubleClickEvent(QMouseEvent *){
+    emit spellIconClicked();
+}
+
+class SpellView : public QDialog {
+public:
+    SpellView(int id, QWidget* parent){
+        if(!Cache::Get().spellInfo){
+            qCritical() << "SpellView widget ctor, but spellInfo ptr in Cache is nullptr";
+            return;
+        }
+        QHBoxLayout* l = new QHBoxLayout(this);
+        setLayout(l);
+        QWebEngineView* view = new QWebEngineView(this);
+        l->addWidget(view);
+        page = new QSWPageCopy(id, parent);
+        /*
+        QVariantHash values = Cache::Get().spellInfo->getValues(id);
+        values["style"] = Cache::Get().m_styleCss;
+        Mustache::Renderer renderer;
+        Mustache::QtVariantContext context(values);
+
+        QString html;
+        QTextStream stream(&html);
+        stream << renderer.render(Cache::Get().m_templateHtml, &context);
+
+        html.replace("\n",  "");
+        html.replace("><", ">\n<");
+
+        page->setInfo(html, id);
+        */
+        view->setPage(page);
+    }
+
+private:
+    QSWPageCopy* page;
+};
 
 SpellIDWidget::SpellIDWidget(QSqlRecord& r, const QString fieldName, const EventAI::Parameter& param, QWidget* parent)
  : QWidget(parent),
@@ -25,18 +142,29 @@ SpellIDWidget::SpellIDWidget(QSqlRecord& r, const QString fieldName, const Event
     setLayout(l);
     QFormLayout* form = new QFormLayout();
 
-    changeButton = new QPushButton("...", this);
-    connect(changeButton, &QPushButton::clicked, this, &SpellIDWidget::onChangeSpellBtn);
-
-    l->addWidget(changeButton);
-    l->addLayout(form);
-
     idLabel = new QLabel(this);
     nameLabel = new QLabel(this);
+
+    bool ok;
+    int spellId = record.value(rIdx).toInt(&ok);
+    Q_ASSERT(ok);
+    spellInfo = Spell::getRecord(spellId, true);
+    if (!spellInfo){
+        nameLabel->setText("SPELL NOT FOUND");
+        return;
+    }
+    nameLabel->setText(spellInfo->name());
+    iconLabel = new SpellIconWidget(getSpellIcon(spellInfo->spellIconId), this);
+    connect(iconLabel, &SpellIconWidget::spellIconClicked, this, &SpellIDWidget::onShowSpellDetails);
+    l->addWidget(iconLabel);
+    l->addLayout(form);
+
+    idLabel->setText(QString::number(spellId));
+
     form->addRow("ID:", idLabel);
     form->addRow("Name:", nameLabel);
 
-    PopulateInfoFromDBC();
+
 }
 
 void SpellIDWidget::onChangeSpellBtn()
@@ -45,21 +173,11 @@ void SpellIDWidget::onChangeSpellBtn()
     //Warnings::Warning("SpellIDWidget::onChangeSpellBtn unimplemented", QMessageBox::Information);
 }
 
-void SpellIDWidget::PopulateInfoFromDBC()
+void SpellIDWidget::onShowSpellDetails()
 {
-    bool ok;
-    int spellId = record.value(rIdx).toInt(&ok);
-    Q_ASSERT(ok);
-    idLabel->setText(QString::number(spellId));
-    const Spell::entry* spellInfo = Spell::getRecord(spellId, true);
-    if (!spellInfo){
-        nameLabel->setText("SPELL NOT FOUND");
-        return;
-    }
-    nameLabel->setText(spellInfo->name());
-    QImage img = getSpellIcon(spellInfo->spellIconId);
-    QIcon ico(QPixmap::fromImage(img));
-    changeButton->setIcon(ico);
-    changeButton->setIconSize(img.size());
-    changeButton->setFixedSize(img.size());
+    //todo: show dialog with spell-info or something
+    qDebug() << "YAY";
+    SpellView dialog(record.value(rIdx).toInt(), this);
+    dialog.exec();
 }
+

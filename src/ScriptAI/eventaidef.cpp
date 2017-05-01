@@ -70,9 +70,11 @@ void EventAIStorage::LoadEvents()
         QJsonObject o = v.toObject();
 
         EventAI_event event;
+        QString name = o["name"].toString();
 
         event.id = o["id"].toInt();
-        event.name = o["name"].toString();
+        event.name = name;
+        event.shortName = name.remove("EVENT_T_");
         event.description = o["d1"].toString();
         event.triggerNote = o["t"].toString();
         QJsonArray params = o["params"].toArray();
@@ -135,9 +137,10 @@ void EventAIStorage::LoadActions()
     foreach(const QJsonValue& v, eActions){
         QJsonObject o = v.toObject();
         EventAI_Action action;
-
+        QString name = o["Name"].toString();
         action.id = o["id"].toInt();
-        action.name = o["Name"].toString();
+        action.name = name;
+        action.shortName = name.remove("ACTION_T_");
         action.description = o["desc"].toString();
 
         QJsonArray params = o["params"].toArray();

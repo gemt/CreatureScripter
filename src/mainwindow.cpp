@@ -54,9 +54,9 @@ void LoadQSW(){
     MPQ::mpqDir() = Cache::Get().settings.value("mpq-dir", "").toString();
     MPQ::localeDir() = "";
     DBC::dbcDir() = "DBFilesClient/";
-    SpellInfoInterface* si = qobject_cast<SpellInfoInterface*>(new SpellInfo());
-    MPQ::setMpqFiles(si->getMPQFiles());
-    si->init();
+    Cache::Get().spellInfo = qobject_cast<SpellInfoInterface*>(new SpellInfo());
+    MPQ::setMpqFiles(Cache::Get().spellInfo->getMPQFiles());
+    Cache::Get().spellInfo->init();
 }
 
 void MainWindow::InitWindow()

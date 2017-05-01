@@ -7,7 +7,7 @@ type_EventType::type_EventType(int currType)
 {
     EventAIStorage& s = EventAIStorage::Get();
     foreach(const EventAI_event& e, s.Events()){
-        addItem(e.name, e.id);
+        addItem(e.shortName, e.id);
     }
     bool ok;
     for(int i = 0; i <= count(); i++){
@@ -28,7 +28,7 @@ type_ActionType::type_ActionType(int currType)
 {
     EventAIStorage& s = EventAIStorage::Get();
     foreach(const EventAI_Action& a, s.Actions()){
-        addItem(a.name, a.id);
+        addItem(a.shortName, a.id);
     }
     bool ok;
     for(int i = 0; i <= count(); i++){

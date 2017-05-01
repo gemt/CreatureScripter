@@ -11,6 +11,7 @@
 #include <QStandardItem>
 #include <QSqlDriver>
 #include <QSqlField>
+#include <QFile>
 
 QString Cache::MapName(unsigned int entry)
 {
@@ -18,7 +19,16 @@ QString Cache::MapName(unsigned int entry)
 }
 
 Cache::Cache(){
-    using namespace Tables;
+    QFile templateFile(":/css/QSpellWork/QSW/plugins/spellinfo/pre-tbc/pre-tbc.html");
+    if (templateFile.open(QFile::ReadOnly)) {
+        m_templateHtml = templateFile.readAll();
+        templateFile.close();
+    }
+    QFile styleFile(":/css/QSpellWork/QSW/plugins/spellinfo/pre-tbc/pre-tbc.css");
+    if (styleFile.open(QFile::ReadOnly)) {
+        m_styleCss = styleFile.readAll();
+        styleFile.close();
+    }
 }
 
 
