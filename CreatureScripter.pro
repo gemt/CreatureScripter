@@ -24,12 +24,14 @@ src/ScriptAI/ \
 src/ScriptAI/widgets/ \
 QSpellWork/QSW/ \
 
-HEADERS += $$files(src/*.h)
+HEADERS += $$files(src/*.h) \
+    src/collapsableframe.h
 HEADERS += $$files(src/CreatureTabs/*.h)
 HEADERS += $$files(src/ScriptAI/*.h)
 HEADERS += $$files(src/ScriptAI/widgets/*.h)
 
-SOURCES += $$files(src/*.cpp)
+SOURCES += $$files(src/*.cpp) \
+    src/collapsableframe.cpp
 SOURCES += $$files(src/CreatureTabs/*.cpp)
 SOURCES += $$files(src/ScriptAI/*.cpp)
 SOURCES += $$files(src/ScriptAI/widgets/*.cpp)
@@ -46,6 +48,7 @@ HEADERS += QSpellWork/QSW/qsw.h \
            QSpellWork/QSW/plugins/spellinfo/pre-tbc/spellinfo.h \
            QSpellWork/QSW/plugins/spellinfo/pre-tbc/structure.h
 
+
 SOURCES += QSpellWork/QSW/qsw.cpp \
            QSpellWork/QSW/blp/blp.cpp \
            QSpellWork/QSW/dbc/DBC.cpp \
@@ -53,9 +56,9 @@ SOURCES += QSpellWork/QSW/qsw.cpp \
            QSpellWork/QSW/wov/texture.cpp \
            QSpellWork/QSW/mustache/mustache.cpp \
            QSpellWork/QSW/plugins/spellinfo/pre-tbc/spellinfo.cpp \
-           QSpellWork/QSW/plugins/spellinfo/pre-tbc/structure.cpp \
+           QSpellWork/QSW/plugins/spellinfo/pre-tbc/structure.cpp
 
-
+include(Qt-Collapsible-Panel/CollapsibleFrame.pri)
 #CONFIG += debug_and_release
 
 #QSW:

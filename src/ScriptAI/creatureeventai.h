@@ -9,6 +9,7 @@
 #include <memory>
 #include <QVector>
 #include <QScrollArea>
+#include "Qt-Collapsible-Panel/collapsibleframe.h"
 
 class QVBoxLayout;
 class QHBoxLayout;

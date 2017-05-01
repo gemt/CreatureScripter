@@ -97,6 +97,7 @@ struct creature_addon : public Table{
 
 struct creature_ai_scripts : public Table{
     static const QString t;
+    static const QString id;
     static const QString creature_id;
 
     static const QString event_type;

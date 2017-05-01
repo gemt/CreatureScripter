@@ -123,6 +123,7 @@ SpellIDWidget::SpellIDWidget(QSqlRecord& r, const QString fieldName, const Event
    record(r),
    parameter(param)
 {
+    setContentsMargins(0,0,0,0);
     rIdx = record.indexOf(fieldName);
     QHBoxLayout* l = new QHBoxLayout(this);
     setLayout(l);
@@ -140,13 +141,15 @@ SpellIDWidget::SpellIDWidget(QSqlRecord& r, const QString fieldName, const Event
         return;
     }
     nameLabel->setText(spellInfo->name());
+    nameLabel->setContentsMargins(0,0,0,0);
     iconLabel = new SpellIconWidget(getSpellIcon(spellInfo->spellIconId), this);
+    iconLabel->setContentsMargins(0,0,0,0);
     connect(iconLabel, &SpellIconWidget::spellIconClicked, this, &SpellIDWidget::onShowSpellDetails);
     l->addWidget(iconLabel);
     l->addLayout(form);
 
     idLabel->setText(QString::number(spellId));
-
+    idLabel->setContentsMargins(0,0,0,0);
     form->addRow("ID:", idLabel);
     form->addRow("Name:", nameLabel);
 

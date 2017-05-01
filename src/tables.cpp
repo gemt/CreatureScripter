@@ -34,6 +34,7 @@ const QString creature_equip_template_raw::t = "creature_equip_template_raw";
 const QString creature_addon::t = "creature_addon";
 
 const QString creature_ai_scripts::t = "creature_ai_scripts";
+const QString creature_ai_scripts::id = "id";
 const QString creature_ai_scripts::creature_id = "creature_id";
 const QString creature_ai_scripts::event_type = "event_type";
 const QString creature_ai_scripts::event_inverse_phase_mask = "event_inverse_phase_mask";

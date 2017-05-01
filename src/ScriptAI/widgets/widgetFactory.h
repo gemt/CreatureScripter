@@ -15,6 +15,7 @@
 
 static QWidget* CreateParameterWidget(const EventAI::Parameter& param, QSqlRecord& record, const QString& field, QWidget* parent = nullptr){
     QFrame* w = new QFrame(parent);
+    w->setContentsMargins(0,0,0,0);
     w->setObjectName("paramWidget");
     w->setStyleSheet("#paramWidget { border: 1px solid black; }");
     QVBoxLayout* l = new QVBoxLayout(w);
@@ -70,6 +71,7 @@ static QWidget* CreateParameterWidget(const EventAI::Parameter& param, QSqlRecor
         rw = new DefaultLineEdit(record, field, param, w);
     }
     Q_ASSERT(rw);
+    rw->setContentsMargins(0,0,0,0);
     l->addWidget(rw, 0, Qt::AlignTop | Qt::AlignLeft);
     return w;
 }
