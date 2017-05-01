@@ -16,6 +16,7 @@ private:
     QLineEdit* username;
     QLineEdit* password;
     QLineEdit* worlddb;
+    QLineEdit* mpqDir;
 
     QString origConnectionName;
     QString origHostName;
@@ -23,6 +24,7 @@ private:
     QString origWorldDB;
     QString origUsername;
     QString origPassword;
+    QString origMPQDir;
 
 public slots:
     void done(int);

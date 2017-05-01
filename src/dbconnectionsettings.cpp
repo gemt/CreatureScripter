@@ -22,6 +22,7 @@ DBConnectionSettings::DBConnectionSettings(QWidget *parent) :
     origWorldDB = settings.value("worldDB", "mangos").toString();
     origUsername = settings.value("username", "root").toString();
     origPassword = settings.value("password", "").toString();
+    origMPQDir = settings.value("mpq-dir", "").toString();
 
     connection = new QLineEdit(origConnectionName, this);
     hostname = new QLineEdit(origHostName, this);
@@ -29,6 +30,7 @@ DBConnectionSettings::DBConnectionSettings(QWidget *parent) :
     worlddb = new QLineEdit(origWorldDB, this);
     username = new QLineEdit(origUsername, this);
     password = new QLineEdit(origPassword, this);
+    mpqDir = new QLineEdit(origMPQDir, this);
 
     l->addRow("Connection Name", connection);
     l->addRow("Hostname", hostname);
@@ -36,6 +38,7 @@ DBConnectionSettings::DBConnectionSettings(QWidget *parent) :
     l->addRow("Username", username);
     l->addRow("Password", password);
     l->addRow("World DB name", worlddb);
+    l->addRow("MPQ Directory", mpqDir);
 
     QDialogButtonBox* buttons = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
 
@@ -56,6 +59,8 @@ void DBConnectionSettings::done(int i)
         settings.setValue("username", username->text());
         settings.setValue("password", password->text());
         settings.setValue("worldDB", worlddb->text());
+        settings.setValue("mpq-dir", mpqDir->text());
+
         if(Cache::Get().isConnected()){
             Warnings::Warning("Restart the program to reconnect");
         }else{
@@ -68,6 +73,7 @@ void DBConnectionSettings::done(int i)
         settings.setValue("username", origUsername);
         settings.setValue("password", origPassword);
         settings.setValue("worldDB", origWorldDB);
+        settings.setValue("mpq-dir", origMPQDir);
     }
     QDialog::done(i);
 }

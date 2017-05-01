@@ -8,6 +8,13 @@
 #include <QPushButton>
 #include <QLabel>
 
+#include "QSpellWork/QSW/plugins/spellinfo/interface.h"
+#include "plugins/spellinfo/pre-tbc/spellinfo.h"
+#include "plugins/spellinfo/pre-tbc/structure.h"
+#include <QLabel>
+#include <QPixmap>
+#include <QIcon>
+
 SpellIDWidget::SpellIDWidget(QSqlRecord& r, const QString fieldName, const EventAI::Parameter& param, QWidget* parent)
  : QWidget(parent),
    record(r),
@@ -35,7 +42,7 @@ SpellIDWidget::SpellIDWidget(QSqlRecord& r, const QString fieldName, const Event
 void SpellIDWidget::onChangeSpellBtn()
 {
     // new modal dialog showing a spell-searcher type gui, like the creatureSearcher
-    Warnings::Warning("SpellIDWidget::onChangeSpellBtn unimplemented", QMessageBox::Information);
+    //Warnings::Warning("SpellIDWidget::onChangeSpellBtn unimplemented", QMessageBox::Information);
 }
 
 void SpellIDWidget::PopulateInfoFromDBC()
@@ -43,8 +50,16 @@ void SpellIDWidget::PopulateInfoFromDBC()
     bool ok;
     int spellId = record.value(rIdx).toInt(&ok);
     Q_ASSERT(ok);
-
     idLabel->setText(QString::number(spellId));
-    nameLabel->setText("missing dbc integration");
-    //todo: need dbc integration...
+    const Spell::entry* spellInfo = Spell::getRecord(spellId, true);
+    if (!spellInfo){
+        nameLabel->setText("SPELL NOT FOUND");
+        return;
+    }
+    nameLabel->setText(spellInfo->name());
+    QImage img = getSpellIcon(spellInfo->spellIconId);
+    QIcon ico(QPixmap::fromImage(img));
+    changeButton->setIcon(ico);
+    changeButton->setIconSize(img.size());
+    changeButton->setFixedSize(img.size());
 }

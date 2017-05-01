@@ -5,6 +5,9 @@
 #include "dbconnectionsettings.h"
 #include "timer.h"
 #include "creaturesearcher.h"
+#include "QSpellWork/QSW/plugins/spellinfo/interface.h"
+#include "plugins/spellinfo/pre-tbc/spellinfo.h"
+#include "plugins/spellinfo/pre-tbc/structure.h"
 
 #include <QDebug>
 #include <QSqlError>
@@ -46,6 +49,16 @@ MainWindow::~MainWindow()
 
 }
 
+void LoadQSW(){
+
+    MPQ::mpqDir() = Cache::Get().settings.value("mpq-dir", "").toString();
+    MPQ::localeDir() = "";
+    DBC::dbcDir() = "DBFilesClient/";
+    SpellInfoInterface* si = qobject_cast<SpellInfoInterface*>(new SpellInfo());
+    MPQ::setMpqFiles(si->getMPQFiles());
+    si->init();
+}
+
 void MainWindow::InitWindow()
 {
     QSplitter* splitter = static_cast<QSplitter*>(centralWidget());
@@ -75,14 +88,16 @@ void MainWindow::InitWindow()
     splitter->setContentsMargins(0,0,0,0);
 
     QMenu* menu = QMainWindow::menuBar()->addMenu("File");
-    QAction* act = new QAction(QIcon(":/icons/ico/Data-Settings-48.png"), "DB Connection");
-    connect(act, &QAction::triggered, [this](){
+    QAction* dbAct = new QAction(QIcon(":/icons/ico/Data-Settings-48.png"), "DB Connection");
+    connect(dbAct, &QAction::triggered, [this](){
         DBConnectionSettings dbSettings(this);
         if(dbSettings.exec() == QDialog::Accepted){
+            LoadQSW();
             //todo: reconnect to db, i guess
         }
     });
-    menu->addActions(QList<QAction*>{act});
+    menu->addActions(QList<QAction*>{dbAct});
+    LoadQSW();
 }
 
 void MainWindow::onNameSearch()

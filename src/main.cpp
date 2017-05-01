@@ -57,7 +57,8 @@ bool CheckConnectionSettings(MainWindow& mw)
     return true;
 }
 
-#include "migration.h"
+
+
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
@@ -65,6 +66,7 @@ int main(int argc, char *argv[])
     SetAppInfo();
     MainWindow w;
     w.show();
+
     try {
         EventAI::EventAIStorage::Get();
     }catch(std::exception& e){
