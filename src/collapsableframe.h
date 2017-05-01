@@ -12,8 +12,6 @@ private:
     QVBoxLayout* l;
     QPushButton* btn;
     QWidget* _w;
-    int _height;
-    bool _hidden;
 public:
     CollapsibleFrame(QString headerText, QWidget *parent);
     void SetWidget(QWidget* w);

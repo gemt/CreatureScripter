@@ -3,6 +3,7 @@
 #include "eventaidef.h"
 #include "eventwidgetclasses.h"
 #include "widgetFactory.h"
+#include "collapsableframe.h"
 
 #include <QSqlRecord>
 #include <QFormLayout>
@@ -153,14 +154,7 @@ CreatureEventAI::CreatureEventAI(std::shared_ptr<Tables::creature_template> crea
         EventEntry* ew = new EventEntry(r, frame);
         frame->SetWidget(ew);
         vl->addWidget(frame, Qt::AlignTop);
-        //vl->addWidget(ew);
-        //QPalette p = ew->palette();
-        //p.setBrush(QPalette::Background, QBrush(p.background().color().lighter()));
-        //ew->setContentsMargins(0,0,0,0);
-        //vl->addWidget(ew);
         entryWidgets.push_back(ew);
-        //frame->adjustSize();
-        //frame->resize(500,500);
     }
     scrollAreaWidget->adjustSize();
 }
