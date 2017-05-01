@@ -3,7 +3,8 @@
 
 namespace EventAI{
 
-type_EventType::type_EventType(int currType)
+type_EventType::type_EventType(int currType, QWidget* parent)
+    : QComboBox(parent)
 {
     EventAIStorage& s = EventAIStorage::Get();
     foreach(const EventAI_event& e, s.Events()){
@@ -24,8 +25,10 @@ type_EventType::type_EventType(int currType)
     }
 }
 
-type_ActionType::type_ActionType(int currType)
+type_ActionType::type_ActionType(int currType, QWidget* parent)
+    : QComboBox(parent)
 {
+    setSizePolicy(QSizePolicy::Maximum,QSizePolicy::Maximum);
     EventAIStorage& s = EventAIStorage::Get();
     foreach(const EventAI_Action& a, s.Actions()){
         addItem(a.shortName, a.id);

@@ -26,10 +26,6 @@ public:
 private:
     QVector<QWidget*> widgets;
     QVBoxLayout* mainLayout;
-    QHBoxLayout* eventLayout;
-    QHBoxLayout* action1Layout;
-    QHBoxLayout* action2Layout;
-    QHBoxLayout* action3Layout;
     void Remake();
 };
 

@@ -13,8 +13,10 @@
 #include "eventwidgetclasses.h"
 #include "MillisecondsWidget.h"
 
-static QWidget* CreateParameterWidget(const EventAI::Parameter& param, QSqlRecord& record, const QString& field, QVector<QWidget*>& collection, QWidget* parent = nullptr){
+static QWidget* CreateParameterWidget(const EventAI::Parameter& param, QSqlRecord& record, const QString& field, QWidget* parent = nullptr){
     QFrame* w = new QFrame(parent);
+    w->setObjectName("paramWidget");
+    w->setStyleSheet("#paramWidget { border: 1px solid black; }");
     QVBoxLayout* l = new QVBoxLayout(w);
     w->setLayout(l);
     QLabel* lbl = new QLabel(param.name);
@@ -68,7 +70,6 @@ static QWidget* CreateParameterWidget(const EventAI::Parameter& param, QSqlRecor
         rw = new DefaultLineEdit(record, field, param, w);
     }
     Q_ASSERT(rw);
-    l->addWidget(rw);
-    collection.push_back(w);
+    l->addWidget(rw, 0, Qt::AlignTop | Qt::AlignLeft);
     return w;
 }
