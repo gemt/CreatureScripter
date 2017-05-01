@@ -6,6 +6,7 @@ namespace EventAI{
 type_EventType::type_EventType(int currType, QWidget* parent)
     : QComboBox(parent)
 {
+    setSizePolicy(QSizePolicy::Maximum,QSizePolicy::Maximum);
     EventAIStorage& s = EventAIStorage::Get();
     foreach(const EventAI_event& e, s.Events()){
         addItem(e.shortName, e.id);

@@ -80,6 +80,7 @@ void EventEntry::Remake(){
             Q_ASSERT(ok);
             Remake();
         });
+        efl->addWidget(new QLabel("Event:"));
         efl->addWidget(et, 0, Qt::AlignLeft);
         for(int i = 0; i < event.params.size(); i++){
             QWidget* w = CreateParameterWidget(event.params.at(i), record, Tables::creature_ai_scripts::event_paramN(i+1), eventFrame);
@@ -91,6 +92,7 @@ void EventEntry::Remake(){
         int actionId = record.value(Tables::creature_ai_scripts::actionN_type(i+1)).toInt(&ok);
         Q_ASSERT(ok);
         QFrame* actionFrame = new QFrame();
+        actionFrame->setSizePolicy(QSizePolicy::Minimum,QSizePolicy::Minimum);
         widgets.push_back(actionFrame);
         actionFrame->setObjectName("paramWidget");
         actionFrame->setStyleSheet("#paramWidget { border: 1px solid black; }");
@@ -107,7 +109,7 @@ void EventEntry::Remake(){
             Q_ASSERT(ok);
             Remake();
         });
-        //actLayouts[i]->addWidget(at);
+        afl->addWidget(new QLabel(QString("Action %1:").arg(i+1)));
         afl->addWidget(at, Qt::AlignLeft);
         for(int p = 0; p < eventAction.params.size(); p++){
             const Parameter& actParam = eventAction.params.at(p);
@@ -118,19 +120,24 @@ void EventEntry::Remake(){
 }
 
 CreatureEventAI::CreatureEventAI(std::shared_ptr<Tables::creature_template> creature, QWidget *parent) :
-    QWidget(parent),
+    QScrollArea(parent),
     _creature(creature)
 {
-    QFormLayout* l = new QFormLayout(this);
-    setLayout(l);
+    QWidget* scrollAreaWidget = new QWidget(this);
+    scrollAreaWidget->setSizePolicy(QSizePolicy::Minimum,QSizePolicy::Minimum);
+    QVBoxLayout* vl = new QVBoxLayout(scrollAreaWidget);
+    scrollAreaWidget->setLayout(vl);
+
+    setWidget(scrollAreaWidget);
 
     QVector<QSqlRecord>& records = _creature->scripts->records;
     for(QVector<QSqlRecord>::iterator it = records.begin(); it != records.end(); it++){
         QSqlRecord& r = *it;
         EventEntry* ew = new EventEntry(r, this);
-        l->addWidget(ew);
+        vl->addWidget(ew);
         entryWidgets.push_back(ew);
     }
+    scrollAreaWidget->adjustSize();
 }
 
 

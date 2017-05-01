@@ -8,6 +8,8 @@
 #include <QTableWidget>
 #include <memory>
 #include <QVector>
+#include <QScrollArea>
+
 class QVBoxLayout;
 class QHBoxLayout;
 namespace Tables{
@@ -30,7 +32,7 @@ private:
 };
 
 
-class CreatureEventAI : public QWidget
+class CreatureEventAI : public QScrollArea
 {
 public:
     CreatureEventAI(std::shared_ptr<Tables::creature_template> creature, QWidget* parent);
