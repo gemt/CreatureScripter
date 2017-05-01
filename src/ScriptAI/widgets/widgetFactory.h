@@ -4,6 +4,7 @@
 #include <QSqlRecord>
 #include <QLineEdit>
 #include <QDebug>
+#include <QVBoxLayout>
 
 #include "eventaidef.h"
 #include "spellidwidget.h"
@@ -12,19 +13,34 @@
 #include "eventwidgetclasses.h"
 #include "MillisecondsWidget.h"
 
-static QWidget* GetParameterWidget(const EventAI::Parameter& param, QSqlRecord& record, const QString& field, QWidget* parent = nullptr){
+static QWidget* CreateParameterWidget(const EventAI::Parameter& param, QSqlRecord& record, const QString& field, QVector<QWidget*>& collection, QWidget* parent = nullptr){
+    QFrame* w = new QFrame(parent);
+    QVBoxLayout* l = new QVBoxLayout(w);
+    w->setLayout(l);
+    QLabel* lbl = new QLabel(param.name);
+    lbl->setAutoFillBackground(true);
+    QPalette p = lbl->palette();
+    p.setBrush(QPalette::ColorRole::Background, QBrush(QColor(150,150,150)));
+    p.setBrush(QPalette::ColorRole::Window, QBrush(QColor(150,150,150)));
+    p.setBrush(QPalette::ColorRole::AlternateBase, QBrush(QColor(150,150,150)));
+    p.setBrush(QPalette::ColorRole::ToolTipBase, QBrush(QColor(150,150,150)));
+    lbl->setPalette(p);
+    w->setFrameStyle(QFrame::Raised);
+    lbl->setToolTip(param.description);
+    l->addWidget(lbl, 0, Qt::AlignTop);
+    QWidget* rw = nullptr;
     switch(param.type){
-    case EventAI::MILLISECONDS: return new MillisecondsWidget(record, field, param, parent);
-    case EventAI::PERCENTAGE: return new DefaultLineEdit(record, field, param, parent);
-    case EventAI::SPELL_ID: return new SpellIDWidget(record, field, param, parent);
-    case EventAI::FACTION_ID_FLAGS: return new TypeValueWidget(EventAI::factionFlags, record, field, param, parent);
-    case EventAI::TARGET: return new TypeValueWidget(EventAI::TargetTypes, record, field, param, parent);
-    case EventAI::CAST_FLAGS: return new TypeValueWidget(EventAI::CastFlags, record, field, param, parent);
-    case EventAI::SHEET: return new TypeValueWidget(EventAI::SheetState, record, field, param, parent);
-    case EventAI::EVENT_TYPE_MASK: return new TypeValueWidget(EventAI::EventTypeMask, record, field, param, parent);
-    case EventAI::STAND_STATE: return new TypeValueWidget(EventAI::StandState, record, field, param, parent);
-    case EventAI::MOVEMENT_TYPE:return new TypeValueWidget(EventAI::MovementType, record, field, param, parent);
-    case EventAI::REACT_STATE: return new TypeValueWidget(EventAI::ReactState, record, field, param, parent);
+    case EventAI::MILLISECONDS: rw = new MillisecondsWidget(record, field, param, w); break;
+    case EventAI::PERCENTAGE: rw =  new DefaultLineEdit(record, field, param, w);break;
+    case EventAI::SPELL_ID: rw = new SpellIDWidget(record, field, param, w);break;
+    case EventAI::FACTION_ID_FLAGS: rw = new TypeValueWidget(EventAI::factionFlags, record, field, param, w);break;
+    case EventAI::TARGET: rw = new TypeValueWidget(EventAI::TargetTypes, record, field, param, w);break;
+    case EventAI::CAST_FLAGS: rw = new TypeValueWidget(EventAI::CastFlags, record, field, param, w);break;
+    case EventAI::SHEET: rw = new TypeValueWidget(EventAI::SheetState, record, field, param, w);break;
+    case EventAI::EVENT_TYPE_MASK: rw = new TypeValueWidget(EventAI::EventTypeMask, record, field, param, w);break;
+    case EventAI::STAND_STATE: rw = new TypeValueWidget(EventAI::StandState, record, field, param, w);break;
+    case EventAI::MOVEMENT_TYPE:rw = new TypeValueWidget(EventAI::MovementType, record, field, param, w);break;
+    case EventAI::REACT_STATE: rw = new TypeValueWidget(EventAI::ReactState, record, field, param, w);break;
     case EventAI::UNUSED:
     case EventAI::SPELL_SCHOOL:
     case EventAI::DISTANCE:
@@ -49,6 +65,10 @@ static QWidget* GetParameterWidget(const EventAI::Parameter& param, QSqlRecord& 
     case EventAI::CREATURE_TEMPLATE_ID:
     case EventAI::RADIUS:
     case EventAI::CHANCE:
-        return new DefaultLineEdit(record, field, param, parent);
+        rw = new DefaultLineEdit(record, field, param, w);
     }
+    Q_ASSERT(rw);
+    l->addWidget(rw);
+    collection.push_back(w);
+    return w;
 }

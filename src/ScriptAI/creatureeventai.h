@@ -8,7 +8,8 @@
 #include <QTableWidget>
 #include <memory>
 #include <QVector>
-
+class QVBoxLayout;
+class QHBoxLayout;
 namespace Tables{
 struct creature_template;
 }
@@ -16,13 +17,19 @@ struct creature_template;
 namespace EventAI
 {
 
-class EventEntry : public QTableWidget {
+class EventEntry : public QFrame {
 private:
     QSqlRecord& record;
 public:
     EventEntry(QSqlRecord& record, QWidget* parent);
 
 private:
+    QVector<QWidget*> widgets;
+    QVBoxLayout* mainLayout;
+    QHBoxLayout* eventLayout;
+    QHBoxLayout* action1Layout;
+    QHBoxLayout* action2Layout;
+    QHBoxLayout* action3Layout;
     void Remake();
 };
 

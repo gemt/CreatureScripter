@@ -110,21 +110,7 @@ public:
         QWebEngineView* view = new QWebEngineView(this);
         l->addWidget(view);
         page = new QSWPageCopy(id, parent);
-        /*
-        QVariantHash values = Cache::Get().spellInfo->getValues(id);
-        values["style"] = Cache::Get().m_styleCss;
-        Mustache::Renderer renderer;
-        Mustache::QtVariantContext context(values);
 
-        QString html;
-        QTextStream stream(&html);
-        stream << renderer.render(Cache::Get().m_templateHtml, &context);
-
-        html.replace("\n",  "");
-        html.replace("><", ">\n<");
-
-        page->setInfo(html, id);
-        */
         view->setPage(page);
     }
 

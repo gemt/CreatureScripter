@@ -9,19 +9,8 @@
 #include <QPushButton>
 #include <QHeaderView>
 #include <QLineEdit>
-
+#include <QGridLayout>
 namespace EventAI{
-
-EventEntry::EventEntry(QSqlRecord &record, QWidget* parent) :
-    QTableWidget(parent),
-    record(record)
-{
-    Q_ASSERT(record.count() == Tables::creature_ai_scripts::num_cols);
-    //horizontalHeader()->setHidden(true);
-    verticalHeader()->setHidden(true);
-    Remake();
-}
-
 QTableWidgetItem* HeaderItem(const Parameter& type){
     QTableWidgetItem* itm = new QTableWidgetItem(type.name);
     itm->setToolTip(type.description);
@@ -41,13 +30,102 @@ static const EventAI_Action& GetEventAction(int actionId)
     return *aIt;
 }
 
+
+EventEntry::EventEntry(QSqlRecord &record, QWidget* parent) :
+    QFrame(parent),
+    record(record),
+    mainLayout(nullptr),
+    eventLayout(nullptr),
+    action1Layout(nullptr),
+    action2Layout(nullptr),
+    action3Layout(nullptr)
+{
+    setFrameShadow(QFrame::Shadow::Raised);
+    Q_ASSERT(record.count() == Tables::creature_ai_scripts::num_cols);
+    //horizontalHeader()->setHidden(true);
+    //verticalHeader()->setHidden(true);
+    Remake();
+}
+void EventEntry::Remake(){
+    foreach(QWidget* w, widgets){
+        w->deleteLater();
+    }
+    widgets.clear();
+    delete mainLayout;
+
+    mainLayout = new QVBoxLayout();
+    setLayout(mainLayout);
+    eventLayout = new QHBoxLayout();
+    mainLayout->addLayout(eventLayout);
+    QHBoxLayout* actLayouts[3];
+    actLayouts[0] = action1Layout = new QHBoxLayout();
+    actLayouts[1] = action2Layout = new QHBoxLayout();
+    actLayouts[2] = action3Layout = new QHBoxLayout();
+    mainLayout->addLayout(action1Layout);
+    mainLayout->addLayout(action2Layout);
+    mainLayout->addLayout(action3Layout);
+
+    EventAIStorage& s = EventAIStorage::Get();
+    s.Events();
+    bool ok;
+    quint32 eventId = record.value(Tables::creature_ai_scripts::event_type).toUInt(&ok);Q_ASSERT(ok);
+    quint32 action1Id = record.value(Tables::creature_ai_scripts::action1_type).toUInt(&ok);Q_ASSERT(ok);
+    quint32 action2Id = record.value(Tables::creature_ai_scripts::action2_type).toUInt(&ok);Q_ASSERT(ok);
+    quint32 action3Id = record.value(Tables::creature_ai_scripts::action3_type).toUInt(&ok);Q_ASSERT(ok);
+
+    auto eIt = s.Events().find(eventId);
+    if(eIt == EventAIStorage::Get().Events().end())
+        throw std::runtime_error(QString("EventEntry::Remake() eventID %1 is unknown").arg(eventId).toStdString());
+
+    const EventAI_event& event = *eIt;
+
+
+
+    type_EventType* et = new type_EventType(record.value(Tables::creature_ai_scripts::event_type).toInt(&ok));
+    Q_ASSERT(ok);
+    connect(et, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), [this, et](int i){
+        bool ok;
+        record.setValue(Tables::creature_ai_scripts::event_type,et->itemData(i).toInt(&ok));
+        Q_ASSERT(ok);
+        Remake();
+    });
+    eventLayout->addWidget(et);
+    widgets.push_back(et);
+    for(int i = 0; i < event.params.size(); i++){
+        QWidget* w = CreateParameterWidget(event.params.at(i), record, Tables::creature_ai_scripts::event_paramN(i+1), widgets);
+        eventLayout->addWidget(w);
+    }
+
+    for(int i = 0; i < 3; i++){
+        int actionId = record.value(Tables::creature_ai_scripts::actionN_type(i+1)).toInt(&ok);
+        Q_ASSERT(ok);
+        const EventAI_Action& eventAction = GetEventAction(actionId);
+        type_ActionType* at = new type_ActionType(eventAction.id);
+        widgets.push_back(at);
+        connect(at, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), [this, at, i](int isig){
+            bool ok;
+            record.setValue(Tables::creature_ai_scripts::actionN_type(i+1),at->itemData(isig).toInt(&ok));
+            Q_ASSERT(ok);
+            Remake();
+        });
+        actLayouts[i]->addWidget(at);
+
+        for(int p = 0; p < eventAction.params.size(); p++){
+            const Parameter& actParam = eventAction.params.at(p);
+            QWidget* w = CreateParameterWidget(actParam, record, Tables::creature_ai_scripts::actionX_paramY(i+1,p+1), widgets);
+            actLayouts[i]->addWidget(w);
+        }
+    }
+}
+
+#if 0
 void EventEntry::Remake()
 {
     //TODO: missing columns/info: event_flags, event_chance, event_inverse_phase_mask, comment
     // and alternatively some creature id/event id
 
-    clear();
-    setRowCount(1);
+    //clear();
+    //setRowCount(4);
     EventAIStorage& s = EventAIStorage::Get();
     s.Events();
     bool ok;
@@ -60,6 +138,7 @@ void EventEntry::Remake()
     auto eIt = s.Events().find(eventId);
     if(eIt == EventAIStorage::Get().Events().end())
         throw std::runtime_error(QString("EventEntry::Remake() eventID %1 is unknown").arg(eventId).toStdString());
+
     const EventAI_event& event = *eIt;
     col_count += event.params.size();
 
@@ -69,9 +148,10 @@ void EventEntry::Remake()
     col_count += GetEventAction(action2Id).params.size();
     col_count += GetEventAction(action3Id).params.size();
 
-    setColumnCount(col_count);
+    //setColumnCount(col_count);
     int cur_col = 0;
-    setHorizontalHeaderItem(cur_col, new QTableWidgetItem("Event Name"));
+
+    //setHorizontalHeaderItem(cur_col, new QTableWidgetItem("Event Name"));
     type_EventType* et = new type_EventType(record.value(Tables::creature_ai_scripts::event_type).toInt(&ok));
     Q_ASSERT(ok);
     connect(et, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), [this, et](int i){
@@ -80,20 +160,22 @@ void EventEntry::Remake()
         Q_ASSERT(ok);
         Remake();
     });
-    setCellWidget(0, cur_col, et);
-    cur_col++;
+    //setCellWidget(0, cur_col, et);
+    //cur_col++;
 
     //adding event params
     for(int i = 0; i < event.params.size(); i++){
-        setHorizontalHeaderItem(cur_col, HeaderItem(event.params.at(i)));
-        setCellWidget(0, cur_col, GetParameterWidget(event.params.at(i), record, Tables::creature_ai_scripts::event_paramN(i+1)));
-                      //EventWidget(event.params.at(i), record, Tables::creature_ai_scripts::event_paramN(i+1)));
-        cur_col++;
+        //setHorizontalHeaderItem(cur_col, HeaderItem(event.params.at(i)));
+        //setCellWidget(0, cur_col, GetParameterWidget(event.params.at(i), record, Tables::creature_ai_scripts::event_paramN(i+1)));
+        //              //EventWidget(event.params.at(i), record, Tables::creature_ai_scripts::event_paramN(i+1)));
+        GetParameterWidget(event.params.at(i), record, Tables::creature_ai_scripts::event_paramN(i+1));
+        //cur_col++;
     }
 
     // adding actions
     for(int i = 0; i < 3; i++){
-        setHorizontalHeaderItem(cur_col, new QTableWidgetItem(QString("Action %1").arg(i+1)));
+        cur_col = 0;
+        //setHorizontalHeaderItem(cur_col, new QTableWidgetItem(QString("Action %1").arg(i+1)));
         int actionId = record.value(Tables::creature_ai_scripts::actionN_type(i+1)).toInt(&ok);
         Q_ASSERT(ok);
         const EventAI_Action& eventAction = GetEventAction(actionId);
@@ -104,12 +186,15 @@ void EventEntry::Remake()
             Q_ASSERT(ok);
             Remake();
         });
-        setCellWidget(0, cur_col, at);
+        //setCellWidget(i+1, cur_col, at);
         cur_col++;
         for(int p = 0; p < eventAction.params.size(); p++){
             const Parameter& actParam = eventAction.params.at(p);
-            setHorizontalHeaderItem(cur_col, HeaderItem(actParam));
-            setCellWidget(0, cur_col, GetParameterWidget(actParam, record, Tables::creature_ai_scripts::actionX_paramY(i+1,p+1)));
+            //setHorizontalHeaderItem(cur_col, HeaderItem(actParam));
+            //setCellWidget(i+1, cur_col, GetParameterWidget(actParam, record, Tables::creature_ai_scripts::actionX_paramY(i+1,p+1)));
+
+            GetParameterWidget(actParam, record, Tables::creature_ai_scripts::actionX_paramY(i+1,p+1));
+
             cur_col++;
         }
     }
@@ -118,11 +203,12 @@ void EventEntry::Remake()
 
 
 
-
     resizeColumnsToContents();
     resizeRowsToContents();
+    setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
+    adjustSize();
 }
-
+#endif
 
 CreatureEventAI::CreatureEventAI(std::shared_ptr<Tables::creature_template> creature, QWidget *parent) :
     QWidget(parent),
