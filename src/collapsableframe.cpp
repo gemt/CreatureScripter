@@ -10,10 +10,8 @@ CollapsibleFrame::CollapsibleFrame(QString headerText, QWidget *parent)
     l = new QVBoxLayout(this);
     setLayout(l);
     btn = new QPushButton(headerText);
-    //btn->setSizePolicy(QSizePolicy::Maximum,QSizePolicy::Maximum);
     l->addWidget(btn,0,Qt::AlignTop|Qt::AlignLeft);
     setSizePolicy(QSizePolicy::Maximum,QSizePolicy::Maximum);
-    //l->setSizeConstraint(QLayout::SetFixedSize);
 }
 
 void CollapsibleFrame::SetWidget(QWidget *w)

@@ -11,6 +11,7 @@
 #include <QScrollArea>
 
 class QVBoxLayout;
+class QGridLayout;
 class QHBoxLayout;
 namespace Tables{
 struct creature_template;
@@ -27,8 +28,10 @@ public:
 
 private:
     QVector<QWidget*> widgets;
-    QVBoxLayout* mainLayout;
+    QVector<QWidget*> eWidgets;
+    QGridLayout* mainLayout;
     void Remake();
+
 };
 
 
