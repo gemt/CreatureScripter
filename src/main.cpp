@@ -1,4 +1,10 @@
 #include "mainwindow.h"
+#include "warnings.h"
+#include "cache.h"
+#include "creature.h"
+#include "dbconnectionsettings.h"
+#include "eventaidef.h"
+
 #include <QApplication>
 #include <QSettings>
 #include <QSqlDatabase>
@@ -6,13 +12,6 @@
 #include <QDebug>
 #include <QStyleFactory>
 #include <QPalette>
-#include "warnings.h"
-#include "cache.h"
-#include "creature.h"
-#include "dbconnectionsettings.h"
-#include "eventaidef.h"
-
-#include "MainForm.h"
 
 void SetStyle()
 {
@@ -67,11 +66,6 @@ int main(int argc, char *argv[])
     MainWindow w;
     w.show();
 
-    QDialog* d = new QDialog();
-    QHBoxLayout* l = new QHBoxLayout(d);
-    d->setLayout(l);
-    l->addWidget(new MainForm());
-    d->exec();
     try {
         EventAI::EventAIStorage::Get();
     }catch(std::exception& e){
@@ -81,6 +75,7 @@ int main(int argc, char *argv[])
     if(!CheckConnectionSettings(w)){
         return 1;
     }
+
     w.InitWindow();
 
     return a.exec();

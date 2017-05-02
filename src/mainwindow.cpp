@@ -5,9 +5,8 @@
 #include "dbconnectionsettings.h"
 #include "timer.h"
 #include "creaturesearcher.h"
-#include "QSpellWork/QSW/plugins/spellinfo/interface.h"
-#include "plugins/spellinfo/pre-tbc/spellinfo.h"
-#include "plugins/spellinfo/pre-tbc/structure.h"
+#include "SettingsForm.h"
+#include "qswwrapper.h"
 
 #include <QDebug>
 #include <QSqlError>
@@ -24,7 +23,7 @@
 #include <QTabWidget>
 #include <QMenuBar>
 #include <QIcon>
-
+#include <QCloseEvent>
 
 #define QT_DEBUG_PLUGINS
 
@@ -47,17 +46,6 @@ MainWindow::MainWindow(QWidget *parent)
 MainWindow::~MainWindow()
 {
 
-}
-
-void LoadQSW(){
-/*
-    MPQ::mpqDir() = Cache::Get().settings.value("mpq-dir", "").toString();
-    MPQ::localeDir() = "";
-    DBC::dbcDir() = "DBFilesClient/";
-    Cache::Get().spellInfo = qobject_cast<SpellInfoInterface*>(new SpellInfo());
-    MPQ::setMpqFiles(Cache::Get().spellInfo->getMPQFiles());
-    Cache::Get().spellInfo->init();
-    */
 }
 
 void MainWindow::InitWindow()
@@ -93,12 +81,31 @@ void MainWindow::InitWindow()
     connect(dbAct, &QAction::triggered, [this](){
         DBConnectionSettings dbSettings(this);
         if(dbSettings.exec() == QDialog::Accepted){
-            LoadQSW();
+            //todo: reconnect to db, i guess
+        }
+    });
+    QAction* qswAct = new QAction(QIcon(":/icons/ico/Data-Settings-48.png"), "QSW Directories");
+    connect(qswAct , &QAction::triggered, [this](){
+        SettingsForm s(this);
+        if(s.exec() == QDialog::Accepted){
             //todo: reconnect to db, i guess
         }
     });
     menu->addActions(QList<QAction*>{dbAct});
-    //LoadQSW();
+
+    QMenu* qswMenu = QMainWindow::menuBar()->addMenu("QSW");
+    QAction* qswShowHide = new QAction("Toggle show/hide");
+    connect(qswShowHide , &QAction::triggered, [this](){
+        QSWWrapper::Get().setHidden(!QSWWrapper::Get().isHidden());
+    });
+    QAction* qswSettings = new QAction("QSW Directories");
+    connect(qswSettings , &QAction::triggered, [this](){
+        SettingsForm s(this);
+        if(s.exec() == QDialog::Accepted){
+            //todo: reconnect to db, i guess
+        }
+    });
+    qswMenu->addActions(QList<QAction*>{qswShowHide, qswSettings});
 }
 
 void MainWindow::onNameSearch()
