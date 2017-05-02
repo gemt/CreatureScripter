@@ -12,6 +12,7 @@
 #include <QSqlDriver>
 #include <QSqlField>
 #include <QFile>
+#include <QWindow>
 
 QString Cache::MapName(unsigned int entry)
 {
@@ -30,7 +31,6 @@ Cache::Cache(){
         styleFile.close();
     }
 }
-
 
 QString Cache::Table(const QString& table) const{
     QSettings settings;

@@ -36,7 +36,7 @@ static QWidget* CreateParameterWidget(const EventAI::Parameter& param, QSqlRecor
     switch(param.type){
     case EventAI::MILLISECONDS: rw = new MillisecondsWidget(record, field, param, w); break;
     case EventAI::PERCENTAGE: rw =  new DefaultLineEdit(record, field, param, w);break;
-    case EventAI::SPELL_ID: rw = new SpellIDWidget(record, field, param, w);break;
+    //case EventAI::SPELL_ID: rw = new SpellIDWidget(record, field, param, w);break;
     case EventAI::FACTION_ID_FLAGS: rw = new TypeValueWidget(EventAI::factionFlags, record, field, param, w);break;
     case EventAI::TARGET: rw = new TypeValueWidget(EventAI::TargetTypes, record, field, param, w);break;
     case EventAI::CAST_FLAGS: rw = new TypeValueWidget(EventAI::CastFlags, record, field, param, w);break;

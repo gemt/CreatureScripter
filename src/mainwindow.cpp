@@ -50,13 +50,14 @@ MainWindow::~MainWindow()
 }
 
 void LoadQSW(){
-
+/*
     MPQ::mpqDir() = Cache::Get().settings.value("mpq-dir", "").toString();
     MPQ::localeDir() = "";
     DBC::dbcDir() = "DBFilesClient/";
     Cache::Get().spellInfo = qobject_cast<SpellInfoInterface*>(new SpellInfo());
     MPQ::setMpqFiles(Cache::Get().spellInfo->getMPQFiles());
     Cache::Get().spellInfo->init();
+    */
 }
 
 void MainWindow::InitWindow()
@@ -97,7 +98,7 @@ void MainWindow::InitWindow()
         }
     });
     menu->addActions(QList<QAction*>{dbAct});
-    LoadQSW();
+    //LoadQSW();
 }
 
 void MainWindow::onNameSearch()
@@ -119,4 +120,18 @@ void MainWindow::onNameSearchTimeout()
         return;
     currentDisplayedSearch = nameSearch->text();
     searcher->Search(currentDisplayedSearch);
+}
+
+void MainWindow::closeEvent(QCloseEvent *event)
+{
+    QMessageBox::StandardButton resBtn =
+            QMessageBox::question( this, "Close",
+            tr("Are you sure?\n"),
+            QMessageBox::Cancel | QMessageBox::No | QMessageBox::Yes,
+            QMessageBox::Yes);
+        if (resBtn != QMessageBox::Yes) {
+            event->ignore();
+        } else {
+            event->accept();
+        }
 }

@@ -12,6 +12,8 @@
 #include "dbconnectionsettings.h"
 #include "eventaidef.h"
 
+#include "MainForm.h"
+
 void SetStyle()
 {
     qApp->setStyle(QStyleFactory::create("Fusion"));
@@ -57,8 +59,6 @@ bool CheckConnectionSettings(MainWindow& mw)
     return true;
 }
 
-
-
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
@@ -67,6 +67,11 @@ int main(int argc, char *argv[])
     MainWindow w;
     w.show();
 
+    QDialog* d = new QDialog();
+    QHBoxLayout* l = new QHBoxLayout(d);
+    d->setLayout(l);
+    l->addWidget(new MainForm());
+    d->exec();
     try {
         EventAI::EventAIStorage::Get();
     }catch(std::exception& e){

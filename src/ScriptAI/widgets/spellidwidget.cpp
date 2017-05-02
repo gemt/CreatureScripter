@@ -14,13 +14,14 @@
 #include <QPixmap>
 #include <QIcon>
 #include <QWebEngineView>
+#include <QProcess>
 
-#include "QSpellWork/QSW/plugins/spellinfo/interface.h"
-#include "plugins/spellinfo/pre-tbc/spellinfo.h"
-#include "plugins/spellinfo/pre-tbc/structure.h"
-#include "mustache/mustache.h"
-#include "MainForm.h"
-
+//#include "QSpellWork/QSW/plugins/spellinfo/interface.h"
+//#include "plugins/spellinfo/pre-tbc/spellinfo.h"
+//#include "plugins/spellinfo/pre-tbc/structure.h"
+//#include "mustache/mustache.h"
+//#include "MainForm.h"
+#if 0
 class QSWPageCopy : public QWebEnginePage
 {
     public:
@@ -91,7 +92,7 @@ SpellIconWidget::SpellIconWidget(const QImage &img, QWidget *parent)
     :QLabel(parent)
 {
     setPixmap(QPixmap::fromImage(img));
-    setScaledContents(true);
+    //setScaledContents(true);
 }
 
 void SpellIconWidget::mouseDoubleClickEvent(QMouseEvent *){
@@ -150,9 +151,23 @@ SpellIDWidget::SpellIDWidget(QSqlRecord& r, const QString fieldName, const Event
 
     idLabel->setText(QString::number(spellId));
     idLabel->setContentsMargins(0,0,0,0);
+
+    QPushButton* changeBtn = new QPushButton("Change", this);
+    connect(changeBtn, &QPushButton::clicked, [this](){
+        static QProcess* p = nullptr;
+        if(!p){
+             p = new QProcess();
+             //p->start("C:/Users/G3m7/Documents/git/CreatureScripter/CreatureScripter/QSpellWork/build-qsw-msvc2015_64bit-Release/bin/x64/Release/ QSW.exe");
+             //p->execute("C:\Users\G3m7\Documents\git\CreatureScripter\CreatureScripter\QSpellWork\build-qsw-msvc2015_64bit-Release\bin\x64\Release\QSW.exe");
+             if(!p->waitForStarted())
+                 qDebug() << p->errorString();
+        }
+    });
+
     form->addRow("ID:", idLabel);
     form->addRow("Name:", nameLabel);
-
+    form->setWidget(2, QFormLayout::SpanningRole, changeBtn);
+    //form->addWidget(changeBtn);
 
 }
 
@@ -170,3 +185,4 @@ void SpellIDWidget::onShowSpellDetails()
     dialog.exec();
 }
 
+#endif

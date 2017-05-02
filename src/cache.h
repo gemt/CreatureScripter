@@ -8,13 +8,14 @@
 #include <QSqlDatabase>
 #include <QSqlRecord>
 #include <QByteArray>
+#include <QProcess>
+#include <QObject>
 
-class SpellInfoInterface;
-class Cache
+//class SpellInfoInterface;
+
+class Cache : public QObject
 {
-public:
-
-
+Q_OBJECT
 public:
     static Cache& Get(){
         static Cache* instance = new Cache();
@@ -30,7 +31,7 @@ public:
 
     QString MapName(unsigned int entry);
     QSettings settings;
-    SpellInfoInterface* spellInfo;
+    //SpellInfoInterface* spellInfo;
     QByteArray m_templateHtml;
     QByteArray m_styleCss;
 private:

@@ -6,7 +6,7 @@
 #include <QWidget>
 #include <QSqlRecord>
 #include <QLabel>
-
+#if 0
 namespace Spell{
 struct entry;
 }
@@ -44,5 +44,5 @@ private:
     const Spell::entry* spellInfo;
 
 };
-
+#endif
 #endif // SPELLIDWIDGET_H
