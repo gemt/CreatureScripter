@@ -54,7 +54,7 @@ void SpellIDWidget::onChangeSpellBtn()
 {
     QSWWrapperModal dialog(record.value(rIdx).toInt());
     int retSpellId = dialog.exec();
-    if(retSpellId != -1){
+    if(retSpellId > 0){
         record.setValue(rIdx, retSpellId);
         UpdateInfo();
     }

@@ -56,17 +56,20 @@ QSWWrapperModal::QSWWrapperModal(int id)
     setModal(true);
     QVBoxLayout* l = new QVBoxLayout(this);
     setLayout(l);
-    qsw = new MainForm();
+
+    qsw = QSWWrapper::Get().qsw; //new MainForm(id);
+    l->addWidget(qsw);
+    qsw->SetSearchAndShowSpell(id);
+    /*
     qsw->m_sw->setActivePlugin2(QSWWrapper::Get().SW()->GetActivePlugin());
     qsw->ShowSpell(id);
-    l->addWidget(qsw);
-    setWindowTitle("QSpellWorks");
+    */
     QDialogButtonBox* buttons = new QDialogButtonBox(this);
     QPushButton* cancelButton = buttons->addButton("Cancel", QDialogButtonBox::RejectRole);
     QPushButton* useButton = buttons->addButton("Use current spell", QDialogButtonBox::AcceptRole);
     l->addWidget(buttons);
     connect(cancelButton, &QPushButton::clicked, [this](){
-        done(-1);
+        done(0);
     });
     connect(useButton, &QPushButton::clicked, this, &QSWWrapperModal::onAccepted);
 }

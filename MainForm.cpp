@@ -8,12 +8,15 @@
 #include <QPropertyAnimation>
 #include <QClipboard>
 #include <QShortcut>
+#include <QVariantHash>
 
 #include "MainForm.h"
 #include "AboutForm.h"
 #include "SettingsForm.h"
 #include "wov/wov.h"
 #include "mpq/MPQ.h"
+#include "qswwrapper.h"
+
 
 MainForm::MainForm(QWidget* parent)
     : QMainWindow(parent)
@@ -119,9 +122,21 @@ MainForm::MainForm(QWidget* parent)
     loadSettings();
 }
 
+
 MainForm::~MainForm()
 {
     saveSettings();
+}
+
+void MainForm::SetSearchAndShowSpell(int spell_id)
+{
+    ShowSpell(spell_id);
+    if(auto* plugin = m_sw->getActivePlugin()){
+        auto vals = plugin->getValues(spell_id);
+        QString spell_name = vals["name"].toString();
+        findLine_e1->setText(spell_name);
+        findLine_e1->returnPressed();
+    }
 }
 
 void MainForm::slotSettings()

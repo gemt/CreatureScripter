@@ -131,6 +131,7 @@ class MainForm : public QMainWindow, public Ui::main
     public:
         MainForm(QWidget* parent = nullptr);
         ~MainForm();
+        void SetSearchAndShowSpell(int id);
 
         void saveSettings(QString pluginName = QString());
         void loadSettings(QString pluginName = QString());
