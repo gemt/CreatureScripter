@@ -3,9 +3,12 @@
 
 #include <QObject>
 #include <QVariantHash>
-
+#include <QImage>
 #include "../../qsw.h"
 
+namespace Spell{
+struct entry;
+}
 class SpellInfoInterface
 {
     public:
@@ -23,6 +26,9 @@ class SpellInfoInterface
         virtual EnumHash getEnums() const = 0;
         virtual quint8 getLocale() const = 0;
         virtual QStringList getNames() const = 0;
+        virtual QImage GetSpellIcon(quint32 iconId) = 0;
+        virtual const Spell::entry* GetEntry(quint32 id, bool realid = false) = 0;
+
 };
 
 #define SpellInfoInterface_iid "org.qsw.plugins.spellinfo"

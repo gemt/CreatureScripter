@@ -3,7 +3,7 @@
 #include "wovdbc.h"
 
 // AnimationData.dbc
-const DBCFile& AnimationDataDBC::getDbc()
+DBCFile& AnimationDataDBC::getDbc()
 {
     static DBCFile dbc("AnimationData.dbc");
     return dbc;
@@ -20,7 +20,7 @@ const QString AnimationDataDBC::entry::name() const
 }
 
 // CameraShakes.dbc
-const DBCFile& CameraShakesDBC::getDbc()
+DBCFile& CameraShakesDBC::getDbc()
 {
     static DBCFile dbc("CameraShakes.dbc");
     return dbc;
@@ -32,7 +32,7 @@ const CameraShakesDBC::entry* CameraShakesDBC::getRecord(quint32 id, bool realId
 }
 
 // CreatureDisplayInfo.dbc
-const DBCFile& CreatureDisplayInfoDBC::getDbc()
+DBCFile& CreatureDisplayInfoDBC::getDbc()
 {
     static DBCFile dbc("CreatureDisplayInfo.dbc");
     return dbc;
@@ -59,7 +59,7 @@ const QString CreatureDisplayInfoDBC::entry::skin3() const
 }
 
 // CreatureModelData.dbc
-const DBCFile& CreatureModelDataDBC::getDbc()
+DBCFile& CreatureModelDataDBC::getDbc()
 {
     static DBCFile dbc("CreatureModelData.dbc");
     return dbc;
@@ -76,7 +76,7 @@ const QString CreatureModelDataDBC::entry::model() const
 }
 
 // SpellEffectCameraShakes.dbc
-const DBCFile& SpellEffectCameraShakesDBC::getDbc()
+DBCFile& SpellEffectCameraShakesDBC::getDbc()
 {
     static DBCFile dbc("SpellEffectCameraShakes.dbc");
     return dbc;
@@ -88,7 +88,7 @@ const SpellEffectCameraShakesDBC::entry* SpellEffectCameraShakesDBC::getRecord(q
 }
 
 // SpellVisual.dbc
-const DBCFile& SpellVisualDBC::getDbc()
+DBCFile& SpellVisualDBC::getDbc()
 {
     static DBCFile dbc("SpellVisual.dbc");
     return dbc;
@@ -100,7 +100,7 @@ const SpellVisualDBC::entry* SpellVisualDBC::getRecord(quint32 id, bool realId)
 }
 
 // SpellVisualKit.dbc
-const DBCFile& SpellVisualKitDBC::getDbc()
+DBCFile& SpellVisualKitDBC::getDbc()
 {
     static DBCFile dbc("SpellVisualKit.dbc");
     return dbc;
@@ -112,7 +112,7 @@ const SpellVisualKitDBC::entry* SpellVisualKitDBC::getRecord(quint32 id, bool re
 }
 
 // SpellVisualEffectName.dbc
-const DBCFile& SpellVisualEffectNameDBC::getDbc()
+DBCFile& SpellVisualEffectNameDBC::getDbc()
 {
     static DBCFile dbc("SpellVisualEffectName.dbc");
     return dbc;

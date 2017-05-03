@@ -8,9 +8,12 @@ class QSWWrapper : public QDialog
 {
 public:
     static QSWWrapper& Get();
+
+    void ShowSpell(int id);
+
+    MainForm* qsw;
 private:
     QSWWrapper();
-    MainForm* qswf;
 
     // QWidget interface
 protected:

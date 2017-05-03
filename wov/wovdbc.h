@@ -14,7 +14,7 @@ namespace AnimationDataDBC
         const QString name() const;
     };
 
-    const DBCFile& getDbc();
+    DBCFile& getDbc();
     const DBCFileHeader* getHeader();
     const entry* getRecord(quint32 id, bool realId = false);
 }
@@ -33,7 +33,7 @@ namespace CameraShakesDBC
         float coefficient;
     };
 
-    const DBCFile& getDbc();
+    DBCFile& getDbc();
     const DBCFileHeader* getHeader();
     const entry* getRecord(quint32 id, bool realId = false);
 }
@@ -60,7 +60,7 @@ namespace CreatureDisplayInfoDBC
         const QString skin3() const;
     };
 
-    const DBCFile& getDbc();
+    DBCFile& getDbc();
     const DBCFileHeader* getHeader();
     const entry* getRecord(quint32 id, bool realId = false);
 }
@@ -76,7 +76,7 @@ namespace CreatureModelDataDBC
         const QString model() const;
     };
 
-    const DBCFile& getDbc();
+    DBCFile& getDbc();
     const DBCFileHeader* getHeader();
     const entry* getRecord(quint32 id, bool realId = false);
 }
@@ -89,7 +89,7 @@ namespace SpellEffectCameraShakesDBC
         quint32 shakes[3];
     };
 
-    const DBCFile& getDbc();
+    DBCFile& getDbc();
     const DBCFileHeader* getHeader();
     const entry* getRecord(quint32 id, bool realId = false);
 }
@@ -108,7 +108,7 @@ namespace SpellVisualDBC
         quint32 missile;
     };
 
-    const DBCFile& getDbc();
+    DBCFile& getDbc();
     const DBCFileHeader* getHeader();
     const entry* getRecord(quint32 id, bool realId = false);
 }
@@ -134,7 +134,7 @@ namespace SpellVisualKitDBC
         quint32 shakes;
     };
 
-    const DBCFile& getDbc();
+    DBCFile& getDbc();
     const DBCFileHeader* getHeader();
     const entry* getRecord(quint32 id, bool realId = false);
 }
@@ -151,7 +151,7 @@ namespace SpellVisualEffectNameDBC
         const QString model() const;
     };
 
-    const DBCFile& getDbc();
+    DBCFile& getDbc();
     const DBCFileHeader* getHeader();
     const entry* getRecord(quint32 id, bool realId = false);
 }

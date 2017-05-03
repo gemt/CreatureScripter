@@ -141,12 +141,24 @@ QStringList SpellInfo::getNames() const
     return m_names;
 }
 
+
 QImage getSpellIcon(quint32 iconId)
 {
     const SpellIcon::entry* iconInfo = SpellIcon::getRecord(iconId, true);
 
     return (iconInfo ? BLP::getBLP(iconInfo->iconPath() + QString(".blp")) : QImage());
 }
+
+QImage SpellInfo::GetSpellIcon(quint32 iconId)
+{
+    return getSpellIcon(iconId);
+}
+
+const Spell::entry *SpellInfo::GetEntry(quint32 id, bool realid)
+{
+    return Spell::getRecord(id, realid);
+}
+
 
 QVariantList getParentSpells(quint32 triggerId)
 {

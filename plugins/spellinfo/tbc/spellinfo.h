@@ -7,7 +7,9 @@
 #include "../interface.h"
 
 extern quint8 m_locale;
-
+namespace Spell{
+struct entry;
+}
 class SpellInfo : public QObject, SpellInfoInterface
 {
     Q_OBJECT
@@ -28,6 +30,8 @@ class SpellInfo : public QObject, SpellInfoInterface
         EnumHash getEnums() const;
         quint8 getLocale() const;
         QStringList getNames() const;
+        QImage GetSpellIcon(quint32 iconId);
+        const Spell::entry *GetEntry(quint32 id, bool realid);
 };
 
 #endif // SPELLINFO_H

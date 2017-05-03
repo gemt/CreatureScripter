@@ -6,10 +6,7 @@
 #include <QWidget>
 #include <QSqlRecord>
 #include <QLabel>
-#if 0
-namespace Spell{
-struct entry;
-}
+
 class QLabel;
 class QPushButton;
 
@@ -40,9 +37,6 @@ private:
     QLabel* idLabel;
     QLabel* nameLabel;
     SpellIconWidget* iconLabel;
-
-    const Spell::entry* spellInfo;
-
 };
-#endif
+
 #endif // SPELLIDWIDGET_H

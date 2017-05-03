@@ -1190,3 +1190,13 @@ QVariantHash SpellInfo::getValues(quint32 id) const
 
     return values;
 }
+
+QImage SpellInfo::GetSpellIcon(quint32 iconId)
+{
+    return getSpellIcon(iconId);
+}
+
+const Spell::entry *SpellInfo::GetEntry(quint32 id, bool realid)
+{
+    return Spell::getRecord(id, realid);
+}

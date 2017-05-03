@@ -56,10 +56,13 @@ WovWidget::WovWidget(QWidget* parent) : QWidget(parent), m_selection(0), m_drag(
     connect(m_scene, SIGNAL(mouseReleased(QMouseEvent *)), this, SLOT(mouseReleased(QMouseEvent *)));
     connect(m_scene, SIGNAL(mouseMoved(QMouseEvent *)), this, SLOT(mouseMoved(QMouseEvent *)));
     connect(m_scene, SIGNAL(wheelRotated(QWheelEvent *)), this, SLOT(wheelRotated(QWheelEvent *)));
+
 }
 
 void WovWidget::addModel()
 {
+    qDebug() << "setting model: ";
+    qDebug() << m_displayEdit->text().toUInt();
     Model *model = new Model(m_scene);
     model->setDisplayId(m_displayEdit->text().toUInt());
     m_scene->addModel(model);

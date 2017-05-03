@@ -34,9 +34,9 @@ win32: {
         BUILDTYPE = "Release"
     }
 
-    LIBS += -L$$PWD/../../../../build-qsw/bin/$$PLATFORM/$$BUILDTYPE/ -lQSW
+    LIBS += -L$$PWD/../../../../build-cs/bin/$$PLATFORM/$$BUILDTYPE/ -lCreatureScripter
 
-    DLLDESTDIR = $$PWD/../../../../../../build-cs/bin/$$PLATFORM/$$BUILDTYPE/plugins/spellinfo
+    DLLDESTDIR = $$PWD/../../../../build-cs/bin/$$PLATFORM/$$BUILDTYPE/plugins/spellinfo
     DESTDIR = $$DLLDESTDIR
 
     copyToDestdir($$PWD/$$quote($$TARGET).css)

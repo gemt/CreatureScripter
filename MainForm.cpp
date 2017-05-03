@@ -313,6 +313,11 @@ void MainForm::createPluginButton()
     }
 }
 
+void MainForm::ShowSpell(int id)
+{
+    m_sw->showInfo(id);
+}
+
 void MainForm::slotChangeActivePlugin()
 {
     QAction* actionPlugin = static_cast<QAction*>(sender());

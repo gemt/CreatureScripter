@@ -5,9 +5,10 @@
 #include <QtPlugin>
 
 #include "../interface.h"
-
+namespace Spell{
+struct entry;
+}
 extern quint8 m_locale;
-QImage getSpellIcon(quint32 iconId);
 class SpellInfo : public QObject, SpellInfoInterface
 {
     Q_OBJECT
@@ -28,6 +29,8 @@ class SpellInfo : public QObject, SpellInfoInterface
         EnumHash getEnums() const;
         quint8 getLocale() const;
         QStringList getNames() const;
+        QImage GetSpellIcon(quint32 iconId);
+        const Spell::entry *GetEntry(quint32 id, bool realid);
 };
 
 #endif // SPELLINFO_H

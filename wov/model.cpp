@@ -36,7 +36,14 @@ quint32 Model::displayId() const
 void Model::setDisplayId(quint32 displayId)
 {
     m_displayId = displayId;
-
+    AnimationDataDBC::getDbc().load();
+    CameraShakesDBC::getDbc().load();
+    CreatureDisplayInfoDBC::getDbc().load();
+    CreatureModelDataDBC::getDbc().load();
+    SpellEffectCameraShakesDBC::getDbc().load();
+    SpellVisualDBC::getDbc().load();
+    SpellVisualKitDBC::getDbc().load();
+    SpellVisualEffectNameDBC::getDbc().load();
     const CreatureDisplayInfoDBC::entry* displayInfo = CreatureDisplayInfoDBC::getRecord(m_displayId, true);
     const CreatureModelDataDBC::entry* modelData = CreatureModelDataDBC::getRecord(displayInfo->model, true);
     

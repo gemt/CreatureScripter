@@ -6,7 +6,7 @@
 
 QT += core widgets sql gui xml webenginewidgets webengine concurrent
 
-TARGET = QSW
+TARGET = CreatureScripter
 TEMPLATE = app
 CONFIG += debug_and_release
 CONFIG += c++11
@@ -26,7 +26,6 @@ INCLUDEPATH += src/ \
 src/CreatureTabs/ \
 src/ScriptAI/ \
 src/ScriptAI/widgets/ \
-#QSpellWork/QSW/ \
 
 HEADERS += $$files(src/*.h) \
     src/collapsableframe.h \

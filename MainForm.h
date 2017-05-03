@@ -162,6 +162,9 @@ class MainForm : public QMainWindow, public Ui::main
         void createModeButton();
         void createPluginButton();
 
+        void ShowSpell(int id);
+        SpellWork* m_sw;
+
     signals:
         void signalSearch(quint8 type);
 
@@ -191,7 +194,6 @@ class MainForm : public QMainWindow, public Ui::main
 
         SpellListSortedModel* m_sortedModel;
         Ui::main m_ui;
-        SpellWork* m_sw;
         QToolButton* m_modeButton;
         QToolButton* m_pluginButton;
         QAction* m_actionAbout;

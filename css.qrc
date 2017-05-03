@@ -1,7 +1,5 @@
 <RCC>
     <qresource prefix="/css">
         <file>css/treeview.css</file>
-        <file>QSpellWork/QSW/plugins/spellinfo/pre-tbc/pre-tbc.css</file>
-        <file>QSpellWork/QSW/plugins/spellinfo/pre-tbc/pre-tbc.html</file>
     </qresource>
 </RCC>
