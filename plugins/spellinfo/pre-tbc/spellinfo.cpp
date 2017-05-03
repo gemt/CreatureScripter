@@ -741,7 +741,7 @@ QVariantHash SpellInfo::getValues(quint32 id) const
     values["icon"] = iconData.toBase64().data();
 
     values["id"] = spellInfo->id;
-    values["nam7e"] = spellInfo->name();
+    values["name"] = spellInfo->name();
     values["rank"] = spellInfo->rank();
     values["nameWithRank"] = spellInfo->nameWithRank();
     values["description"] = //spellInfo->description();
