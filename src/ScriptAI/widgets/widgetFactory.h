@@ -72,7 +72,7 @@ static QWidget* CreateParameterWidget(const EventAI::Parameter& param, QSqlRecor
         rw = new DefaultLineEdit(record, field, param, w);
     }
     Q_ASSERT(rw);
-    rw->setContentsMargins(0,0,0,0);
+    //rw->setContentsMargins(0,0,0,0);
     //l->addWidget(rw, 0, Qt::AlignTop | Qt::AlignLeft);
     return rw;
 }

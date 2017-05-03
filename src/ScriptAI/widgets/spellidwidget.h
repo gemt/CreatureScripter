@@ -6,8 +6,8 @@
 #include <QWidget>
 #include <QSqlRecord>
 #include <QLabel>
+#include <QLabel>
 
-class QLabel;
 class QPushButton;
 
 class SpellIDWidget : public QWidget
@@ -28,6 +28,10 @@ private:
     QLabel* iconLabel;
 
     void UpdateInfo();
+
+    // QWidget interface
+protected:
+    void mouseMoveEvent(QMouseEvent *event);
 };
 
 #endif // SPELLIDWIDGET_H

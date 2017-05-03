@@ -24,30 +24,38 @@ SpellIDWidget::SpellIDWidget(QSqlRecord& r, const QString fieldName, const Event
    record(r),
    parameter(param)
 {
-    setContentsMargins(0,0,0,0);
+    setMouseTracking(true);
+    //setStyleSheet("QWidget:hover { background-color: black; }");
+    //setContentsMargins(0,0,0,0);
     rIdx = record.indexOf(fieldName);
     QHBoxLayout* l = new QHBoxLayout(this);
+    l->setContentsMargins(0,0,0,0);
     setLayout(l);
     QFormLayout* form = new QFormLayout();
-
     idLabel = new QLabel(this);
-    nameLabel = new QLabel(this);
-    iconLabel = new QLabel(this);
-    nameLabel->setContentsMargins(0,0,0,0);
-    iconLabel->setContentsMargins(0,0,0,0);
+    idLabel->setStyleSheet("background-color: rgba(0,0,0,0)");
     idLabel->setContentsMargins(0,0,0,0);
+    form->addRow("ID:", idLabel);
 
+    nameLabel = new QLabel(this);
+    nameLabel->setContentsMargins(0,0,0,0);
+    form->addRow("Name:", nameLabel);
+
+
+    iconLabel = new QLabel(this);
+    iconLabel->setSizePolicy(QSizePolicy::Maximum,QSizePolicy::Maximum);
+    iconLabel->setContentsMargins(0,0,0,0);
     l->addWidget(iconLabel);
+
     l->addLayout(form);
 
     UpdateInfo();
 
+    /*
     QPushButton* changeBtn = new QPushButton("Change/View", this);
     connect(changeBtn, &QPushButton::clicked, this, &SpellIDWidget::onChangeSpellBtn);
-
-    form->addRow("ID:", idLabel);
-    form->addRow("Name:", nameLabel);
     form->setWidget(2, QFormLayout::SpanningRole, changeBtn);
+    */
 }
 
 void SpellIDWidget::onChangeSpellBtn()
@@ -70,8 +78,14 @@ void SpellIDWidget::UpdateInfo()
         auto vals = plugin->getValues(spellId);
         QImage img = vals["qimage"].value<QImage>();
         nameLabel->setText(vals["nameWithRank"].toString());
-        iconLabel->setPixmap(QPixmap::fromImage(img));
+
+        iconLabel->setPixmap(QPixmap::fromImage(img.scaled(48,48, Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation)));
     }
     idLabel->setText(QString::number(spellId));
 
+}
+
+void SpellIDWidget::mouseMoveEvent(QMouseEvent *event)
+{
+    QWidget::mouseMoveEvent(event);
 }
