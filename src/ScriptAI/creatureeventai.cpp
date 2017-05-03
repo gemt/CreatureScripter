@@ -49,7 +49,8 @@ EventEntry::EventEntry(QSqlRecord &record, QWidget* parent) :
     record(record),
     mainLayout(nullptr)
 {
-    setSizePolicy(QSizePolicy::Minimum,QSizePolicy::Minimum);
+    setContentsMargins(0,0,0,0);
+    //setSizePolicy(QSizePolicy::Minimum,QSizePolicy::Minimum);
     setObjectName("eventEntry");
     setStyleSheet("#eventEntry { border: 3px solid black; }");
 
@@ -82,7 +83,7 @@ void EventEntry::Remake(){
         //QFrame* eventFrame = new QFrame();
         //widgets.push_back(eventFrame);
         //eventFrame->setObjectName("paramWidget");
-        //eventFrame->setStyleSheet("#paramWidget { border: 1px solid black; }");
+        //eventFrame->setStyleSheet("#paramWidget { border: 1px solid black; }");z
         //mainLayout->addWidget(eventFrame, 0, 0, 1, 1, Qt::AlignLeft|Qt::AlignTop);
         //QHBoxLayout* efl = new QHBoxLayout();
         //eventFrame->setLayout(efl);
@@ -160,14 +161,17 @@ CreatureEventAI::CreatureEventAI(std::shared_ptr<Tables::creature_template> crea
     QScrollArea(parent),
     _creature(creature)
 {
+    setContentsMargins(0,0,0,0);
     QWidget* scrollAreaWidget = new QWidget(this);
+    scrollAreaWidget->setContentsMargins(0,0,0,0);
     scrollAreaWidget->setSizePolicy(QSizePolicy::Minimum,QSizePolicy::Minimum);
     QVBoxLayout* vl = new QVBoxLayout(scrollAreaWidget);
+    vl->setContentsMargins(0,0,0,0);
     scrollAreaWidget->setLayout(vl);
-
     setWidget(scrollAreaWidget);
 
     QVector<QSqlRecord>& records = _creature->scripts->records;
+    int maxSize = 0;
     for(QVector<QSqlRecord>::iterator it = records.begin(); it != records.end(); it++){
         QSqlRecord& r = *it;
 
@@ -176,7 +180,15 @@ CreatureEventAI::CreatureEventAI(std::shared_ptr<Tables::creature_template> crea
         frame->SetWidget(ew);
         vl->addWidget(frame, Qt::AlignTop);
         entryWidgets.push_back(ew);
+        //if(maxSize < frame)
     }
+    adjustSize();
+    scrollAreaWidget->adjustSize();
+    //scrollAreaWidget->setSizePolicy(QSize);
+    foreach(QWidget* w, entryWidgets){
+        w->setFixedWidth(scrollAreaWidget->width());
+    }
+    adjustSize();
     scrollAreaWidget->adjustSize();
 }
 
