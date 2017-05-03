@@ -3,6 +3,7 @@
 
 #include <QDialog>
 #include "MainForm.h"
+#include "plugins/spellinfo/interface.h"
 
 class QSWWrapper : public QDialog
 {
@@ -11,13 +12,28 @@ public:
 
     void ShowSpell(int id);
 
-    MainForm* qsw;
+    SpellInfoInterface* Plugin();
+    SpellWork* SW();
 private:
+    MainForm* qsw;
     QSWWrapper();
 
     // QWidget interface
 protected:
     void closeEvent(QCloseEvent *event);
+};
+
+class QSWWrapperModal : public QDialog
+{
+public:
+    QSWWrapperModal(int id);
+
+private slots:
+    void onAccepted();
+
+private:
+    MainForm* qsw;
+
 };
 
 #endif // QSWWRAPPER_H

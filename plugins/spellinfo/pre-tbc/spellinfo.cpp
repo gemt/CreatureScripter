@@ -735,12 +735,13 @@ QVariantHash SpellInfo::getValues(quint32 id) const
     QBuffer buffer;
     buffer.setBuffer(&iconData);
     buffer.open(QIODevice::WriteOnly);
-    getSpellIcon(spellInfo->spellIconId).save(&buffer, "PNG");
-
+    QImage img = getSpellIcon(spellInfo->spellIconId);
+    values["qimage"] = img;
+    img.save(&buffer, "PNG");
     values["icon"] = iconData.toBase64().data();
 
     values["id"] = spellInfo->id;
-    values["name"] = spellInfo->name();
+    values["nam7e"] = spellInfo->name();
     values["rank"] = spellInfo->rank();
     values["nameWithRank"] = spellInfo->nameWithRank();
     values["description"] = //spellInfo->description();

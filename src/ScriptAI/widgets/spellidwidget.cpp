@@ -3,6 +3,7 @@
 #include "warnings.h"
 #include "qswwrapper.h"
 
+
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QFormLayout>
@@ -17,37 +18,6 @@
 #include <QWebEngineView>
 #include <QProcess>
 
-SpellIconWidget::SpellIconWidget(const QImage &img, QWidget *parent)
-    :QLabel(parent)
-{
-    setPixmap(QPixmap::fromImage(img));
-    //setScaledContents(true);
-}
-
-void SpellIconWidget::mouseDoubleClickEvent(QMouseEvent *){
-    emit spellIconClicked();
-}
-
-class SpellView : public QDialog {
-public:
-    SpellView(int id, QWidget* parent){
-        /*
-        if(!Cache::Get().spellInfo){
-            qCritical() << "SpellView widget ctor, but spellInfo ptr in Cache is nullptr";
-            return;
-        }
-        QHBoxLayout* l = new QHBoxLayout(this);
-        setLayout(l);
-        QWebEngineView* view = new QWebEngineView(this);
-        l->addWidget(view);
-        page = new QSWPageCopy(id, parent);
-
-        view->setPage(page);
-        */
-    }
-
-private:
-};
 
 SpellIDWidget::SpellIDWidget(QSqlRecord& r, const QString fieldName, const EventAI::Parameter& param, QWidget* parent)
  : QWidget(parent),
@@ -62,62 +32,46 @@ SpellIDWidget::SpellIDWidget(QSqlRecord& r, const QString fieldName, const Event
 
     idLabel = new QLabel(this);
     nameLabel = new QLabel(this);
-
-    bool ok;
-    int spellId = record.value(rIdx).toInt(&ok);
-    Q_ASSERT(ok);
-
-    if(SpellInfoInterface* qsi = QSWWrapper::Get().qsw->m_sw->getActivePlugin()){
-        /*
-        qsi->
-        qsi->get getValues(spellId);
-        qvh[""].to
-        QSWWrapper::Get().qsw->ShowSpell(spellId);
-        const Spell::entry* spellInfo = Spell::getRecord(id, true);
-
-        nameLabel->setText(spellInfo->name());
-        nameLabel->setContentsMargins(0,0,0,0);
-        iconLabel = new SpellIconWidget(getSpellIcon(spellInfo->spellIconId), this);
-        iconLabel->setContentsMargins(0,0,0,0);
-        connect(iconLabel, &SpellIconWidget::spellIconClicked, this, &SpellIDWidget::onShowSpellDetails);
-        l->addWidget(iconLabel);
-        l->addLayout(form);
-        */
-    }else{
-        Warnings::Warning("No loaded QSW plugin");
-    }
-    idLabel->setText(QString::number(spellId));
+    iconLabel = new QLabel(this);
+    nameLabel->setContentsMargins(0,0,0,0);
+    iconLabel->setContentsMargins(0,0,0,0);
     idLabel->setContentsMargins(0,0,0,0);
 
-    QPushButton* changeBtn = new QPushButton("Change", this);
-    connect(changeBtn, &QPushButton::clicked, [this](){
-        static QProcess* p = nullptr;
-        if(!p){
-             p = new QProcess();
-             //p->start("C:/Users/G3m7/Documents/git/CreatureScripter/CreatureScripter/QSpellWork/build-qsw-msvc2015_64bit-Release/bin/x64/Release/ QSW.exe");
-             //p->execute("C:\Users\G3m7\Documents\git\CreatureScripter\CreatureScripter\QSpellWork\build-qsw-msvc2015_64bit-Release\bin\x64\Release\QSW.exe");
-             if(!p->waitForStarted())
-                 qDebug() << p->errorString();
-        }
-    });
+    l->addWidget(iconLabel);
+    l->addLayout(form);
+
+    UpdateInfo();
+
+    QPushButton* changeBtn = new QPushButton("Change/View", this);
+    connect(changeBtn, &QPushButton::clicked, this, &SpellIDWidget::onChangeSpellBtn);
 
     form->addRow("ID:", idLabel);
     form->addRow("Name:", nameLabel);
     form->setWidget(2, QFormLayout::SpanningRole, changeBtn);
-    //form->addWidget(changeBtn);
-
 }
 
 void SpellIDWidget::onChangeSpellBtn()
 {
-    // new modal dialog showing a spell-searcher type gui, like the creatureSearcher
-    //Warnings::Warning("SpellIDWidget::onChangeSpellBtn unimplemented", QMessageBox::Information);
+    QSWWrapperModal dialog(record.value(rIdx).toInt());
+    int retSpellId = dialog.exec();
+    if(retSpellId != -1){
+        record.setValue(rIdx, retSpellId);
+        UpdateInfo();
+    }
 }
 
-void SpellIDWidget::onShowSpellDetails()
+void SpellIDWidget::UpdateInfo()
 {
-    //todo: show dialog with spell-info or something
-    qDebug() << "YAY";
-    SpellView dialog(record.value(rIdx).toInt(), this);
-    dialog.exec();
+    bool ok;
+    int spellId = record.value(rIdx).toInt(&ok);
+    Q_ASSERT(ok);
+
+    if(auto* plugin = QSWWrapper::Get().Plugin()){
+        auto vals = plugin->getValues(spellId);
+        QImage img = vals["qimage"].value<QImage>();
+        nameLabel->setText(vals["nameWithRank"].toString());
+        iconLabel->setPixmap(QPixmap::fromImage(img));
+    }
+    idLabel->setText(QString::number(spellId));
+
 }

@@ -66,6 +66,23 @@ void SpellWork::setActivePlugin(QString name)
     }
 }
 
+void SpellWork::setActivePlugin2(QPair<QString, SpellInfoPluginPair> p)
+{
+    if(m_spellInfoPlugins.contains(p.first)){
+        setActivePlugin(p.first);
+    }else{
+        m_spellInfoPlugins[p.first] = p.second;
+    }
+}
+
+QPair<QString, SpellInfoPluginPair> SpellWork::GetActivePlugin()
+{
+    if(m_activeSpellInfoPlugin)
+        return QPair<QString, SpellInfoPluginPair>(m_activeSpellInfoPluginName, m_spellInfoPlugins[m_activeSpellInfoPluginName]);
+    else
+        return QPair<QString, SpellInfoPluginPair>();
+}
+
 void SpellWork::loadPlugins()
 {
     QDir pluginsDir(qApp->applicationDirPath());

@@ -15,7 +15,7 @@ DEFINES += __STORMLIB_SELF__ QSW_LIB
 INCLUDEPATH += $$PWD/mpq/StormLib
 DEPENDPATH += $$PWD/mpq/StormLib
 
-win32:RC_ICONS += resources/mangos.ico
+#win32:RC_ICONS += resources/mangos.ico
 
 RESOURCES += \
     icons.qrc \

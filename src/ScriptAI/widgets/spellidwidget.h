@@ -10,16 +10,6 @@
 class QLabel;
 class QPushButton;
 
-class SpellIconWidget : public QLabel {
-    Q_OBJECT
-public:
-    SpellIconWidget(const QImage& img, QWidget* parent);
-signals:
-    void spellIconClicked();
-protected:
-    void mouseDoubleClickEvent(QMouseEvent*);
-};
-
 class SpellIDWidget : public QWidget
 {
     Q_OBJECT
@@ -28,7 +18,6 @@ public:
 
 private slots:
     void onChangeSpellBtn();
-    void onShowSpellDetails();
 
 private:
     QSqlRecord& record;
@@ -36,7 +25,9 @@ private:
     int rIdx;
     QLabel* idLabel;
     QLabel* nameLabel;
-    SpellIconWidget* iconLabel;
+    QLabel* iconLabel;
+
+    void UpdateInfo();
 };
 
 #endif // SPELLIDWIDGET_H

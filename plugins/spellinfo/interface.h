@@ -31,6 +31,7 @@ class SpellInfoInterface
 
 };
 
+
 #define SpellInfoInterface_iid "org.qsw.plugins.spellinfo"
 
 Q_DECLARE_INTERFACE(SpellInfoInterface, SpellInfoInterface_iid)

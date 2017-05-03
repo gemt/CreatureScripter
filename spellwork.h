@@ -6,6 +6,7 @@
 #include <QJSValue>
 #include <QJSValueList>
 #include <QJsonObject>
+#include <QPair>
 
 #include "MainForm.h"
 #include "qsw.h"
@@ -28,6 +29,9 @@ class SpellWork : public QObject
 
         void loadPlugins();
         void setActivePlugin(QString name);
+        void setActivePlugin2(QPair<QString, SpellInfoPluginPair> p);
+        QPair<QString, SpellInfoPluginPair> GetActivePlugin();
+
         SpellInfoPlugins getPlugins() const { return m_spellInfoPlugins; }
         SpellInfoInterface* getActivePlugin() const { return m_activeSpellInfoPlugin; }
         QString getActivePluginName() const { return m_activeSpellInfoPluginName; }
