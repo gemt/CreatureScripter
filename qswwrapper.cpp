@@ -57,7 +57,9 @@ QSWWrapperModal::QSWWrapperModal(int id)
     QVBoxLayout* l = new QVBoxLayout(this);
     setLayout(l);
 
+    QSWWrapper::Get().hide();
     qsw = QSWWrapper::Get().qsw; //new MainForm(id);
+
     l->addWidget(qsw);
     qsw->SetSearchAndShowSpell(id);
     qsw->setParent(this);
@@ -78,7 +80,7 @@ QSWWrapperModal::QSWWrapperModal(int id)
 
 QSWWrapperModal::~QSWWrapperModal()
 {
-    qsw->setParent(nullptr);
+    qsw->setParent(&QSWWrapper::Get());
 }
 
 void QSWWrapperModal::onAccepted()
