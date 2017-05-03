@@ -135,7 +135,7 @@ void MainForm::SetSearchAndShowSpell(int spell_id)
         auto vals = plugin->getValues(spell_id);
         QString spell_name = vals["name"].toString();
         findLine_e1->setText(spell_name);
-        findLine_e1->returnPressed();
+        slotButtonSearch();
     }
 }
 

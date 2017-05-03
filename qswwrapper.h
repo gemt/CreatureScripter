@@ -27,6 +27,7 @@ class QSWWrapperModal : public QDialog
 {
 public:
     QSWWrapperModal(int id);
+    ~QSWWrapperModal();
 
 private slots:
     void onAccepted();

@@ -60,6 +60,8 @@ QSWWrapperModal::QSWWrapperModal(int id)
     qsw = QSWWrapper::Get().qsw; //new MainForm(id);
     l->addWidget(qsw);
     qsw->SetSearchAndShowSpell(id);
+    qsw->setParent(this);
+    qsw->setFocus();
     /*
     qsw->m_sw->setActivePlugin2(QSWWrapper::Get().SW()->GetActivePlugin());
     qsw->ShowSpell(id);
@@ -72,6 +74,11 @@ QSWWrapperModal::QSWWrapperModal(int id)
         done(0);
     });
     connect(useButton, &QPushButton::clicked, this, &QSWWrapperModal::onAccepted);
+}
+
+QSWWrapperModal::~QSWWrapperModal()
+{
+    qsw->setParent(nullptr);
 }
 
 void QSWWrapperModal::onAccepted()
