@@ -111,7 +111,7 @@ void EventEntry::Remake(){
         }
         for(int i = 0; i < 3; i++){
             QWidget* w;
-            if(i >= event.params.size()-1){
+            if(i >= event.params.size()){
                 w = new QWidget(this);
             }else{
                 w = CreateParameterWidget(event.params.at(i), record, Tables::creature_ai_scripts::event_paramN(i+1), this/*eventFrame*/);
@@ -141,7 +141,7 @@ void EventEntry::Remake(){
         mainLayout->addWidget(at, mainLayout->rowCount(),0,1,1,Qt::AlignTop|Qt::AlignLeft);
         for(int p = 0; p < 3; p++){
             QWidget* w;
-            if(p >= eventAction.params.size()-1){
+            if(p >= eventAction.params.size()){
                 w = new QWidget(this);
             }else{
                 const Parameter& actParam = eventAction.params.at(p);
