@@ -20,7 +20,7 @@ struct creature_template;
 namespace EventAI
 {
 
-class EventEntry : public QFrame {
+class EventEntry : public QWidget {
 private:
     QSqlRecord& record;
 public:
@@ -32,6 +32,8 @@ private:
     QGridLayout* mainLayout;
     void Remake();
 
+protected:
+    void paintEvent(QPaintEvent *event);
 };
 
 

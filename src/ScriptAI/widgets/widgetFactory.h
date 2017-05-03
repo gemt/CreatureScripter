@@ -14,13 +14,18 @@
 #include "MillisecondsWidget.h"
 
 static QWidget* CreateParameterWidget(const EventAI::Parameter& param, QSqlRecord& record, const QString& field, QWidget* parent = nullptr){
-    //QFrame* w = new QFrame(parent);
+    QFrame* w = new QFrame(parent);
+    w->setContentsMargins(0,0,0,0);
+    QVBoxLayout* l = new QVBoxLayout(w);
+    l->setContentsMargins(0,0,0,5);
+    QLabel* lbl = new QLabel(param.name);
+    lbl->setContentsMargins(0,0,0,0);
+    l->addWidget(lbl);
+
     //w->setContentsMargins(0,0,0,0);
     //w->setObjectName("paramWidget");
     //w->setStyleSheet("#paramWidget { border: 1px solid black; }");
-    //QVBoxLayout* l = new QVBoxLayout(w);
     //w->setLayout(l);
-    //QLabel* lbl = new QLabel(param.name);
     //lbl->setAutoFillBackground(true);
     //QPalette p = lbl->palette();
     //p.setBrush(QPalette::ColorRole::Background, QBrush(QColor(150,150,150)));
@@ -31,7 +36,8 @@ static QWidget* CreateParameterWidget(const EventAI::Parameter& param, QSqlRecor
     //w->setFrameStyle(QFrame::Raised);
     //lbl->setToolTip(param.description);
     //l->addWidget(lbl, 0, Qt::AlignTop);
-    QWidget* w = parent;
+
+    //QWidget* w = parent;
     QWidget* rw = nullptr;
     switch(param.type){
     case EventAI::MILLISECONDS: rw = new MillisecondsWidget(record, field, param, w); break;
@@ -74,5 +80,7 @@ static QWidget* CreateParameterWidget(const EventAI::Parameter& param, QSqlRecor
     Q_ASSERT(rw);
     //rw->setContentsMargins(0,0,0,0);
     //l->addWidget(rw, 0, Qt::AlignTop | Qt::AlignLeft);
-    return rw;
+    //return rw;
+    l->addWidget(rw);
+    return w;
 }

@@ -44,20 +44,29 @@ static QWidget* getHLine(QVector<QWidget*>& widgets){
     return f;
 }
 
+static QWidget* getVLine(QVector<QWidget*>& widgets){
+    QFrame* f = new QFrame();
+    widgets.push_back(f);
+    f->setLineWidth(10);
+    f->setMidLineWidth(10);
+    f->setFrameShape(QFrame::VLine);
+    f->setFrameShadow(QFrame::Raised);
+    f->setPalette(QPalette(QColor(0,0,0)));
+    return f;
+}
+
 EventEntry::EventEntry(QSqlRecord &record, QWidget* parent) :
-    QFrame(parent),
+    QWidget(parent),
     record(record),
     mainLayout(nullptr)
 {
     setContentsMargins(0,0,0,0);
     //setSizePolicy(QSizePolicy::Minimum,QSizePolicy::Minimum);
-    setObjectName("eventEntry");
-    setStyleSheet("#eventEntry { border: 3px solid black; }");
+    //setObjectName("eventEntry");
+    //setStyleSheet("#eventEntry { border: 3px solid black; }");
 
     //setFrameStyle(QFrame::StyledPanel);
     Q_ASSERT(record.count() == Tables::creature_ai_scripts::num_cols);
-    //horizontalHeader()->setHidden(true);
-    //verticalHeader()->setHidden(true);
     Remake();
 }
 void EventEntry::Remake(){
@@ -77,20 +86,11 @@ void EventEntry::Remake(){
     if(eIt == EventAIStorage::Get().Events().end())
         throw std::runtime_error(QString("EventEntry::Remake() eventID %1 is unknown").arg(eventId).toStdString());
 
+    //mainLayout->addWidget(getHLine(widgets), mainLayout->rowCount(), 0,1, 4);
     const EventAI_event& event = *eIt;
     type_EventType* et;
     {
-        //QFrame* eventFrame = new QFrame();
-        //widgets.push_back(eventFrame);
-        //eventFrame->setObjectName("paramWidget");
-        //eventFrame->setStyleSheet("#paramWidget { border: 1px solid black; }");z
-        //mainLayout->addWidget(eventFrame, 0, 0, 1, 1, Qt::AlignLeft|Qt::AlignTop);
-        //QHBoxLayout* efl = new QHBoxLayout();
-        //eventFrame->setLayout(efl);
         {
-            //QVBoxLayout* el = new QVBoxLayout();
-            //efl->addLayout(el);
-
             et = new type_EventType(record.value(Tables::creature_ai_scripts::event_type).toInt(&ok), this/*eventFrame*/);
             widgets.push_back(et);
             eWidgets.push_back(et);
@@ -103,31 +103,25 @@ void EventEntry::Remake(){
             });
             QLabel* eventLabel = new QLabel("Event:");
             eventLabel->setSizePolicy(QSizePolicy::Minimum,QSizePolicy::Maximum);
-            //eventLabel->setStyleSheet("background: qlineargradient( x1:0 y1:0, x2:1 y2:0, stop:0 cyan, stop:1 blue);}");
-
             eventLabel->setContentsMargins(0,0,0,0);
-            //el->addWidget(eventLabel, Qt::AlignTop|Qt::AlignLeft);
-            //el->addWidget(et, 0, Qt::AlignLeft);
-            mainLayout->addWidget(et,0,0,1,1,Qt::AlignLeft|Qt::AlignTop);
+            mainLayout->addWidget(et,mainLayout->rowCount(),0,1,1,Qt::AlignLeft|Qt::AlignTop);
         }
-        for(int i = 0; i < 3; i++){
+        for(int i = 0; i < 4; i++){
             QWidget* w;
             if(i >= event.params.size()){
                 w = new QWidget(this);
             }else{
                 w = CreateParameterWidget(event.params.at(i), record, Tables::creature_ai_scripts::event_paramN(i+1), this/*eventFrame*/);
-                //efl->addWidget(w);
             }
             widgets.push_back(w);
-            mainLayout->addWidget(w,0,i+1,1,1,Qt::AlignLeft|Qt::AlignTop);
+            mainLayout->addWidget(w,mainLayout->rowCount()-1,i+1,1,1,Qt::AlignLeft|Qt::AlignTop);
             eWidgets.push_back(w);
         }
     }
 
-
-    mainLayout->addWidget(getHLine(widgets), 1, 0,1,4);
     type_ActionType* at;
     for(int i = 0; i < 3; i++){
+        //mainLayout->addWidget(getHLine(widgets), mainLayout->rowCount(), 0,1,mainLayout->columnCount());
         int actionId = record.value(Tables::creature_ai_scripts::actionN_type(i+1)).toInt(&ok);
         Q_ASSERT(ok);
         const EventAI_Action& eventAction = GetEventAction(actionId);
@@ -149,12 +143,33 @@ void EventEntry::Remake(){
                 w = CreateParameterWidget(actParam, record, Tables::creature_ai_scripts::actionX_paramY(i+1,p+1), this/*actionFrame*/);
             }
             widgets.push_back(w);
-            //afl->addWidget(w, Qt::AlignLeft);
             mainLayout->addWidget(w, mainLayout->rowCount()-1,p+1,1,1,Qt::AlignTop|Qt::AlignLeft);
         }
-        mainLayout->addWidget(getHLine(widgets), mainLayout->rowCount(), 0,1,4);
     }
     adjustSize();
+}
+
+void EventEntry::paintEvent(QPaintEvent *event)
+{
+    QPainter painter(this);
+    painter.setPen(Qt::black);
+    QRect r = rect();
+    for(int i = 0; i < mainLayout->columnCount()-1; i++){
+        QRect a = mainLayout->cellRect(1, i);
+        QRect b = mainLayout->cellRect(1, i+1);
+        float p = (a.right() + b.left()) / 2.0f;
+        painter.drawLine(QPointF(p, (float)a.top()), QPoint(p, (float)r.height()));
+
+    }
+    float left = (float)mainLayout->cellRect(0,0).left();
+    float right = (float)mainLayout->cellRect(0, mainLayout->columnCount()-1).right();
+    for(int i = 0; i < mainLayout->rowCount()-1; i++){
+        QRect a = mainLayout->cellRect(i, 0);
+        QRect b = mainLayout->cellRect(i+1,0);
+
+        float p = (a.bottom() + b.top())/ 2.0f;
+        painter.drawLine(QPointF(left, p), QPoint(right, p));
+    }
 }
 
 CreatureEventAI::CreatureEventAI(std::shared_ptr<Tables::creature_template> creature, QWidget *parent) :
@@ -175,7 +190,11 @@ CreatureEventAI::CreatureEventAI(std::shared_ptr<Tables::creature_template> crea
     for(QVector<QSqlRecord>::iterator it = records.begin(); it != records.end(); it++){
         QSqlRecord& r = *it;
 
-        CollapsibleFrame* frame = new CollapsibleFrame("Event entry " +r.value(Tables::creature_ai_scripts::id).toString(), scrollAreaWidget);
+
+        CollapsibleFrame* frame = new CollapsibleFrame(
+                    "Event entry " +r.value(Tables::creature_ai_scripts::id).toString(),
+                    r.value(Tables::creature_ai_scripts::comment).toString(),
+                    scrollAreaWidget);
         EventEntry* ew = new EventEntry(r, frame);
         frame->SetWidget(ew);
         vl->addWidget(frame, Qt::AlignTop);
