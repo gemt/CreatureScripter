@@ -165,11 +165,14 @@ class MainForm : public QMainWindow, public Ui::main
         void ShowSpell(int id);
         SpellWork* m_sw;
 
+public slots:
+        void slotAbout();
+        void slotSettings();
+
     signals:
         void signalSearch(quint8 type);
 
     private slots:
-        void slotAbout();
         void slotScriptFilter();
         void slotScriptApply();
         void slotFilterSearch();
@@ -180,7 +183,6 @@ class MainForm : public QMainWindow, public Ui::main
         void slotSearchFromList(const QModelIndex &index);
         void slotLinkClicked(const QUrl &url);
         void slotWov();
-        void slotSettings();
         void slotModeShow();
         void slotModeCompare();
         void slotPrevRow();

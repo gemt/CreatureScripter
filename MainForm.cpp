@@ -37,18 +37,18 @@ MainForm::MainForm(QWidget* parent)
 
     setLocale(0);
     createModeButton();
-    createPluginButton();
+    //createPluginButton();
 
     mainToolBar->addSeparator();
     mainToolBar->addWidget(m_modeButton);
-    mainToolBar->addSeparator();
-    mainToolBar->addWidget(m_pluginButton);
-    mainToolBar->addSeparator();
-    m_actionSettings = mainToolBar->addAction(QIcon(":/qsw/resources/cog.png"), "Settings");
+    //mainToolBar->addSeparator();
+    //mainToolBar->addWidget(m_pluginButton);
+    //mainToolBar->addSeparator();
+    //m_actionSettings = mainToolBar->addAction(QIcon(":/qsw/resources/cog.png"), "Settings");
     mainToolBar->addSeparator();
     m_actionWov = mainToolBar->addAction(QIcon(":/qsw/resources/wand.png"), "Wov");
-    mainToolBar->addSeparator();
-    m_actionAbout = mainToolBar->addAction(QIcon(":/qsw/resources/information.png"), "About");
+    //mainToolBar->addSeparator();
+    //m_actionAbout = mainToolBar->addAction(QIcon(":/qsw/resources/information.png"), "About");
 
     QShortcut* shortcut = new QShortcut(QKeySequence(QKeySequence::MoveToPreviousLine), this, SLOT(slotPrevRow()));
     shortcut = new QShortcut(QKeySequence(QKeySequence::MoveToNextLine), this, SLOT(slotNextRow()));
@@ -73,10 +73,10 @@ MainForm::MainForm(QWidget* parent)
     connect(findLine_e3, SIGNAL(returnPressed()), this, SLOT(slotButtonSearch()));
 
     // Menu connections
-    connect(m_actionAbout, SIGNAL(triggered()), this, SLOT(slotAbout()));
+    //connect(m_actionAbout, SIGNAL(triggered()), this, SLOT(slotAbout()));
 
     // Settings form connection
-    connect(m_actionSettings, SIGNAL(triggered()), this, SLOT(slotSettings()));
+    //connect(m_actionSettings, SIGNAL(triggered()), this, SLOT(slotSettings()));
 
     // Wov form connection
     connect(m_actionWov, SIGNAL(triggered()), this, SLOT(slotWov()));

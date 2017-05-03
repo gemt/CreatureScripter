@@ -7,6 +7,7 @@
 #include "creaturesearcher.h"
 #include "SettingsForm.h"
 #include "qswwrapper.h"
+#include "spellwork.h"
 
 #include <QDebug>
 #include <QSqlError>
@@ -24,6 +25,10 @@
 #include <QMenuBar>
 #include <QIcon>
 #include <QCloseEvent>
+#include <QWidgetAction>
+#include <QRadioButton>
+#include <QButtonGroup>
+#include <QPropertyAnimation>
 
 #define QT_DEBUG_PLUGINS
 
@@ -76,14 +81,17 @@ void MainWindow::InitWindow()
     splitter->setStretchFactor(1, 1000);
     splitter->setContentsMargins(0,0,0,0);
 
-    QMenu* menu = QMainWindow::menuBar()->addMenu("File");
-    QAction* dbAct = new QAction(QIcon(":/icons/ico/Data-Settings-48.png"), "DB Connection");
+    QMenu* menu = QMainWindow::menuBar()->addMenu("Database");
+    QAction* dbAct = new QAction(QIcon(":/icons/ico/Data-Settings-48.png"), "Connection Settings");
     connect(dbAct, &QAction::triggered, [this](){
         DBConnectionSettings dbSettings(this);
         if(dbSettings.exec() == QDialog::Accepted){
             //todo: reconnect to db, i guess
         }
     });
+
+    QMainWindow::menuBar()->addSeparator();
+
     QAction* qswAct = new QAction(QIcon(":/icons/ico/Data-Settings-48.png"), "QSW Directories");
     connect(qswAct , &QAction::triggered, [this](){
         SettingsForm s(this);
@@ -98,14 +106,38 @@ void MainWindow::InitWindow()
     connect(qswShowHide , &QAction::triggered, [this](){
         QSWWrapper::Get().setHidden(!QSWWrapper::Get().isHidden());
     });
-    QAction* qswSettings = new QAction("QSW Directories");
-    connect(qswSettings , &QAction::triggered, [this](){
-        SettingsForm s(this);
-        if(s.exec() == QDialog::Accepted){
-            //todo: reconnect to db, i guess
-        }
-    });
-    qswMenu->addActions(QList<QAction*>{qswShowHide, qswSettings});
+    qswMenu->addAction(qswShowHide);
+    connect(qswMenu->addAction("Directories"), &QAction::triggered, QSWWrapper::Get().qsw, &MainForm::slotSettings);
+    connect(qswMenu->addAction("About QSW"), &QAction::triggered, QSWWrapper::Get().qsw, &MainForm::slotAbout);
+
+
+    QMenu* pluginMenu = QMainWindow::menuBar()->addMenu("QSW Plugins");
+    SpellInfoPlugins plugins = QSWWrapper::Get().qsw->m_sw->getPlugins();
+    QButtonGroup* pluginGroup = new QButtonGroup(pluginMenu);
+    pluginGroup->setExclusive(true);
+
+    QString start_plugin = Cache::Get().settings.value("active-qsw-plugin", "pre-tbc").toString();
+    for (SpellInfoPlugins::iterator itr = plugins.begin(); itr != plugins.end(); ++itr)
+    {
+        QString plugin_key = itr.key();
+        QString plugin_name = itr.value().first.value("fullName").toString();
+        QRadioButton *btn = new QRadioButton(plugin_name, pluginMenu);
+        pluginGroup->addButton(btn);
+        QWidgetAction* qwa= new QWidgetAction(pluginMenu);
+        qwa->setDefaultWidget(btn);
+        pluginMenu->addAction(qwa);
+        qwa->setData(plugin_key);
+
+        btn->setChecked(plugin_key == start_plugin);
+        connect(btn, &QRadioButton::toggled, this, [this, qwa](bool checked){
+            if(checked){
+                QString plugin_name = qwa->data().toString();
+                QSWWrapper::Get().qsw->m_sw->setActivePlugin(plugin_name);
+                Cache::Get().settings.setValue("active-qsw-plugin", plugin_name);
+            }
+        });
+    }
+    QSWWrapper::Get().qsw->m_sw->setActivePlugin(start_plugin);
 }
 
 void MainWindow::onNameSearch()

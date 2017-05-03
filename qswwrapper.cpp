@@ -19,7 +19,7 @@ void QSWWrapper::ShowSpell(int id)
 
 SpellInfoInterface *QSWWrapper::Plugin()
 {
-    if(SpellInfoInterface* i = qsw->m_sw->getActivePlugin()){
+     if(SpellInfoInterface* i = qsw->m_sw->getActivePlugin()){
        return i;
     }else{
         Warnings::Warning("No QSW plugin loaded");

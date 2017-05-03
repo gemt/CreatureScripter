@@ -14,8 +14,8 @@ public:
 
     SpellInfoInterface* Plugin();
     SpellWork* SW();
-private:
     MainForm* qsw;
+private:
     QSWWrapper();
 
     // QWidget interface
