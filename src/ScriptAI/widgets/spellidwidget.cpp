@@ -1,6 +1,8 @@
 #include "spellidwidget.h"
 #include "cache.h"
 #include "warnings.h"
+#include "qswwrapper.h"
+
 
 #include <QVBoxLayout>
 #include <QHBoxLayout>
@@ -14,159 +16,76 @@
 #include <QPixmap>
 #include <QIcon>
 #include <QWebEngineView>
+#include <QProcess>
 
-#include "QSpellWork/QSW/plugins/spellinfo/interface.h"
-#include "plugins/spellinfo/pre-tbc/spellinfo.h"
-#include "plugins/spellinfo/pre-tbc/structure.h"
-#include "mustache/mustache.h"
-#include "MainForm.h"
-
-class QSWPageCopy : public QWebEnginePage
-{
-    public:
-        QSWPageCopy(int id, QObject* parent = nullptr)
-            : QWebEnginePage(parent),  m_spellId(0)
-        {
-            setInfo(id);
-        }
-
-        quint32 getSpellId() const { return m_spellId; }
-        QString getSourceHtml() const { return m_sourceHtml; }
-
-        void setCompareInfo(const QString &html)
-        {
-            setHtml(html, QUrl(QString("http://spellwork/%0").arg(m_spellId)));
-        }
-
-        void setInfo(quint32 id)
-        {
-            QVariantHash values = Cache::Get().spellInfo->getValues(id);
-            values["style"] = Cache::Get().m_styleCss;
-            Mustache::Renderer renderer;
-            Mustache::QtVariantContext context(values);
-
-            QString html;
-            QTextStream stream(&html);
-            stream << renderer.render(Cache::Get().m_templateHtml, &context);
-
-            html.replace("\n",  "");
-            html.replace("><", ">\n<");
-
-            if (id)
-                m_spellId = id;
-
-            m_sourceHtml = html;
-            setHtml(html, QUrl(QString("http://spellwork/%0").arg(id)));
-        }
-        bool acceptNavigationRequest(const QUrl& url, QWebEnginePage::NavigationType type, bool)
-        {
-            if (type == QWebEnginePage::NavigationTypeLinkClicked)
-            {
-                qint32 id = url.toString().section('/', -1).toUInt();
-                history.push(m_spellId);
-                setInfo(id);
-                return false;
-            }else if(type == QWebEnginePage::NavigationTypeBackForward){
-
-            }
-            return true;
-        }
-        void triggerAction(WebAction action, bool b) {
-            if(action == WebAction::Back){
-                if(history.size() > 0){
-                    setInfo(history.pop());
-                }
-            }else{
-                QWebEnginePage::triggerAction(action, b);
-            }
-        }
-
-    private:
-        quint32 m_spellId;
-        QString m_sourceHtml;
-        QStack<int> history;
-};
-
-SpellIconWidget::SpellIconWidget(const QImage &img, QWidget *parent)
-    :QLabel(parent)
-{
-    setPixmap(QPixmap::fromImage(img));
-    setScaledContents(true);
-}
-
-void SpellIconWidget::mouseDoubleClickEvent(QMouseEvent *){
-    emit spellIconClicked();
-}
-
-class SpellView : public QDialog {
-public:
-    SpellView(int id, QWidget* parent){
-        if(!Cache::Get().spellInfo){
-            qCritical() << "SpellView widget ctor, but spellInfo ptr in Cache is nullptr";
-            return;
-        }
-        QHBoxLayout* l = new QHBoxLayout(this);
-        setLayout(l);
-        QWebEngineView* view = new QWebEngineView(this);
-        l->addWidget(view);
-        page = new QSWPageCopy(id, parent);
-
-        view->setPage(page);
-    }
-
-private:
-    QSWPageCopy* page;
-};
 
 SpellIDWidget::SpellIDWidget(QSqlRecord& r, const QString fieldName, const EventAI::Parameter& param, QWidget* parent)
  : QWidget(parent),
    record(r),
    parameter(param)
 {
-    setContentsMargins(0,0,0,0);
+    setMouseTracking(true);
+    //setStyleSheet("QWidget:hover { background-color: black; }");
+    //setContentsMargins(0,0,0,0);
     rIdx = record.indexOf(fieldName);
     QHBoxLayout* l = new QHBoxLayout(this);
+    l->setContentsMargins(0,0,0,0);
     setLayout(l);
     QFormLayout* form = new QFormLayout();
-
     idLabel = new QLabel(this);
-    nameLabel = new QLabel(this);
-
-    bool ok;
-    int spellId = record.value(rIdx).toInt(&ok);
-    Q_ASSERT(ok);
-    spellInfo = Spell::getRecord(spellId, true);
-    if (!spellInfo){
-        nameLabel->setText("SPELL NOT FOUND");
-        return;
-    }
-    nameLabel->setText(spellInfo->name());
-    nameLabel->setContentsMargins(0,0,0,0);
-    iconLabel = new SpellIconWidget(getSpellIcon(spellInfo->spellIconId), this);
-    iconLabel->setContentsMargins(0,0,0,0);
-    connect(iconLabel, &SpellIconWidget::spellIconClicked, this, &SpellIDWidget::onShowSpellDetails);
-    l->addWidget(iconLabel);
-    l->addLayout(form);
-
-    idLabel->setText(QString::number(spellId));
+    idLabel->setStyleSheet("background-color: rgba(0,0,0,0)");
     idLabel->setContentsMargins(0,0,0,0);
     form->addRow("ID:", idLabel);
+
+    nameLabel = new QLabel(this);
+    nameLabel->setContentsMargins(0,0,0,0);
     form->addRow("Name:", nameLabel);
 
 
+    iconLabel = new QLabel(this);
+    iconLabel->setSizePolicy(QSizePolicy::Maximum,QSizePolicy::Maximum);
+    iconLabel->setContentsMargins(0,0,0,0);
+    l->addWidget(iconLabel);
+
+    l->addLayout(form);
+
+    UpdateInfo();
+
+    /*
+    QPushButton* changeBtn = new QPushButton("Change/View", this);
+    connect(changeBtn, &QPushButton::clicked, this, &SpellIDWidget::onChangeSpellBtn);
+    form->setWidget(2, QFormLayout::SpanningRole, changeBtn);
+    */
 }
 
 void SpellIDWidget::onChangeSpellBtn()
 {
-    // new modal dialog showing a spell-searcher type gui, like the creatureSearcher
-    //Warnings::Warning("SpellIDWidget::onChangeSpellBtn unimplemented", QMessageBox::Information);
+    QSWWrapperModal dialog(record.value(rIdx).toInt());
+    int retSpellId = dialog.exec();
+    if(retSpellId > 0){
+        record.setValue(rIdx, retSpellId);
+        UpdateInfo();
+    }
 }
 
-void SpellIDWidget::onShowSpellDetails()
+void SpellIDWidget::UpdateInfo()
 {
-    //todo: show dialog with spell-info or something
-    qDebug() << "YAY";
-    SpellView dialog(record.value(rIdx).toInt(), this);
-    dialog.exec();
+    bool ok;
+    int spellId = record.value(rIdx).toInt(&ok);
+    Q_ASSERT(ok);
+
+    if(auto* plugin = QSWWrapper::Get().Plugin()){
+        auto vals = plugin->getValues(spellId);
+        QImage img = vals["qimage"].value<QImage>();
+        nameLabel->setText(vals["nameWithRank"].toString());
+
+        iconLabel->setPixmap(QPixmap::fromImage(img.scaled(48,48, Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation)));
+    }
+    idLabel->setText(QString::number(spellId));
+
 }
 
+void SpellIDWidget::mouseMoveEvent(QMouseEvent *event)
+{
+    QWidget::mouseMoveEvent(event);
+}

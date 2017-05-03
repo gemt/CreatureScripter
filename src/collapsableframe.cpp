@@ -1,17 +1,36 @@
 
 #include "collapsableframe.h"
 #include <QVBoxLayout>
+#include <QHBoxLayout>
 #include <QPushButton>
 #include <QDebug>
-CollapsibleFrame::CollapsibleFrame(QString headerText, QWidget *parent)
-    :QWidget(parent),
+#include <QLabel>
+
+CollapsibleFrame::CollapsibleFrame(const QString& buttonText, const QString& labelText, QWidget *parent)
+    :QFrame(parent),
       _w(nullptr)
 {
+    setObjectName("CollapsibleFrame");
+    setStyleSheet("#CollapsibleFrame { border: 3px solid black; }");
+
+    setContentsMargins(0,0,0,0);
+    setSizePolicy(QSizePolicy::Minimum,QSizePolicy::Minimum);
+
     l = new QVBoxLayout(this);
+    //l->setContentsMargins(0,0,0,0);
     setLayout(l);
-    btn = new QPushButton(headerText);
-    l->addWidget(btn,0,Qt::AlignTop|Qt::AlignLeft);
-    setSizePolicy(QSizePolicy::Maximum,QSizePolicy::Maximum);
+
+    QHBoxLayout* headerLayout = new QHBoxLayout(this);
+    headerLayout->setContentsMargins(0,0,0,0);
+    l->addLayout(headerLayout);
+
+    btn = new QPushButton(buttonText);
+    headerLayout->addWidget(btn,0,Qt::AlignTop|Qt::AlignLeft);
+
+    QLabel* label = new QLabel(labelText, this);
+    headerLayout->addWidget(label, 0, Qt::AlignTop|Qt::AlignLeft);
+    //QPushButton* resetBtn = new QPushButton("Reset Changes");
+    //headerLayout->addWidget(resetBtn, 0, Qt::AlignTop|Qt::AlignRight);
 }
 
 void CollapsibleFrame::SetWidget(QWidget *w)

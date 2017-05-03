@@ -6,22 +6,9 @@
 #include <QWidget>
 #include <QSqlRecord>
 #include <QLabel>
+#include <QLabel>
 
-namespace Spell{
-struct entry;
-}
-class QLabel;
 class QPushButton;
-
-class SpellIconWidget : public QLabel {
-    Q_OBJECT
-public:
-    SpellIconWidget(const QImage& img, QWidget* parent);
-signals:
-    void spellIconClicked();
-protected:
-    void mouseDoubleClickEvent(QMouseEvent*);
-};
 
 class SpellIDWidget : public QWidget
 {
@@ -31,7 +18,6 @@ public:
 
 private slots:
     void onChangeSpellBtn();
-    void onShowSpellDetails();
 
 private:
     QSqlRecord& record;
@@ -39,10 +25,13 @@ private:
     int rIdx;
     QLabel* idLabel;
     QLabel* nameLabel;
-    SpellIconWidget* iconLabel;
+    QLabel* iconLabel;
 
-    const Spell::entry* spellInfo;
+    void UpdateInfo();
 
+    // QWidget interface
+protected:
+    void mouseMoveEvent(QMouseEvent *event);
 };
 
 #endif // SPELLIDWIDGET_H

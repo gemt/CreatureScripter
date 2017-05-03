@@ -1,4 +1,10 @@
 #include "mainwindow.h"
+#include "warnings.h"
+#include "cache.h"
+#include "creature.h"
+#include "dbconnectionsettings.h"
+#include "eventaidef.h"
+
 #include <QApplication>
 #include <QSettings>
 #include <QSqlDatabase>
@@ -6,11 +12,6 @@
 #include <QDebug>
 #include <QStyleFactory>
 #include <QPalette>
-#include "warnings.h"
-#include "cache.h"
-#include "creature.h"
-#include "dbconnectionsettings.h"
-#include "eventaidef.h"
 
 void SetStyle()
 {
@@ -57,8 +58,6 @@ bool CheckConnectionSettings(MainWindow& mw)
     return true;
 }
 
-
-
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
@@ -76,6 +75,7 @@ int main(int argc, char *argv[])
     if(!CheckConnectionSettings(w)){
         return 1;
     }
+
     w.InitWindow();
 
     return a.exec();

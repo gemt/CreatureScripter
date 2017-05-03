@@ -2,10 +2,10 @@
 #define COLLAPSABLEFRAME_H
 
 #include <QWidget>
-
+#include <QFrame>
 class QVBoxLayout;
 class QPushButton;
-class CollapsibleFrame : public QWidget
+class CollapsibleFrame : public QFrame
 {
     Q_OBJECT
 private:
@@ -13,7 +13,7 @@ private:
     QPushButton* btn;
     QWidget* _w;
 public:
-    CollapsibleFrame(QString headerText, QWidget *parent);
+    CollapsibleFrame(const QString& buttonText, const QString& labelText, QWidget *parent);
     void SetWidget(QWidget* w);
 
 };

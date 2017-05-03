@@ -40,6 +40,10 @@ private:
     QString currentDisplayedSearch;
     QTimer nameSearchTimer;
 
+
+    // QWidget interface
+protected:
+    void closeEvent(QCloseEvent *event);
 };
 
 #endif // MAINWINDOW_H

@@ -4,14 +4,18 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
-
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets sql gui xml webenginewidgets webengine
+QT += core widgets sql gui xml webenginewidgets webengine concurrent
 
 TARGET = CreatureScripter
 TEMPLATE = app
+CONFIG += debug_and_release
+CONFIG += c++11
 DEFINES += __STORMLIB_SELF__ QSW_LIB
-CONFIG += c++14
+
+INCLUDEPATH += $$PWD/mpq/StormLib
+DEPENDPATH += $$PWD/mpq/StormLib
+
+#win32:RC_ICONS += resources/mangos.ico
 
 RESOURCES += \
     icons.qrc \
@@ -22,59 +26,133 @@ INCLUDEPATH += src/ \
 src/CreatureTabs/ \
 src/ScriptAI/ \
 src/ScriptAI/widgets/ \
-QSpellWork/QSW/ \
 
 HEADERS += $$files(src/*.h) \
-    src/collapsableframe.h
+    src/collapsableframe.h \
+    qswwrapper.h
 HEADERS += $$files(src/CreatureTabs/*.h)
 HEADERS += $$files(src/ScriptAI/*.h)
 HEADERS += $$files(src/ScriptAI/widgets/*.h)
 
 SOURCES += $$files(src/*.cpp) \
-    src/collapsableframe.cpp
+    src/collapsableframe.cpp \
+    qswwrapper.cpp
 SOURCES += $$files(src/CreatureTabs/*.cpp)
 SOURCES += $$files(src/ScriptAI/*.cpp)
 SOURCES += $$files(src/ScriptAI/widgets/*.cpp)
 
 
 
-HEADERS += QSpellWork/QSW/qsw.h \
-           QSpellWork/QSW/qsw_export.h \
-           QSpellWork/QSW/blp/blp.h \
-           QSpellWork/QSW/dbc/DBC.h \
-           QSpellWork/QSW/mpq/MPQ.h \
-           QSpellWork/QSW/wov/texture.h \
-           QSpellWork/QSW/mustache/mustache.h \
-           QSpellWork/QSW/plugins/spellinfo/pre-tbc/spellinfo.h \
-           QSpellWork/QSW/plugins/spellinfo/pre-tbc/structure.h
+SOURCES += \
+    AboutForm.cpp \
+    Alphanum.cpp \
+    MainForm.cpp \
+    ScriptEdit.cpp \
+    SettingsForm.cpp \
+    blp/blp.cpp \
+    dbc/DBC.cpp \
+    mpq/MPQ.cpp \
+    wov/bone.cpp \
+    wov/camerashake.cpp \
+    wov/m2.cpp \
+    wov/model.cpp \
+    wov/modelscene.cpp \
+    wov/mvp.cpp \
+    wov/particleemitter.cpp \
+    wov/ribbonemitter.cpp \
+    wov/spellvisual.cpp \
+    wov/spellvisualkit.cpp \
+    wov/texture.cpp \
+    wov/textureanimation.cpp \
+    wov/wovdbc.cpp \
+    mustache/mustache.cpp \
+    models.cpp \
+    qsw.cpp \
+    spellwork.cpp \
+    wov/wov.cpp
 
+HEADERS  += \
+    AboutForm.h \
+    Alphanum.h \
+    MainForm.h \
+    ScriptEdit.h \
+    SettingsForm.h \
+    blp/blp.h \
+    dbc/DBC.h \
+    mpq/MPQ.h \
+    wov/animatedvalue.h \
+    wov/bone.h \
+    wov/camerashake.h \
+    wov/m2.h \
+    wov/m2structures.h \
+    wov/model.h \
+    wov/modelscene.h \
+    wov/mvp.h \
+    wov/particleemitter.h \
+    wov/ribbonemitter.h \
+    wov/spellvisual.h \
+    wov/spellvisualkit.h \
+    wov/texture.h \
+    wov/textureanimation.h \
+    wov/wovdbc.h \
+    mustache/mustache.h \
+    models.h \
+    events.h \
+    qsw.h \
+    spellwork.h \
+    wov/wov.h
 
-SOURCES += QSpellWork/QSW/qsw.cpp \
-           QSpellWork/QSW/blp/blp.cpp \
-           QSpellWork/QSW/dbc/DBC.cpp \
-           QSpellWork/QSW/mpq/MPQ.cpp \
-           QSpellWork/QSW/wov/texture.cpp \
-           QSpellWork/QSW/mustache/mustache.cpp \
-           QSpellWork/QSW/plugins/spellinfo/pre-tbc/spellinfo.cpp \
-           QSpellWork/QSW/plugins/spellinfo/pre-tbc/structure.cpp
+FORMS += \
+    about.ui \
+    main.ui \
+    settings.ui \
+    scriptFilter.ui
 
-include(Qt-Collapsible-Panel/CollapsibleFrame.pri)
-#CONFIG += debug_and_release
+OTHER_FILES += \
+    wov/particle.fs \
+    wov/particle.vs \
+    wov/shader.fs \
+    wov/shader.vs
 
-#QSW:
+RESOURCES += \
+    qsw.qrc \
+    wov/wov.qrc
 
-INCLUDEPATH += $$PWD/QSpellWork/QSW/mpq/StormLib
-DEPENDPATH += $$PWD/QSpellWork/QSW/mpq/StormLib
-#====
+defineTest(copyToDestdir) {
+    files = $$1
 
-win32:CONFIG(release, debug|release): LIBS += -L$$PWD/QSpellWork/QSW/mpq/StormLib/x64/Release/ -lStormLib
-else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/QSpellWork/QSW/mpq/StormLib/x64/Debug/ -lStormLib
-message($$LIBS)
-#INCLUDEPATH += $$PWD/QSpellWork/QSW/mpq/StormLib/x64/Debug
-#DEPENDPATH += $$PWD/QSpellWork/QSW/mpq/StormLib/x64/Debug
+    for(FILE, files) {
 
-win32:CONFIG(release, debug|release): LIBS += -L$$PWD/QSpellWork/QSW/blp/squish/x64/Release/ -lsquish
-else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/QSpellWork/QSW/blp/squish/x64/Debug/ -lsquish
+        DDIR = $$DESTDIR\\$$2
 
-INCLUDEPATH += $$PWD/QSpellWork/QSW/blp/squish/x64/Debug
-DEPENDPATH += $$PWD/QSpellWork/QSW/blp/squish/x64/Debug
+        win32:FILE ~= s,/,\\,g
+        win32:DDIR ~= s,/,\\,g
+
+        QMAKE_POST_LINK += $$QMAKE_COPY $$quote($$FILE) $$quote($$DDIR) $$escape_expand(\\n\\t)
+    }
+
+    export(QMAKE_POST_LINK)
+}
+
+win32: {
+    contains(QT_ARCH, i386) {
+        PLATFORM = "Win32"
+    } else {
+        PLATFORM = "x64"
+    }
+    CONFIG(debug, debug|release) {
+        BUILDTYPE = "Debug"
+    } else {
+        BUILDTYPE = "Release"
+    }
+
+    LIBS += -L$$PWD/mpq/StormLib/$$PLATFORM/$$BUILDTYPE/ -lStormLib
+    LIBS += -L$$PWD/blp/squish/$$PLATFORM/$$BUILDTYPE/ -lsquish
+    DLLDESTDIR = $$OUT_PWD/bin/$$PLATFORM/$$BUILDTYPE/
+    DESTDIR = $$DLLDESTDIR
+
+    copyToDestdir($$PWD/mpq/StormLib/$$PLATFORM/$$BUILDTYPE/StormLib.dll)
+
+    QMAKE_POST_LINK += windeployqt --no-system-d3d-compiler --no-opengl-sw --no-svg --no-qmltooling $${DESTDIR}$${TARGET}.exe
+}
+
