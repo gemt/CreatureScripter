@@ -24,7 +24,11 @@ SpellIDWidget::SpellIDWidget(QSqlRecord& r, const QString fieldName, const Event
    record(r),
    parameter(param)
 {
-    setMouseTracking(true);
+    //setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Minimum);
+    //setAutoFillBackground(true);
+    //setMouseTracking(true);
+    //setObjectName("spellWidget");
+    //setStyleSheet("#spellWidget { border: 1px solid black; }");
     //setStyleSheet("QWidget:hover { background-color: black; }");
     //setContentsMargins(0,0,0,0);
     rIdx = record.indexOf(fieldName);
@@ -83,9 +87,15 @@ void SpellIDWidget::UpdateInfo()
     idLabel->setText(QString::number(spellId));
 
 }
-
+/*
 void SpellIDWidget::mouseMoveEvent(QMouseEvent *event)
 {
+    //if(rect().contains(event->pos())){
+    //    setStyleSheet("#spellWidget { border: 10px solid black; }");
+    //}else{
+    //    setStyleSheet("#spellWidget { border: 1px solid black; }");
+    //}
     QWidget::mouseMoveEvent(event);
 }
 
+*/

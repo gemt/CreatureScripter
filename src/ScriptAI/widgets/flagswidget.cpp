@@ -29,7 +29,6 @@ FlagsWidget::FlagsWidget(const QVector<EventAI::TypeValue>& values, QSqlRecord& 
 
     connect(lineEdit(), &QLineEdit::selectionChanged, lineEdit(), &QLineEdit::deselect);
     connect((QListView*) view(), SIGNAL(pressed(QModelIndex)), this, SLOT(on_itemPressed(QModelIndex)));
-    connect(m_model, SIGNAL(dataChanged(QModelIndex, QModelIndex, QVector<int>)), this, SLOT(updateText()));
 
 
     bool ok;

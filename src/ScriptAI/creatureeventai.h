@@ -32,12 +32,14 @@ public:
 private:
     QVector<QWidget*> widgets;
     QVector<QWidget*> eWidgets;
+    QVector<QWidget*> spellWidgets;
+
     QGridLayout* mainLayout;
     void Remake();
 
     type_EventType* currentEventType;
     type_ActionType* currentActionTypes[3];
-
+    QVector<QWidget*> hovering;
 private slots:
     void onDoRemakeFromEvent(int i);
     void onDoRemakeFromAction1(int i);
@@ -46,6 +48,7 @@ private slots:
 
 protected:
     void paintEvent(QPaintEvent *event);
+    void mouseMoveEvent(QMouseEvent *event);
 };
 
 

@@ -13,6 +13,8 @@
 #include <QLineEdit>
 #include <QGridLayout>
 #include <QPainter>
+#include <QPaintEvent>
+#include <QCursor>
 
 namespace EventAI{
 QTableWidgetItem* HeaderItem(const Parameter& type){
@@ -34,39 +36,13 @@ static const EventAI_Action& GetEventAction(int actionId)
     return *aIt;
 }
 
-static QWidget* getHLine(QVector<QWidget*>& widgets){
-    QFrame* f = new QFrame();
-    widgets.push_back(f);
-    f->setLineWidth(10);
-    f->setMidLineWidth(10);
-    f->setFrameShape(QFrame::HLine);
-    f->setFrameShadow(QFrame::Raised);
-    f->setPalette(QPalette(QColor(0,0,0)));
-    return f;
-}
-
-static QWidget* getVLine(QVector<QWidget*>& widgets){
-    QFrame* f = new QFrame();
-    widgets.push_back(f);
-    f->setLineWidth(10);
-    f->setMidLineWidth(10);
-    f->setFrameShape(QFrame::VLine);
-    f->setFrameShadow(QFrame::Raised);
-    f->setPalette(QPalette(QColor(0,0,0)));
-    return f;
-}
-
 EventEntry::EventEntry(QSqlRecord &record, QWidget* parent) :
     QWidget(parent),
     record(record),
     mainLayout(nullptr)
 {
+    setMouseTracking(true);
     setContentsMargins(0,0,0,0);
-    //setSizePolicy(QSizePolicy::Minimum,QSizePolicy::Minimum);
-    //setObjectName("eventEntry");
-    //setStyleSheet("#eventEntry { border: 3px solid black; }");
-
-    //setFrameStyle(QFrame::StyledPanel);
     Q_ASSERT(record.count() == Tables::creature_ai_scripts::num_cols);
     Remake();
 }
@@ -169,18 +145,9 @@ void EventEntry::Remake()
             mainLayout->addWidget(w, mainLayout->rowCount()-1, p*2+1, 1, 2, Qt::AlignTop|Qt::AlignLeft);
         }
     }
-    //hide();
-    //show();
-    //parentWidget()->adjustSize();
-    //parentWidget()->parentWidget()->adjustSize();
-    //repaint();
     adjustSize();
     updateGeometry();
-    //parentWidget()->parentWidget()->adjustSize();
-    //parentWidget()->adjustSize();
-    //adjustSize();
-    //parentWidget()->parentWidget()->adjustSize();
-    //parentWidget()->parentWidget()->adjustSize();
+    setMask(frameGeometry());
 }
 
 void EventEntry::onDoRemakeFromEvent(int i)
@@ -215,9 +182,23 @@ void EventEntry::onDoRemakeFromAction3(int i)
     Remake();
 }
 
-void EventEntry::paintEvent(QPaintEvent*)
+void EventEntry::paintEvent(QPaintEvent* e)
 {
     QPainter painter(this);
+    painter.save();
+
+    painter.setPen(Qt::blue);
+    //painter.rotate(270.0f);
+    QRect eRect = mainLayout->cellRect(0,0);
+    QRect pr = QRect(eRect.left()-10, eRect.top(), 10, eRect.height());
+    painter.rotate(90.0f);
+    painter.drawText(0,25, "Event");
+
+    painter.setPen(Qt::red);
+    QRect aREctTop = mainLayout->cellRect(1,0);
+    QRect aREctBot = mainLayout->cellRect(mainLayout->rowCount()-1,0);
+
+    painter.restore();
     painter.setPen(Qt::black);
     //drawing vertical lines for event
     {
@@ -241,7 +222,6 @@ void EventEntry::paintEvent(QPaintEvent*)
             b = mainLayout->cellRect(mainLayout->rowCount()-1, i+1);
             p = (a.right() + b.left()) / 2.0f;
             painter.drawLine(QPointF(p, (float)a.top()), QPoint(p, b.bottom()));
-
         }
     }
 
@@ -253,7 +233,6 @@ void EventEntry::paintEvent(QPaintEvent*)
     float right = (float)mainLayout->cellRect(0, mainLayout->columnCount()-1).right();
     float p;
     QRect a, b;
-
     painter.drawLine(QPointF(left, top), QPoint(right, top));
     for(int i = 0; i < mainLayout->rowCount()-1; i++){
         a = mainLayout->cellRect(i, 0);
@@ -269,7 +248,8 @@ void EventEntry::paintEvent(QPaintEvent*)
     {
         //QRect rightRect = mainLayout->cellRect(1, mainLayout->columnCount()-1);
         QRect eventRect(mainLayout->cellRect(0,0).topLeft(),
-                        mainLayout->cellRect(1, mainLayout->columnCount()-1).topRight());
+                        mainLayout->cellRect(0, mainLayout->columnCount()-1).bottomRight());
+                        //mainLayout->cellRect(1, mainLayout->columnCount()-1).topRight());
         //QPointF leftP = QPointF(leftRect.left(), leftRect.center().y());
         //QPointF rightP = QPointF(rightRect.right(), rightRect.center().y());
         //QLinearGradient gradient(leftP, rightP);
@@ -291,6 +271,54 @@ void EventEntry::paintEvent(QPaintEvent*)
         //gradient.setColorAt(0, QColor(0,0,255, 50));
         //gradient.setColorAt(1, QColor(0,0,255,0));
         painter.fillRect(eventRect, QColor(255,0,0, 25));
+    }
+
+
+    QPoint mp = mapFromGlobal(QCursor::pos());
+    for(int i = 1; i < mainLayout->rowCount(); i++){
+        for(int j = 1; j < mainLayout->columnCount(); j += 2){
+            QWidget* w = mainLayout->itemAtPosition(i, j)->widget();
+            if(!w)
+                continue;
+            //if(!w->property("hoverable").toBool())
+            //    continue;
+            //if(!w->property("do-hover").toBool())
+            //    continue;
+            if(hovering.contains(w)){
+                QRect r1 = mainLayout->cellRect(i,j);
+                QRect r2 = mainLayout->cellRect(i,j+1);
+                QRect r3(r1.topLeft(),r2.bottomRight());
+                painter.fillRect(r3, QBrush(Qt::black));
+            }
+        }
+    }
+}
+
+void EventEntry::mouseMoveEvent(QMouseEvent *event)
+{
+    for(int i = 1; i < mainLayout->rowCount(); i++){
+        for(int j = 1; j < mainLayout->columnCount(); j += 2){
+            QWidget* w = mainLayout->itemAtPosition(i, j)->widget();
+            if(!w)
+                continue;
+            if(!w->property("hoverable").toBool())
+                continue;
+            QRect r1 = mainLayout->cellRect(i,j);
+            QRect r2 = mainLayout->cellRect(i,j+1);
+            QRect r3(r1.topLeft(),r2.bottomRight());
+            qDebug() << r3 << event->pos() << r3.contains(event->pos());
+            if(r3.contains(event->pos())){
+                if(!hovering.contains(w)){
+                    hovering.push_back(w);
+                    repaint();
+                }
+            }else{
+                if(hovering.removeAll(w))
+                    repaint();
+            }
+            //w->setProperty("do-hover", r3.contains(event->pos()));
+            //qDebug() << w->property("do-hover").toBool();
+        }
     }
 }
 

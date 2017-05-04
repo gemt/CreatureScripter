@@ -6,7 +6,6 @@
 #include <QWidget>
 #include <QSqlRecord>
 #include <QLabel>
-#include <QLabel>
 
 class QPushButton;
 
@@ -31,7 +30,7 @@ private:
 
     // QWidget interface
 protected:
-    void mouseMoveEvent(QMouseEvent *event);
+    //void mouseMoveEvent(QMouseEvent *event);
 
 };
 

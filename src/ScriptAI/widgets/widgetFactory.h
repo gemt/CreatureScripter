@@ -13,12 +13,11 @@
 #include "eventwidgetclasses.h"
 #include "MillisecondsWidget.h"
 #include "flagswidget.h"
-
+#include <QMouseEvent>
 
 static QWidget* CreateParameterWidget(const EventAI::Parameter& param, QSqlRecord& record, const QString& field, QWidget* parent = nullptr){
     QWidget* w = new QWidget(parent);
-
-    //w->setSizePolicy(QSizePolicy::Minimum,QSizePolicy::Minimum);
+    w->setSizePolicy(QSizePolicy::Minimum,QSizePolicy::Minimum);
 
     w->setContentsMargins(0,0,0,0);
     QVBoxLayout* l = new QVBoxLayout(w);
@@ -47,7 +46,10 @@ static QWidget* CreateParameterWidget(const EventAI::Parameter& param, QSqlRecor
     switch(param.type){
     case EventAI::MILLISECONDS: rw = new MillisecondsWidget(record, field, param, w); break;
     case EventAI::PERCENTAGE: rw =  new DefaultLineEdit(record, field, param, w);break;
-    case EventAI::SPELL_ID: rw = new SpellIDWidget(record, field, param, w);break;
+    case EventAI::SPELL_ID:
+        rw = new SpellIDWidget(record, field, param, w);
+        w->setProperty("hoverable", true);
+        break;
     case EventAI::FACTION_ID_FLAGS: rw = new TypeValueWidget(EventAI::factionFlags, record, field, w);break;
     case EventAI::TARGET: rw = new TypeValueWidget(EventAI::TargetTypes, record, field, w);break;
     case EventAI::CAST_FLAGS: rw = new TypeValueWidget(EventAI::CastFlags, record, field, w);break;
@@ -91,6 +93,8 @@ static QWidget* CreateParameterWidget(const EventAI::Parameter& param, QSqlRecor
     //l->addWidget(rw, 0, Qt::AlignTop | Qt::AlignLeft);
     //return rw;
     l->addWidget(rw);
+    rw->setMouseTracking(true);
+    w->setMouseTracking(true);
     //l->setSizeConstraint(QLayout::SetMinimumSize);
     //w->setMinimumSize(100,100);
     return w;
