@@ -278,17 +278,13 @@ void EventEntry::paintEvent(QPaintEvent* e)
     for(int i = 1; i < mainLayout->rowCount(); i++){
         for(int j = 1; j < mainLayout->columnCount(); j += 2){
             QWidget* w = mainLayout->itemAtPosition(i, j)->widget();
-            if(!w)
-                continue;
-            //if(!w->property("hoverable").toBool())
-            //    continue;
-            //if(!w->property("do-hover").toBool())
-            //    continue;
+            if(!w) continue;
+
             if(hovering.contains(w)){
                 QRect r1 = mainLayout->cellRect(i,j);
                 QRect r2 = mainLayout->cellRect(i,j+1);
                 QRect r3(r1.topLeft(),r2.bottomRight());
-                painter.fillRect(r3, QBrush(Qt::black));
+                painter.fillRect(r3, QBrush(QColor(0,0,0,50)));
             }
         }
     }
@@ -306,7 +302,6 @@ void EventEntry::mouseMoveEvent(QMouseEvent *event)
             QRect r1 = mainLayout->cellRect(i,j);
             QRect r2 = mainLayout->cellRect(i,j+1);
             QRect r3(r1.topLeft(),r2.bottomRight());
-            qDebug() << r3 << event->pos() << r3.contains(event->pos());
             if(r3.contains(event->pos())){
                 if(!hovering.contains(w)){
                     hovering.push_back(w);
@@ -316,8 +311,6 @@ void EventEntry::mouseMoveEvent(QMouseEvent *event)
                 if(hovering.removeAll(w))
                     repaint();
             }
-            //w->setProperty("do-hover", r3.contains(event->pos()));
-            //qDebug() << w->property("do-hover").toBool();
         }
     }
 }
