@@ -31,7 +31,8 @@
 
 #include <QVector>
 #include <QMap>
-namespace EventAI{
+namespace EventAI
+{
 enum ParameterType{
     PT_MIN = -1,
     UNUSED = 0,
@@ -70,6 +71,10 @@ enum ParameterType{
     STAND_STATE = 32,
     MOVEMENT_TYPE = 33,
     REACT_STATE = 34,
+
+    //==============
+    EVENT_PHASE_MASK = 50,
+    EVENT_FLAGS = 51,
     PT_UNKNOWN
 };
 
@@ -78,6 +83,11 @@ struct TypeValue{
     QString name;
     QString description;
 };
+
+static const QString phase_mask_tooltip =
+        "Phase mask is a bitmask of phases which shouldn't trigger this event. (ie. Phase mask of value 12 (binary 1100) results in triggering this event in phases 0, 1 and all others with exception for phases 2 and 3 (counting from 0)."
+        "Phase 0 is default so this will occur in all phases unless specified. (1101 = Triggers in Phase 1 of 3, 1011 = Triggers in Phase 2 of 3, 0111 = Triggers in Phase 3 of 3, 0011 = Triggers in Both Phase 2 and 3)."
+        "Take Desired Binary Configuration and convert into Decimal and this is your event_inverse_phase_mask to use in your script.";
 
 static const QVector<TypeValue> SheetState =
 {
@@ -123,14 +133,14 @@ static const QVector<TypeValue> EventTypeMask =
 
 static const QVector<TypeValue> EventFlags =
 {
-TypeValue{1         ,"EFLAG_REPEATABLE"     ,"Event repeats (Does not repeat if this flag is not set)"},
-TypeValue{2         ,"EFLAG_NORMAL"         ,"Event occurs in Normal instance difficulty (will not occur in Normal if not set)"},
-TypeValue{4         ,"EFLAG_HEROIC"         ,"Event occurs in Heroic instance difficulty (will not occur in Heroic if not set)"},
+TypeValue{1         ,"REPEATABLE"     ,"Event repeats (Does not repeat if this flag is not set)"},
+TypeValue{2         ,"NORMAL"         ,"Event occurs in Normal instance difficulty (will not occur in Normal if not set)"},
+TypeValue{4         ,"HEROIC"         ,"Event occurs in Heroic instance difficulty (will not occur in Heroic if not set)"},
 TypeValue{8         ,""                     ,""},
 TypeValue{16        ,""                     ,""},
-TypeValue{32        ,"EFLAG_RANDOM_ACTION"  ,"At event occur execute one random action from event actions instead all actions."},
+TypeValue{32        ,"RANDOM_ACTION"  ,"At event occur execute one random action from event actions instead all actions."},
 TypeValue{64        ,""                     ,""},
-TypeValue{128       ,"EFLAG_DEBUG_ONLY"     ,"Prevents events from occuring on Release builds. Useful for testing new features."}
+TypeValue{128       ,"DEBUG_ONLY"     ,"Prevents events from occuring on Release builds. Useful for testing new features."}
 };
 
 // referenced in description of 44   ACTION_T_CHANCED_TEXT, but cant see how it should be used. Not used yet
@@ -204,7 +214,6 @@ static const QVector<TypeValue> factionFlags = {
 };
 
 struct Parameter{
-    //Parameter() : type(PT_UNKNOWN),name("UNKNOWN"){}
     ParameterType type;
     QString name;
     QString description;
@@ -219,6 +228,11 @@ struct EventAI_Action{
 };
 
 struct EventAI_event{
+    EventAI_event(){
+        params.push_back({ParameterType::EVENT_PHASE_MASK, "Phase Mask", phase_mask_tooltip});
+        params.push_back({ParameterType::EVENT_FLAGS, "Event Flags", ""});
+    }
+
     quint8 id;
     QString name;
     QString shortName;

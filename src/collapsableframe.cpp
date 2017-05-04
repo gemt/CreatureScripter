@@ -14,8 +14,9 @@ CollapsibleFrame::CollapsibleFrame(const QString& buttonText, const QString& lab
     setStyleSheet("#CollapsibleFrame { border: 3px solid black; }");
 
     setContentsMargins(0,0,0,0);
-    setSizePolicy(QSizePolicy::Minimum,QSizePolicy::Minimum);
-
+    //setSizePolicy(QSizePolicy::Fixed,QSizePolicy::Fixed);
+    //setSizePolicy(QSizePolicy::Preferred,QSizePolicy::Preferred);
+    //setSizePolicy(QSizePolicy::Maximum,QSizePolicy::Maximum);
     l = new QVBoxLayout(this);
     //l->setContentsMargins(0,0,0,0);
     setLayout(l);
@@ -24,7 +25,7 @@ CollapsibleFrame::CollapsibleFrame(const QString& buttonText, const QString& lab
     headerLayout->setContentsMargins(0,0,0,0);
     l->addLayout(headerLayout);
 
-    btn = new QPushButton(buttonText);
+    btn = new QPushButton(buttonText, this);
     headerLayout->addWidget(btn,0,Qt::AlignTop|Qt::AlignLeft);
 
     QLabel* label = new QLabel(labelText, this);

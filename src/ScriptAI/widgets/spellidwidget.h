@@ -32,6 +32,7 @@ private:
     // QWidget interface
 protected:
     void mouseMoveEvent(QMouseEvent *event);
+
 };
 
 #endif // SPELLIDWIDGET_H

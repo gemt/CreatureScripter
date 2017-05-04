@@ -20,6 +20,9 @@ struct creature_template;
 namespace EventAI
 {
 
+class type_EventType;
+class type_ActionType;
+
 class EventEntry : public QWidget {
 private:
     QSqlRecord& record;
@@ -31,6 +34,15 @@ private:
     QVector<QWidget*> eWidgets;
     QGridLayout* mainLayout;
     void Remake();
+
+    type_EventType* currentEventType;
+    type_ActionType* currentActionTypes[3];
+
+private slots:
+    void onDoRemakeFromEvent(int i);
+    void onDoRemakeFromAction1(int i);
+    void onDoRemakeFromAction2(int i);
+    void onDoRemakeFromAction3(int i);
 
 protected:
     void paintEvent(QPaintEvent *event);

@@ -29,14 +29,16 @@ src/ScriptAI/widgets/ \
 
 HEADERS += $$files(src/*.h) \
     src/collapsableframe.h \
-    qswwrapper.h
+    qswwrapper.h \
+    src/ScriptAI/widgets/flagswidget.h
 HEADERS += $$files(src/CreatureTabs/*.h)
 HEADERS += $$files(src/ScriptAI/*.h)
 HEADERS += $$files(src/ScriptAI/widgets/*.h)
 
 SOURCES += $$files(src/*.cpp) \
     src/collapsableframe.cpp \
-    qswwrapper.cpp
+    qswwrapper.cpp \
+    src/ScriptAI/widgets/flagswidget.cpp
 SOURCES += $$files(src/CreatureTabs/*.cpp)
 SOURCES += $$files(src/ScriptAI/*.cpp)
 SOURCES += $$files(src/ScriptAI/widgets/*.cpp)

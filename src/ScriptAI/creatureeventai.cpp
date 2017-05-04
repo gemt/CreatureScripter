@@ -4,6 +4,7 @@
 #include "eventwidgetclasses.h"
 #include "widgetFactory.h"
 #include "collapsableframe.h"
+#include "flagswidget.h"
 
 #include <QSqlRecord>
 #include <QFormLayout>
@@ -69,7 +70,9 @@ EventEntry::EventEntry(QSqlRecord &record, QWidget* parent) :
     Q_ASSERT(record.count() == Tables::creature_ai_scripts::num_cols);
     Remake();
 }
-void EventEntry::Remake(){
+
+void EventEntry::Remake()
+{
     foreach(QWidget* w, widgets){
         w->deleteLater();
     }
@@ -86,54 +89,74 @@ void EventEntry::Remake(){
     if(eIt == EventAIStorage::Get().Events().end())
         throw std::runtime_error(QString("EventEntry::Remake() eventID %1 is unknown").arg(eventId).toStdString());
 
-    //mainLayout->addWidget(getHLine(widgets), mainLayout->rowCount(), 0,1, 4);
     const EventAI_event& event = *eIt;
-    type_EventType* et;
     {
+        // Adding the event combobox
         {
-            et = new type_EventType(record.value(Tables::creature_ai_scripts::event_type).toInt(&ok), this/*eventFrame*/);
-            widgets.push_back(et);
-            eWidgets.push_back(et);
+            currentEventType = new type_EventType(record.value(Tables::creature_ai_scripts::event_type).toInt(&ok), this/*eventFrame*/);
+            widgets.push_back(currentEventType);
+            eWidgets.push_back(currentEventType);
             Q_ASSERT(ok);
-            connect(et, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), [this, et](int i){
-                bool ok;
-                record.setValue(Tables::creature_ai_scripts::event_type,et->itemData(i).toInt(&ok));
-                Q_ASSERT(ok);
-                Remake();
-            });
+            connect(currentEventType, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, &EventEntry::onDoRemakeFromEvent, Qt::DirectConnection);
+
             QLabel* eventLabel = new QLabel("Event:");
             eventLabel->setSizePolicy(QSizePolicy::Minimum,QSizePolicy::Maximum);
             eventLabel->setContentsMargins(0,0,0,0);
-            mainLayout->addWidget(et,mainLayout->rowCount(),0,1,1,Qt::AlignLeft|Qt::AlignTop);
+            mainLayout->addWidget(currentEventType,mainLayout->rowCount()-1,0,1,1,Qt::AlignLeft|Qt::AlignTop);
         }
-        for(int i = 0; i < 4; i++){
-            QWidget* w;
+
+        // phase mask
+        int paramColOffset = 1;
+        QWidget* w = CreateParameterWidget(event.params.at(0), record, Tables::creature_ai_scripts::event_inverse_phase_mask, this/*eventFrame*/);
+        widgets.push_back(w);
+        eWidgets.push_back(w);
+        mainLayout->addWidget(w,mainLayout->rowCount()-1,paramColOffset++, 1,1,Qt::AlignLeft|Qt::AlignTop);
+
+        // event flags
+        w = CreateParameterWidget(event.params.at(1), record, Tables::creature_ai_scripts::event_flags, this/*eventFrame*/);
+        widgets.push_back(w);
+        eWidgets.push_back(w);
+        mainLayout->addWidget(w,mainLayout->rowCount()-1,paramColOffset++, 1,1,Qt::AlignLeft|Qt::AlignTop);
+
+        // Adding event parameters
+        int eventParamNum = 1;
+        for(int i = 2; i < 6; i++){
             if(i >= event.params.size()){
                 w = new QWidget(this);
             }else{
-                w = CreateParameterWidget(event.params.at(i), record, Tables::creature_ai_scripts::event_paramN(i+1), this/*eventFrame*/);
+                w = CreateParameterWidget(event.params.at(i), record, Tables::creature_ai_scripts::event_paramN(eventParamNum++), this/*eventFrame*/);
             }
             widgets.push_back(w);
-            mainLayout->addWidget(w,mainLayout->rowCount()-1,i+1,1,1,Qt::AlignLeft|Qt::AlignTop);
+            mainLayout->addWidget(w,mainLayout->rowCount()-1,paramColOffset++, 1,1, Qt::AlignLeft|Qt::AlignTop);
             eWidgets.push_back(w);
         }
     }
 
-    type_ActionType* at;
+    // Adding action
     for(int i = 0; i < 3; i++){
-        //mainLayout->addWidget(getHLine(widgets), mainLayout->rowCount(), 0,1,mainLayout->columnCount());
+
+        // Adding the action type
         int actionId = record.value(Tables::creature_ai_scripts::actionN_type(i+1)).toInt(&ok);
         Q_ASSERT(ok);
         const EventAI_Action& eventAction = GetEventAction(actionId);
-        at = new type_ActionType(eventAction.id, this/*actionFrame*/);
-        widgets.push_back(at);
-        connect(at, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), [this, at, i](int isig){
-            bool ok;
-            record.setValue(Tables::creature_ai_scripts::actionN_type(i+1),at->itemData(isig).toInt(&ok));
-            Q_ASSERT(ok);
-            Remake();
-        });
-        mainLayout->addWidget(at, mainLayout->rowCount(),0,1,1,Qt::AlignTop|Qt::AlignLeft);
+        currentActionTypes[i] = new type_ActionType(eventAction.id, this/*actionFrame*/);
+        widgets.push_back(currentActionTypes[i]);
+        switch(i){
+        case 0:
+            connect(currentActionTypes[i], static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, &EventEntry::onDoRemakeFromAction1, Qt::DirectConnection);
+            break;
+        case 1:
+            connect(currentActionTypes[i], static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, &EventEntry::onDoRemakeFromAction2, Qt::DirectConnection);
+            break;
+        case 2:
+            connect(currentActionTypes[i], static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, &EventEntry::onDoRemakeFromAction3, Qt::DirectConnection);
+            break;
+        default:
+        Q_ASSERT(0);
+        }
+
+        mainLayout->addWidget(currentActionTypes[i], mainLayout->rowCount(),0,1,1,Qt::AlignTop|Qt::AlignLeft);
+        // Adding the action parameters
         for(int p = 0; p < 3; p++){
             QWidget* w;
             if(p >= eventAction.params.size()){
@@ -143,32 +166,131 @@ void EventEntry::Remake(){
                 w = CreateParameterWidget(actParam, record, Tables::creature_ai_scripts::actionX_paramY(i+1,p+1), this/*actionFrame*/);
             }
             widgets.push_back(w);
-            mainLayout->addWidget(w, mainLayout->rowCount()-1,p+1,1,1,Qt::AlignTop|Qt::AlignLeft);
+            mainLayout->addWidget(w, mainLayout->rowCount()-1, p*2+1, 1, 2, Qt::AlignTop|Qt::AlignLeft);
         }
     }
+    //hide();
+    //show();
+    //parentWidget()->adjustSize();
+    //parentWidget()->parentWidget()->adjustSize();
+    //repaint();
     adjustSize();
+    updateGeometry();
+    //parentWidget()->parentWidget()->adjustSize();
+    //parentWidget()->adjustSize();
+    //adjustSize();
+    //parentWidget()->parentWidget()->adjustSize();
+    //parentWidget()->parentWidget()->adjustSize();
 }
 
-void EventEntry::paintEvent(QPaintEvent *event)
+void EventEntry::onDoRemakeFromEvent(int i)
+{
+    bool ok;
+    record.setValue(Tables::creature_ai_scripts::event_type, currentEventType->itemData(i).toInt(&ok));
+    Q_ASSERT(ok);
+    Remake();
+}
+
+void EventEntry::onDoRemakeFromAction1(int i)
+{
+    bool ok;
+    record.setValue(Tables::creature_ai_scripts::action1_type, currentActionTypes[0]->itemData(i).toInt(&ok));
+    Q_ASSERT(ok);
+    Remake();
+}
+
+void EventEntry::onDoRemakeFromAction2(int i)
+{
+    bool ok;
+    record.setValue(Tables::creature_ai_scripts::action2_type, currentActionTypes[1]->itemData(i).toInt(&ok));
+    Q_ASSERT(ok);
+    Remake();
+}
+
+void EventEntry::onDoRemakeFromAction3(int i)
+{
+    bool ok;
+    record.setValue(Tables::creature_ai_scripts::action3_type, currentActionTypes[2]->itemData(i).toInt(&ok));
+    Q_ASSERT(ok);
+    Remake();
+}
+
+void EventEntry::paintEvent(QPaintEvent*)
 {
     QPainter painter(this);
     painter.setPen(Qt::black);
-    QRect r = rect();
-    for(int i = 0; i < mainLayout->columnCount()-1; i++){
-        QRect a = mainLayout->cellRect(1, i);
-        QRect b = mainLayout->cellRect(1, i+1);
-        float p = (a.right() + b.left()) / 2.0f;
-        painter.drawLine(QPointF(p, (float)a.top()), QPoint(p, (float)r.height()));
+    //drawing vertical lines for event
+    {
+        for(int i = 0; i < mainLayout->columnCount()-1; i++){
+            QRect a = mainLayout->cellRect(0, i);
+            QRect b = mainLayout->cellRect(0, i+1);
+            float p = (a.right() + b.left()) / 2.0f;
+            painter.drawLine(QPointF(p, (float)a.top()), QPoint(p, a.bottom()));
 
+        }
     }
+    //drawing vertical for actions
+    {
+        QRect a = mainLayout->cellRect(1, 0);
+        QRect b = mainLayout->cellRect(mainLayout->rowCount()-1, 1);
+        float p = (a.right() + b.left()) / 2.0f;
+        painter.drawLine(QPointF(p, (float)a.top()), QPoint(p, b.bottom()));
+
+        for(int i = 2; i < mainLayout->columnCount()-1; i+=2){
+            a = mainLayout->cellRect(1, i);
+            b = mainLayout->cellRect(mainLayout->rowCount()-1, i+1);
+            p = (a.right() + b.left()) / 2.0f;
+            painter.drawLine(QPointF(p, (float)a.top()), QPoint(p, b.bottom()));
+
+        }
+    }
+
+    float top = mainLayout->cellRect(0, mainLayout->columnCount()-1).top()-5.0f;
+    float bottom = 5.0f + mainLayout->cellRect(mainLayout->rowCount()-1, mainLayout->columnCount()-1).bottom();
+
+    // drawing horizontal lines
     float left = (float)mainLayout->cellRect(0,0).left();
     float right = (float)mainLayout->cellRect(0, mainLayout->columnCount()-1).right();
-    for(int i = 0; i < mainLayout->rowCount()-1; i++){
-        QRect a = mainLayout->cellRect(i, 0);
-        QRect b = mainLayout->cellRect(i+1,0);
+    float p;
+    QRect a, b;
 
-        float p = (a.bottom() + b.top())/ 2.0f;
+    painter.drawLine(QPointF(left, top), QPoint(right, top));
+    for(int i = 0; i < mainLayout->rowCount()-1; i++){
+        a = mainLayout->cellRect(i, 0);
+        b = mainLayout->cellRect(i+1,0);
+
+        p = (a.bottom() + b.top())/ 2.0f;
         painter.drawLine(QPointF(left, p), QPoint(right, p));
+    }
+    // final horizontal line
+    painter.drawLine(QPointF(left, bottom), QPoint(right, bottom));
+
+    // event row background color
+    {
+        //QRect rightRect = mainLayout->cellRect(1, mainLayout->columnCount()-1);
+        QRect eventRect(mainLayout->cellRect(0,0).topLeft(),
+                        mainLayout->cellRect(1, mainLayout->columnCount()-1).topRight());
+        //QPointF leftP = QPointF(leftRect.left(), leftRect.center().y());
+        //QPointF rightP = QPointF(rightRect.right(), rightRect.center().y());
+        //QLinearGradient gradient(leftP, rightP);
+        //gradient.setColorAt(0, QColor(255,0,0, 50));
+        //gradient.setColorAt(1, QColor(255,0,0,0));
+        //painter.fillRect(eventRect, gradient);
+        painter.fillRect(eventRect, QColor(0,0,255, 25));
+    }
+
+    // Action rows background color
+    {
+        QRect leftRect = mainLayout->cellRect(1,0);
+        QRect rightRect = mainLayout->cellRect(mainLayout->rowCount()-1, mainLayout->columnCount()-1);
+        rightRect.setBottom(bottom);
+        QRect eventRect(leftRect.topLeft(), rightRect.bottomRight());
+        //QPointF leftP = QPointF(leftRect.left(), leftRect.center().y());
+        //QPointF rightP = QPointF(rightRect.right(), rightRect.center().y());
+        //QLinearGradient gradient(leftP, rightP);
+        //gradient.setColorAt(0, QColor(0,0,255, 50));
+        //gradient.setColorAt(1, QColor(0,0,255,0));
+        painter.fillRect(eventRect, QColor(255,0,0, 25));
     }
 }
 
@@ -176,17 +298,22 @@ CreatureEventAI::CreatureEventAI(std::shared_ptr<Tables::creature_template> crea
     QScrollArea(parent),
     _creature(creature)
 {
+    setWidgetResizable(true);
     setContentsMargins(0,0,0,0);
+
     QWidget* scrollAreaWidget = new QWidget(this);
     scrollAreaWidget->setContentsMargins(0,0,0,0);
-    scrollAreaWidget->setSizePolicy(QSizePolicy::Minimum,QSizePolicy::Minimum);
+    //scrollAreaWidget->setSizePolicy(QSizePolicy::Minimum,QSizePolicy::Minimum);
+    scrollAreaWidget->setSizePolicy(QSizePolicy::Maximum,QSizePolicy::Maximum);
+
     QVBoxLayout* vl = new QVBoxLayout(scrollAreaWidget);
     vl->setContentsMargins(0,0,0,0);
     scrollAreaWidget->setLayout(vl);
+
     setWidget(scrollAreaWidget);
 
     QVector<QSqlRecord>& records = _creature->scripts->records;
-    int maxSize = 0;
+
     for(QVector<QSqlRecord>::iterator it = records.begin(); it != records.end(); it++){
         QSqlRecord& r = *it;
 
@@ -197,18 +324,11 @@ CreatureEventAI::CreatureEventAI(std::shared_ptr<Tables::creature_template> crea
                     scrollAreaWidget);
         EventEntry* ew = new EventEntry(r, frame);
         frame->SetWidget(ew);
-        vl->addWidget(frame, Qt::AlignTop);
+        vl->addWidget(frame, 0, Qt::AlignTop|Qt::AlignLeft);
         entryWidgets.push_back(ew);
-        //if(maxSize < frame)
+        //vl->setAlignment(frame, Qt::AlignTop);
     }
     adjustSize();
-    scrollAreaWidget->adjustSize();
-    //scrollAreaWidget->setSizePolicy(QSize);
-    foreach(QWidget* w, entryWidgets){
-        w->setFixedWidth(scrollAreaWidget->width());
-    }
-    adjustSize();
-    scrollAreaWidget->adjustSize();
 }
 
 

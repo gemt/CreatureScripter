@@ -1,10 +1,9 @@
 #include "typevaluewidget.h"
 
 TypeValueWidget::TypeValueWidget(const QVector<EventAI::TypeValue> &values, QSqlRecord &r,
-                                 const QString fieldName, const EventAI::Parameter &param, QWidget *parent)
-    :QComboBox(parent),
+                                 const QString fieldName, QWidget *parent)
+    : QComboBox(parent),
       record(r),
-      parameter(param),
       values(values)
 {
     rIdx = record.indexOf(fieldName);

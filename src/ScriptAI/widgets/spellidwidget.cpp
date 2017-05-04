@@ -43,14 +43,13 @@ SpellIDWidget::SpellIDWidget(QSqlRecord& r, const QString fieldName, const Event
 
 
     iconLabel = new QLabel(this);
-    iconLabel->setSizePolicy(QSizePolicy::Maximum,QSizePolicy::Maximum);
-    iconLabel->setContentsMargins(0,0,0,0);
+    //iconLabel->setSizePolicy(QSizePolicy::Minimum,QSizePolicy::Minimum);
+    //iconLabel->setContentsMargins(0,0,0,0);
     l->addWidget(iconLabel);
 
     l->addLayout(form);
 
     UpdateInfo();
-
     /*
     QPushButton* changeBtn = new QPushButton("Change/View", this);
     connect(changeBtn, &QPushButton::clicked, this, &SpellIDWidget::onChangeSpellBtn);
@@ -89,3 +88,4 @@ void SpellIDWidget::mouseMoveEvent(QMouseEvent *event)
 {
     QWidget::mouseMoveEvent(event);
 }
+

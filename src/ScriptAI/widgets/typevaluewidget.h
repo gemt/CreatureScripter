@@ -9,12 +9,10 @@
 class TypeValueWidget : public QComboBox
 {
 public:
-    TypeValueWidget(const QVector<EventAI::TypeValue>& values, QSqlRecord& r, const QString fieldName,
-                    const EventAI::Parameter& param, QWidget* parent);
+    TypeValueWidget(const QVector<EventAI::TypeValue>& values, QSqlRecord& r, const QString fieldName, QWidget* parent);
 
 private:
     QSqlRecord& record;
-    const EventAI::Parameter& parameter;
     int rIdx;
     const QVector<EventAI::TypeValue>& values;
 };
