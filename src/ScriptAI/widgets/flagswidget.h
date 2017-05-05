@@ -16,15 +16,23 @@
 #include <QListView>
 #include <QVBoxLayout>
 
-/**
- * @brief QComboBox with support of checkboxes
- * http://stackoverflow.com/questions/8422760/combobox-of-checkboxes
- */
-class FlagsWidget : public QComboBox
+class QListWidget;
+class FlagsWidget : public QWidget{
+public:
+    FlagsWidget(const QVector<EventAI::TypeValue>& values, QSqlRecord& r,
+                const QString& fieldName, QWidget* parent, bool verbose=false);
+    void SetLabels(const QStringList& lbls);
+private:
+    bool _verbose;
+    QVector<QWidget*> verboseList;
+    QVBoxLayout* verboseLayout;
+};
+
+class FlagsWidgetList : public QComboBox
 {
     Q_OBJECT
 public:
-    FlagsWidget(const QVector<EventAI::TypeValue>& values, QSqlRecord& r, const QString& fieldName, QWidget* parent);
+    FlagsWidgetList(const QVector<EventAI::TypeValue>& values, QSqlRecord& r, const QString& fieldName, FlagsWidget* parent);
     QStandardItem* addCheckItem(const QString &label, const QVariant &data, const QString& tt, const Qt::CheckState checkState);
 protected:
     bool eventFilter(QObject* _object, QEvent* _event);
@@ -33,8 +41,8 @@ private:
     void updateText();
     bool is_shown;
     QSqlRecord& record;
-    const QString& fieldName;
-
+    const QString fieldName;
+    FlagsWidget* _parent;
 private slots:
     void on_itemPressed(const QModelIndex &index);
 };

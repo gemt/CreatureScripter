@@ -5,17 +5,23 @@
 #include <QFrame>
 class QVBoxLayout;
 class QPushButton;
+
+namespace EventAI
+{
+
+class EventEntry;
 class CollapsibleFrame : public QFrame
 {
     Q_OBJECT
 private:
     QVBoxLayout* l;
     QPushButton* btn;
-    QWidget* _w;
+    EventEntry* _w;
 public:
     CollapsibleFrame(const QString& buttonText, const QString& labelText, QWidget *parent);
-    void SetWidget(QWidget* w);
+    void SetWidget(EventEntry* w);
 
 };
 
+}
 #endif // COLLAPSABLEFRAME_H

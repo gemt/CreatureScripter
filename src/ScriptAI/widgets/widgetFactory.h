@@ -6,7 +6,7 @@
 #include <QDebug>
 #include <QVBoxLayout>
 #include <QMouseEvent>
-
+#include <QFont>
 #include "eventaidef.h"
 #include "spellidwidget.h"
 #include "defaultlineedit.h"
@@ -16,33 +16,21 @@
 #include "flagswidget.h"
 #include "clickablewidget.h"
 
-static QWidget* CreateParameterWidget(const EventAI::Parameter& param, QSqlRecord& record, const QString& field, QWidget* parent = nullptr){
+static QWidget* CreateParameterWidget(const EventAI::Parameter& param, QSqlRecord& record,
+                                      const QString& field, QWidget* parent, bool verbose){
     QWidget* w = new QWidget(parent);
     w->setSizePolicy(QSizePolicy::Minimum,QSizePolicy::Minimum);
 
     w->setContentsMargins(0,0,0,0);
     QVBoxLayout* l = new QVBoxLayout(w);
     l->setContentsMargins(5,0,0,5);
-    QLabel* lbl = new QLabel(param.name);
+    QLabel* lbl = new QLabel(param.name + ":");
+    QFont f = lbl->font();
+    f.setUnderline(true);
+    lbl->setFont(f);
     lbl->setContentsMargins(0,0,0,0);
     l->addWidget(lbl);
 
-    //w->setContentsMargins(0,0,0,0);
-    //w->setObjectName("paramWidget");
-    //w->setStyleSheet("#paramWidget { border: 1px solid black; }");
-    //w->setLayout(l);
-    //lbl->setAutoFillBackground(true);
-    //QPalette p = lbl->palette();
-    //p.setBrush(QPalette::ColorRole::Background, QBrush(QColor(150,150,150)));
-    //p.setBrush(QPalette::ColorRole::Window, QBrush(QColor(150,150,150)));
-    //p.setBrush(QPalette::ColorRole::AlternateBase, QBrush(QColor(150,150,150)));
-    //p.setBrush(QPalette::ColorRole::ToolTipBase, QBrush(QColor(150,150,150)));
-    //lbl->setPalette(p);
-    //w->setFrameStyle(QFrame::Raised);
-    //lbl->setToolTip(param.description);
-    //l->addWidget(lbl, 0, Qt::AlignTop);
-
-    //QWidget* w = parent;
     QWidget* rw = nullptr;
     switch(param.type){
     case EventAI::MILLISECONDS: rw = new MillisecondsWidget(record, field, param, w); break;
@@ -61,7 +49,8 @@ static QWidget* CreateParameterWidget(const EventAI::Parameter& param, QSqlRecor
         rw =new TypeValueWidget(EventAI::TargetTypes, record, field, w);
         break;
     case EventAI::CAST_FLAGS:
-        rw = new TypeValueWidget(EventAI::CastFlags, record, field, w);break;
+        rw = new FlagsWidget(EventAI::CastFlags, record, field, w, verbose); break;
+        //rw = new TypeValueWidget(EventAI::CastFlags, record, field, w);break;
     case EventAI::SHEET:
         rw = new TypeValueWidget(EventAI::SheetState, record, field, w);
         break;
@@ -104,7 +93,7 @@ static QWidget* CreateParameterWidget(const EventAI::Parameter& param, QSqlRecor
         rw = new DefaultLineEdit(record, field, param, w);
         break;
     ///////////////////
-    case EventAI::EVENT_FLAGS: rw = new FlagsWidget(EventAI::EventFlags, record, field, w); break;
+    case EventAI::EVENT_FLAGS: rw = new FlagsWidget(EventAI::EventFlags, record, field, w, verbose); break;
     case EventAI::EVENT_PHASE_MASK: rw = new DefaultLineEdit(record, field, param, w); break;
     }
     Q_ASSERT(rw);

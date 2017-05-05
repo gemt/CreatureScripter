@@ -81,11 +81,11 @@ void EventEntry::Remake()
 
         // phase mask
         int paramColOffset = 1;
-        QWidget* w = CreateParameterWidget(event.params.at(0), record, Tables::creature_ai_scripts::event_inverse_phase_mask, this);
+        QWidget* w = CreateParameterWidget(event.params.at(0), record, Tables::creature_ai_scripts::event_inverse_phase_mask, this, verbose);
         AddWidget(w, mainLayout->rowCount()-1,paramColOffset++, 1, 1);
 
         // event flags
-        w = CreateParameterWidget(event.params.at(1), record, Tables::creature_ai_scripts::event_flags, this);
+        w = CreateParameterWidget(event.params.at(1), record, Tables::creature_ai_scripts::event_flags, this, verbose);
         AddWidget(w, mainLayout->rowCount()-1,paramColOffset++, 1, 1);
 
         // Adding event parameters
@@ -94,7 +94,7 @@ void EventEntry::Remake()
             if(i >= event.params.size()){
                 w = new QWidget(this);
             }else{
-                w = CreateParameterWidget(event.params.at(i), record, Tables::creature_ai_scripts::event_paramN(eventParamNum++), this);
+                w = CreateParameterWidget(event.params.at(i), record, Tables::creature_ai_scripts::event_paramN(eventParamNum++), this, verbose);
             }
             AddWidget(w, mainLayout->rowCount()-1,paramColOffset++, 1, 1);
         }
@@ -131,7 +131,7 @@ void EventEntry::Remake()
                 w = new QWidget(this);
             }else{
                 const Parameter& actParam = eventAction.params.at(p);
-                w = CreateParameterWidget(actParam, record, Tables::creature_ai_scripts::actionX_paramY(i+1,p+1), this/*actionFrame*/);
+                w = CreateParameterWidget(actParam, record, Tables::creature_ai_scripts::actionX_paramY(i+1,p+1), this, verbose);
             }
             AddWidget(w, mainLayout->rowCount()-1, p*2+1, 1, 2);
         }

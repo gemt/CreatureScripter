@@ -29,11 +29,12 @@ private:
 public:
     EventEntry(QSqlRecord& record, QWidget* parent);
 
+    bool verbose = false;
+    void Remake();
 private:
     QVector<QWidget*> widgets;
 
     QGridLayout* mainLayout;
-    void Remake();
 
     type_EventType* currentEventType;
     type_ActionType* currentActionTypes[3];
