@@ -24,13 +24,7 @@ SpellIDWidget::SpellIDWidget(QSqlRecord& r, const QString fieldName, const Event
    record(r),
    parameter(param)
 {
-    //setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Minimum);
-    //setAutoFillBackground(true);
-    //setMouseTracking(true);
-    //setObjectName("spellWidget");
-    //setStyleSheet("#spellWidget { border: 1px solid black; }");
-    //setStyleSheet("QWidget:hover { background-color: black; }");
-    //setContentsMargins(0,0,0,0);
+    setMouseTracking(true);
     rIdx = record.indexOf(fieldName);
     QHBoxLayout* l = new QHBoxLayout(this);
     l->setContentsMargins(0,0,0,0);
@@ -47,18 +41,12 @@ SpellIDWidget::SpellIDWidget(QSqlRecord& r, const QString fieldName, const Event
 
 
     iconLabel = new QLabel(this);
-    //iconLabel->setSizePolicy(QSizePolicy::Minimum,QSizePolicy::Minimum);
-    //iconLabel->setContentsMargins(0,0,0,0);
     l->addWidget(iconLabel);
 
     l->addLayout(form);
 
     UpdateInfo();
-    /*
-    QPushButton* changeBtn = new QPushButton("Change/View", this);
-    connect(changeBtn, &QPushButton::clicked, this, &SpellIDWidget::onChangeSpellBtn);
-    form->setWidget(2, QFormLayout::SpanningRole, changeBtn);
-    */
+
 }
 
 void SpellIDWidget::onChangeSpellBtn()
@@ -87,15 +75,3 @@ void SpellIDWidget::UpdateInfo()
     idLabel->setText(QString::number(spellId));
 
 }
-/*
-void SpellIDWidget::mouseMoveEvent(QMouseEvent *event)
-{
-    //if(rect().contains(event->pos())){
-    //    setStyleSheet("#spellWidget { border: 10px solid black; }");
-    //}else{
-    //    setStyleSheet("#spellWidget { border: 1px solid black; }");
-    //}
-    QWidget::mouseMoveEvent(event);
-}
-
-*/

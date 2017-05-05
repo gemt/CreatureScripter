@@ -57,6 +57,10 @@ const QString creature_ai_scripts::action3_param1 = "action3_param1";
 const QString creature_ai_scripts::action3_param2 = "action3_param2";
 const QString creature_ai_scripts::action3_param3 = "action3_param3";
 const QString creature_ai_scripts::comment = "comment";
+const QString creature_ai_scripts::event_param_n = "event_param%1";
+const QString creature_ai_scripts::action_n_type = "action%1_type";
+const QString creature_ai_scripts::action_x_param_y = "action%1_param%2";
+
 
 const QString item_template::t = "item_template";
 

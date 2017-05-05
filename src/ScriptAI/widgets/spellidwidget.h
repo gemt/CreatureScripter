@@ -27,11 +27,6 @@ private:
     QLabel* iconLabel;
 
     void UpdateInfo();
-
-    // QWidget interface
-protected:
-    //void mouseMoveEvent(QMouseEvent *event);
-
 };
 
 #endif // SPELLIDWIDGET_H

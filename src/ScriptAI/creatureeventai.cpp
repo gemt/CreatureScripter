@@ -78,21 +78,23 @@ void EventEntry::Remake()
             QLabel* eventLabel = new QLabel("Event:");
             eventLabel->setSizePolicy(QSizePolicy::Minimum,QSizePolicy::Maximum);
             eventLabel->setContentsMargins(0,0,0,0);
-            mainLayout->addWidget(currentEventType,mainLayout->rowCount()-1,0,1,1,Qt::AlignLeft|Qt::AlignTop);
+            //mainLayout->addWidget(currentEventType,mainLayout->rowCount()-1,0,1,1,Qt::AlignLeft|Qt::AlignTop);
+            AddWidget(currentEventType,mainLayout->rowCount()-1,0,1,1);
         }
 
         // phase mask
         int paramColOffset = 1;
-        QWidget* w = CreateParameterWidget(event.params.at(0), record, Tables::creature_ai_scripts::event_inverse_phase_mask, this/*eventFrame*/);
-        widgets.push_back(w);
-        eWidgets.push_back(w);
-        mainLayout->addWidget(w,mainLayout->rowCount()-1,paramColOffset++, 1,1,Qt::AlignLeft|Qt::AlignTop);
-
+        QWidget* w = CreateParameterWidget(event.params.at(0), record, Tables::creature_ai_scripts::event_inverse_phase_mask, this);
+        //widgets.push_back(w);
+        //eWidgets.push_back(w);
+        //mainLayout->addWidget(w,mainLayout->rowCount()-1,paramColOffset++, 1,1,Qt::AlignLeft|Qt::AlignTop);
+        AddWidget(w, mainLayout->rowCount()-1,paramColOffset++, 1, 1);
         // event flags
-        w = CreateParameterWidget(event.params.at(1), record, Tables::creature_ai_scripts::event_flags, this/*eventFrame*/);
-        widgets.push_back(w);
-        eWidgets.push_back(w);
-        mainLayout->addWidget(w,mainLayout->rowCount()-1,paramColOffset++, 1,1,Qt::AlignLeft|Qt::AlignTop);
+        w = CreateParameterWidget(event.params.at(1), record, Tables::creature_ai_scripts::event_flags, this);
+        //widgets.push_back(w);
+        //eWidgets.push_back(w);
+        //mainLayout->addWidget(w,mainLayout->rowCount()-1,paramColOffset++, 1,1,Qt::AlignLeft|Qt::AlignTop);
+        AddWidget(w, mainLayout->rowCount()-1,paramColOffset++, 1, 1);
 
         // Adding event parameters
         int eventParamNum = 1;
@@ -100,11 +102,12 @@ void EventEntry::Remake()
             if(i >= event.params.size()){
                 w = new QWidget(this);
             }else{
-                w = CreateParameterWidget(event.params.at(i), record, Tables::creature_ai_scripts::event_paramN(eventParamNum++), this/*eventFrame*/);
+                w = CreateParameterWidget(event.params.at(i), record, Tables::creature_ai_scripts::event_paramN(eventParamNum++), this);
             }
-            widgets.push_back(w);
-            mainLayout->addWidget(w,mainLayout->rowCount()-1,paramColOffset++, 1,1, Qt::AlignLeft|Qt::AlignTop);
-            eWidgets.push_back(w);
+            AddWidget(w, mainLayout->rowCount()-1,paramColOffset++, 1, 1);
+            //widgets.push_back(w);
+            //mainLayout->addWidget(w,mainLayout->rowCount()-1,paramColOffset++, 1,1, Qt::AlignLeft|Qt::AlignTop);
+            //eWidgets.push_back(w);
         }
     }
 
@@ -115,8 +118,7 @@ void EventEntry::Remake()
         int actionId = record.value(Tables::creature_ai_scripts::actionN_type(i+1)).toInt(&ok);
         Q_ASSERT(ok);
         const EventAI_Action& eventAction = GetEventAction(actionId);
-        currentActionTypes[i] = new type_ActionType(eventAction.id, this/*actionFrame*/);
-        widgets.push_back(currentActionTypes[i]);
+        currentActionTypes[i] = new type_ActionType(eventAction.id, this);
         switch(i){
         case 0:
             connect(currentActionTypes[i], static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, &EventEntry::onDoRemakeFromAction1, Qt::DirectConnection);
@@ -131,7 +133,9 @@ void EventEntry::Remake()
         Q_ASSERT(0);
         }
 
-        mainLayout->addWidget(currentActionTypes[i], mainLayout->rowCount(),0,1,1,Qt::AlignTop|Qt::AlignLeft);
+        //widgets.push_back(currentActionTypes[i]);
+        //mainLayout->addWidget(currentActionTypes[i], mainLayout->rowCount(),0,1,1,Qt::AlignTop|Qt::AlignLeft);
+        AddWidget(currentActionTypes[i], mainLayout->rowCount(),0,1,1);
         // Adding the action parameters
         for(int p = 0; p < 3; p++){
             QWidget* w;
@@ -139,15 +143,26 @@ void EventEntry::Remake()
                 w = new QWidget(this);
             }else{
                 const Parameter& actParam = eventAction.params.at(p);
+                qDebug() << Tables::creature_ai_scripts::actionX_paramY(i+1,p+1);
                 w = CreateParameterWidget(actParam, record, Tables::creature_ai_scripts::actionX_paramY(i+1,p+1), this/*actionFrame*/);
             }
-            widgets.push_back(w);
-            mainLayout->addWidget(w, mainLayout->rowCount()-1, p*2+1, 1, 2, Qt::AlignTop|Qt::AlignLeft);
+            //widgets.push_back(w);
+            //mainLayout->addWidget(w, mainLayout->rowCount()-1, p*2+1, 1, 2, Qt::AlignTop|Qt::AlignLeft);
+            AddWidget(w, mainLayout->rowCount()-1, p*2+1, 1, 2);
         }
     }
     adjustSize();
     updateGeometry();
-    setMask(frameGeometry());
+}
+
+void EventEntry::AddWidget(QWidget *w, int r, int c, int nr, int nc)
+{
+    mainLayout->addWidget(w, r, c, nr, nc, Qt::AlignTop|Qt::AlignLeft);
+    widgets.push_back(w);
+    w->setProperty("r", r);
+    w->setProperty("c", c);
+    w->setProperty("nr", nr);
+    w->setProperty("nc", nc);
 }
 
 void EventEntry::onDoRemakeFromEvent(int i)
@@ -274,45 +289,84 @@ void EventEntry::paintEvent(QPaintEvent* e)
     }
 
 
-    QPoint mp = mapFromGlobal(QCursor::pos());
-    for(int i = 1; i < mainLayout->rowCount(); i++){
-        for(int j = 1; j < mainLayout->columnCount(); j += 2){
-            QWidget* w = mainLayout->itemAtPosition(i, j)->widget();
-            if(!w) continue;
+    if(currHover){
+        QWidget* w = currHover->w;
+        int r = currHover->w->property("r").toInt();
+        int c = currHover->w->property("c").toInt();
+        int nr = currHover->w->property("nr").toInt();
+        int nc = currHover->w->property("nc").toInt();
+        QRect topLeft = mainLayout->cellRect(r, c);
+        QRect botRight = mainLayout->cellRect(r+nr-1, c+nc-1);
+        QRect fr(topLeft.topLeft(),botRight.bottomRight());
+        QColor fillColor;
+        if(currHover->pressed){
+            fillColor = QColor(0,0,0,75);
+        }else{
+            fillColor = QColor(0,0,0,45);
+        }
+        painter.fillRect(fr, QBrush(fillColor));
+        QPen p = painter.pen();
+        p.setColor(QColor(0,0,0,150));
+        p.setWidth(2);
+        painter.drawRect(fr);
+        if(currHover->clicked){
 
-            if(hovering.contains(w)){
-                QRect r1 = mainLayout->cellRect(i,j);
-                QRect r2 = mainLayout->cellRect(i,j+1);
-                QRect r3(r1.topLeft(),r2.bottomRight());
-                painter.fillRect(r3, QBrush(QColor(0,0,0,50)));
-            }
         }
     }
 }
 
 void EventEntry::mouseMoveEvent(QMouseEvent *event)
 {
-    for(int i = 1; i < mainLayout->rowCount(); i++){
-        for(int j = 1; j < mainLayout->columnCount(); j += 2){
-            QWidget* w = mainLayout->itemAtPosition(i, j)->widget();
-            if(!w)
-                continue;
-            if(!w->property("hoverable").toBool())
-                continue;
-            QRect r1 = mainLayout->cellRect(i,j);
-            QRect r2 = mainLayout->cellRect(i,j+1);
-            QRect r3(r1.topLeft(),r2.bottomRight());
-            if(r3.contains(event->pos())){
-                if(!hovering.contains(w)){
-                    hovering.push_back(w);
-                    repaint();
-                }
-            }else{
-                if(hovering.removeAll(w))
-                    repaint();
+    foreach(QWidget* w, widgets){
+        if(!w->property("hoverable").toBool())
+            continue;
+        int r  = w->property("r").toInt();
+        int c  = w->property("c").toInt();
+        int nr = w->property("nr").toInt();
+        int nc = w->property("nc").toInt();
+        QRect topLeft = mainLayout->cellRect(r, c);
+        QRect botRight = mainLayout->cellRect(r+nr-1, c+nc-1);
+        QRect fr(topLeft.topLeft(),botRight.bottomRight());
+
+        if(fr.contains(event->pos())){
+            if( (currHover && currHover->w != w) || !currHover ){
+                delete currHover;
+                currHover = new hoverWidget{w,false,false};
+                repaint();
+            }
+        }
+        else{
+            if(currHover && currHover->w == w){
+                delete currHover;
+                currHover = nullptr;
+                repaint();
             }
         }
     }
+}
+
+void EventEntry::mousePressEvent(QMouseEvent *event)
+{
+    if(currHover){
+        currHover->clicked = false;
+        currHover->pressed = true;
+        repaint();
+    }
+}
+
+void EventEntry::mouseReleaseEvent(QMouseEvent *event)
+{
+    if(currHover && currHover->pressed){
+        currHover->pressed = false;
+        currHover->clicked = true;
+        repaint();
+    }
+}
+
+void EventEntry::mouseDoubleClickEvent(QMouseEvent *event)
+{
+    if(currHover)
+        currHover->doubleClicked = true;
 }
 
 CreatureEventAI::CreatureEventAI(std::shared_ptr<Tables::creature_template> creature, QWidget *parent) :

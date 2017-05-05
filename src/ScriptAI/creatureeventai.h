@@ -39,7 +39,16 @@ private:
 
     type_EventType* currentEventType;
     type_ActionType* currentActionTypes[3];
-    QVector<QWidget*> hovering;
+
+    struct hoverWidget{
+        QWidget* w;
+        bool pressed;
+        bool clicked;
+        bool doubleClicked;
+    };
+    hoverWidget* currHover = nullptr;
+
+    void AddWidget(QWidget* w, int r, int c, int nr, int nc);
 private slots:
     void onDoRemakeFromEvent(int i);
     void onDoRemakeFromAction1(int i);
@@ -49,6 +58,9 @@ private slots:
 protected:
     void paintEvent(QPaintEvent *event);
     void mouseMoveEvent(QMouseEvent *event);
+    void mousePressEvent(QMouseEvent *event);
+    void mouseReleaseEvent(QMouseEvent *event);
+    void mouseDoubleClickEvent(QMouseEvent *event);
 };
 
 

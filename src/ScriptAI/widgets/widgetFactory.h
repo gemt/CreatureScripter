@@ -49,15 +49,31 @@ static QWidget* CreateParameterWidget(const EventAI::Parameter& param, QSqlRecor
     case EventAI::SPELL_ID:
         rw = new SpellIDWidget(record, field, param, w);
         w->setProperty("hoverable", true);
+        w->setMouseTracking(true);
         break;
-    case EventAI::FACTION_ID_FLAGS: rw = new TypeValueWidget(EventAI::factionFlags, record, field, w);break;
-    case EventAI::TARGET: rw = new TypeValueWidget(EventAI::TargetTypes, record, field, w);break;
-    case EventAI::CAST_FLAGS: rw = new TypeValueWidget(EventAI::CastFlags, record, field, w);break;
-    case EventAI::SHEET: rw = new TypeValueWidget(EventAI::SheetState, record, field, w);break;
-    case EventAI::EVENT_TYPE_MASK: rw = new TypeValueWidget(EventAI::EventTypeMask, record, field, w);break;
-    case EventAI::STAND_STATE: rw = new TypeValueWidget(EventAI::StandState, record, field, w);break;
-    case EventAI::MOVEMENT_TYPE:rw = new TypeValueWidget(EventAI::MovementType, record, field, w);break;
-    case EventAI::REACT_STATE: rw = new TypeValueWidget(EventAI::ReactState, record, field, w);break;
+    case EventAI::FACTION_ID_FLAGS:
+        rw = new TypeValueWidget(EventAI::factionFlags, record, field, w);
+        break;
+    case EventAI::TARGET:
+        rw =new TypeValueWidget(EventAI::TargetTypes, record, field, w);
+        break;
+    case EventAI::CAST_FLAGS:
+        rw = new TypeValueWidget(EventAI::CastFlags, record, field, w);break;
+    case EventAI::SHEET:
+        rw = new TypeValueWidget(EventAI::SheetState, record, field, w);
+        break;
+    case EventAI::EVENT_TYPE_MASK:
+        rw = new TypeValueWidget(EventAI::EventTypeMask, record, field, w);
+        break;
+    case EventAI::STAND_STATE:
+        rw = new TypeValueWidget(EventAI::StandState, record, field, w);
+        break;
+    case EventAI::MOVEMENT_TYPE:
+        rw = new TypeValueWidget(EventAI::MovementType, record, field, w);
+        break;
+    case EventAI::REACT_STATE:
+        rw = new TypeValueWidget(EventAI::ReactState, record, field, w);
+        break;
     case EventAI::UNUSED:
     case EventAI::SPELL_SCHOOL:
     case EventAI::DISTANCE:
@@ -74,7 +90,7 @@ static QWidget* CreateParameterWidget(const EventAI::Parameter& param, QSqlRecor
     case EventAI::MODEL_ID:
     case EventAI::SOUND_ID:
     case EventAI::QUEST_ID:
-    case EventAI::FLAGS_GENERIC: //rw = new FlagsWidget()
+    case EventAI::FLAGS_GENERIC:
     case EventAI::PHASE:
     case EventAI::ANGLE:
     case EventAI::SUMMON_ID:
@@ -93,8 +109,7 @@ static QWidget* CreateParameterWidget(const EventAI::Parameter& param, QSqlRecor
     //l->addWidget(rw, 0, Qt::AlignTop | Qt::AlignLeft);
     //return rw;
     l->addWidget(rw);
-    rw->setMouseTracking(true);
-    w->setMouseTracking(true);
+    //w->setMouseTracking(true);
     //l->setSizeConstraint(QLayout::SetMinimumSize);
     //w->setMinimumSize(100,100);
     return w;

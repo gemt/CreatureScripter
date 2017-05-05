@@ -104,13 +104,13 @@ struct creature_ai_scripts : public Table{
     static const QString event_inverse_phase_mask;
     static const QString event_chance;
     static const QString event_flags;
-    static QString event_paramN(int n){QString s = event_param1; return s.replace("1", QString::number(n));}
+    static QString event_paramN(int n){return event_param_n.arg(n);}
     static const QString event_param1;
     static const QString event_param2;
     static const QString event_param3;
     static const QString event_param4;
-    static QString actionN_type(int n){QString s = action1_type; return s.replace("1", QString::number(n));}
-    static QString actionX_paramY(int x, int y){QString s = action1_param2; return s.replace("1", QString::number(x)).replace("2", QString::number(y));}
+    static QString actionN_type(int n){return action_n_type.arg(n);}
+    static QString actionX_paramY(int x, int y){return action_x_param_y.arg(x).arg(y);}
     static const QString action1_type;
     static const QString action1_param1;
     static const QString action1_param2;
@@ -128,6 +128,10 @@ struct creature_ai_scripts : public Table{
 
     creature_ai_scripts(quint32 entry);
     QVector<QSqlRecord> records;
+private:
+    static const QString event_param_n;
+    static const QString action_n_type;
+    static const QString action_x_param_y;
 };
 
 struct item_template : public Table{
