@@ -11,7 +11,7 @@ Note: QSpellWorks integration is currently a huge hack, and only uses the pre-tb
 
 WIP. 
 Latest screenshot of EventAI editor:
-![alt text](http://i.imgur.com/SVKrf7G.png)
+![alt text](http://i.imgur.com/96pcykd.png)
 
 QSW integration:
 ![alt text](http://i.imgur.com/bOH1hys.png)
