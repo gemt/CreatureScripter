@@ -15,6 +15,7 @@
 #include "MillisecondsWidget.h"
 #include "flagswidget.h"
 #include "clickablewidget.h"
+#include "inversephasemaskwidget.h"
 
 static QWidget* CreateParameterWidget(const EventAI::Parameter& param, QSqlRecord& record,
                                       const QString& field, QWidget* parent, bool verbose){
@@ -98,8 +99,12 @@ static QWidget* CreateParameterWidget(const EventAI::Parameter& param, QSqlRecor
         rw = new DefaultLineEdit(record, field, param, w);
         break;
     ///////////////////
-    case EventAI::EVENT_FLAGS: rw = new FlagsWidget(EventAI::EventFlags, record, field, w, verbose); break;
-    case EventAI::EVENT_PHASE_MASK: rw = new DefaultLineEdit(record, field, param, w); break;
+    case EventAI::EVENT_FLAGS:
+        rw = new FlagsWidget(EventAI::EventFlags, record, field, w, verbose);
+        break;
+    case EventAI::EVENT_PHASE_MASK:
+        rw = new InversePhaseMaskWidget(record, field, w, verbose);
+        break;
     }
     Q_ASSERT(rw);
     l->addWidget(rw);

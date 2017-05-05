@@ -6,8 +6,8 @@
 
 #include "eventaidef.h"
 
-
 #include <QWidget>
+#include <QLabel>
 #include <QComboBox>
 #include <QStandardItemModel>
 #include <QLineEdit>
@@ -16,11 +16,13 @@
 #include <QListView>
 #include <QVBoxLayout>
 
+
+class QVBoxLayout;
 class QListWidget;
 class FlagsWidget : public QWidget{
 public:
     FlagsWidget(const QVector<EventAI::TypeValue>& values, QSqlRecord& r,
-                const QString& fieldName, QWidget* parent, bool verbose=false);
+                const QString& fieldName, QWidget* parent, bool verbose);
     void SetLabels(const QStringList& lbls);
 private:
     bool _verbose;
@@ -46,5 +48,6 @@ private:
 private slots:
     void on_itemPressed(const QModelIndex &index);
 };
+
 
 #endif // FLAGSWIDGET_H

@@ -1,4 +1,4 @@
-#include "flagswidget.h"
+#include "inversephasemaskwidget.h"
 
 class QCheckListStyledItemDelegate : public QStyledItemDelegate
 {
@@ -12,52 +12,31 @@ public:
     }
 };
 
-FlagsWidget::FlagsWidget(const QVector<EventAI::TypeValue> &values, QSqlRecord &r,
-                         const QString &fieldName, QWidget *parent, bool verbose) :
-    QWidget(parent),
-    _verbose(verbose),
-    verboseLayout(nullptr)
+InversePhaseMaskWidget::InversePhaseMaskWidget(QSqlRecord &r, const QString &fieldName, QWidget *parent, bool verbose) :
+     QWidget(parent),
+     record(r),
+     fieldName(fieldName)
 {
     setContentsMargins(0,0,0,0);
     QVBoxLayout* l = new QVBoxLayout(this);
     l->setContentsMargins(0,0,0,0);
     setLayout(l);
 
-    if(verbose){
-        verboseLayout = new QVBoxLayout(this);
-        l->addLayout(verboseLayout);
-    }
-
-    FlagsWidgetList* list = new FlagsWidgetList(values, r, fieldName, this);
+    PhaseWidgetList* list = new PhaseWidgetList(record, fieldName, this);
     l->addWidget(list);
 }
 
-void FlagsWidget::SetLabels(const QStringList& lbls)
+void InversePhaseMaskWidget::UpdateVerboseLabel()
 {
-    if(_verbose){
-        Q_ASSERT(verboseLayout);
-        while(!verboseList.isEmpty()){
-            QWidget* w = verboseList.takeLast();
-            verboseLayout->removeWidget(w);
-            w->deleteLater();
-        }
-        verboseList.clear();
-        foreach(const QString& s, lbls){
-            QLabel* lbl = new QLabel(s);
-            verboseLayout->addWidget(lbl);
-            verboseList.push_back(lbl);
-        }
-    }
+    //Q_ASSERT(0); // todo;
 }
 
 
-
-FlagsWidgetList::FlagsWidgetList(const QVector<EventAI::TypeValue>& values, QSqlRecord& r,
-                                 const QString& fn, FlagsWidget* parent) :
+PhaseWidgetList::PhaseWidgetList(QSqlRecord &r, const QString &fieldName, InversePhaseMaskWidget *parent) :
     QComboBox(parent),
     is_shown(false),
     record(r),
-    fieldName(fn),
+    fieldName(fieldName),
     _parent(parent)
 {
     m_model = new QStandardItemModel(this);
@@ -70,32 +49,31 @@ FlagsWidgetList::FlagsWidgetList(const QVector<EventAI::TypeValue>& values, QSql
     connect(lineEdit(), &QLineEdit::selectionChanged, lineEdit(), &QLineEdit::deselect);
     connect((QListView*) view(), SIGNAL(pressed(QModelIndex)), this, SLOT(on_itemPressed(QModelIndex)));
 
-
     bool ok;
-    int value = r.value(fieldName).toInt(&ok);
+    quint32 value = r.value(fieldName).toUInt(&ok);
     Q_ASSERT(ok);
 
-    foreach(const EventAI::TypeValue& v, values){
-        if(v.name.isEmpty()) continue;
-        QString nameTag = QString("(%1) %2").arg(v.value).arg(v.name);
-        Qt::CheckState check = (v.value & value) ? Qt::Checked : Qt::Unchecked;
-        addCheckItem(nameTag, v.value, v.description, check);
+    for(int i = 0; i < 32; i++){
+        QString nameTag = QString("Phase %1").arg(i+1);
+        quint32 mask = (1<<i);
+        bool activePhase = !(value & mask);
+        Qt::CheckState check = activePhase ? Qt::Checked : Qt::Unchecked;
+        addCheckItem(nameTag, mask, check);
     }
     updateText();
 }
 
-QStandardItem* FlagsWidgetList::addCheckItem(const QString &label, const QVariant &data, const QString& tt, const Qt::CheckState checkState)
+QStandardItem* PhaseWidgetList::addCheckItem(const QString &label, const QVariant &data, const Qt::CheckState checkState)
 {
     QStandardItem* item = new QStandardItem(label);
     item->setCheckState(checkState);
     item->setData(data);
     item->setFlags(Qt::ItemIsUserCheckable | Qt::ItemIsEnabled);
-    item->setToolTip(tt);
     m_model->appendRow(item);
     return item;
 }
 
-bool FlagsWidgetList::eventFilter(QObject *_object, QEvent *_event)
+bool PhaseWidgetList::eventFilter(QObject *_object, QEvent *_event)
 {
     if (_object == lineEdit() && _event->type() == QEvent::MouseButtonPress)
     {
@@ -112,11 +90,12 @@ bool FlagsWidgetList::eventFilter(QObject *_object, QEvent *_event)
     return false;
 }
 
-void FlagsWidgetList::updateText()
+void PhaseWidgetList::updateText()
 {
     QString text;
-    int num = 0;
-    QStringList parentList;
+    bool ok;
+    quint32 value = record.value(fieldName).toUInt(&ok);
+    Q_ASSERT(ok);
     for (int i = 0; i < m_model->rowCount(); i++)
     {
         if (m_model->item(i)->checkState() == Qt::Checked)
@@ -125,22 +104,17 @@ void FlagsWidgetList::updateText()
             {
                 text+= ",";
             }
-            int thisNum = m_model->item(i)->data().toInt();
-            num |= thisNum;
-            text+= QString::number(thisNum);
-            parentList.push_back(m_model->item(i)->text());
+            Q_ASSERT( !(m_model->item(i)->data().toUInt(&ok) & value));
+            Q_ASSERT(ok);
+            text+= QString::number(i);
         }
     }
-    if(!text.isEmpty()){
-        text.prepend("(");
-        text += ")";
-    }
-    text.prepend(QString("%1 ").arg(num));
+
     lineEdit()->setText(text);
-    _parent->SetLabels(parentList);
+    _parent->UpdateVerboseLabel();
 }
 
-void FlagsWidgetList::on_itemPressed(const QModelIndex &index)
+void PhaseWidgetList::on_itemPressed(const QModelIndex &index)
 {
     QStandardItem* item = m_model->itemFromIndex(index);
     bool ok;
