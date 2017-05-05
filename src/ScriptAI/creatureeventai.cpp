@@ -70,30 +70,22 @@ void EventEntry::Remake()
         // Adding the event combobox
         {
             currentEventType = new type_EventType(record.value(Tables::creature_ai_scripts::event_type).toInt(&ok), this/*eventFrame*/);
-            widgets.push_back(currentEventType);
-            eWidgets.push_back(currentEventType);
             Q_ASSERT(ok);
             connect(currentEventType, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, &EventEntry::onDoRemakeFromEvent, Qt::DirectConnection);
 
             QLabel* eventLabel = new QLabel("Event:");
             eventLabel->setSizePolicy(QSizePolicy::Minimum,QSizePolicy::Maximum);
             eventLabel->setContentsMargins(0,0,0,0);
-            //mainLayout->addWidget(currentEventType,mainLayout->rowCount()-1,0,1,1,Qt::AlignLeft|Qt::AlignTop);
             AddWidget(currentEventType,mainLayout->rowCount()-1,0,1,1);
         }
 
         // phase mask
         int paramColOffset = 1;
         QWidget* w = CreateParameterWidget(event.params.at(0), record, Tables::creature_ai_scripts::event_inverse_phase_mask, this);
-        //widgets.push_back(w);
-        //eWidgets.push_back(w);
-        //mainLayout->addWidget(w,mainLayout->rowCount()-1,paramColOffset++, 1,1,Qt::AlignLeft|Qt::AlignTop);
         AddWidget(w, mainLayout->rowCount()-1,paramColOffset++, 1, 1);
+
         // event flags
         w = CreateParameterWidget(event.params.at(1), record, Tables::creature_ai_scripts::event_flags, this);
-        //widgets.push_back(w);
-        //eWidgets.push_back(w);
-        //mainLayout->addWidget(w,mainLayout->rowCount()-1,paramColOffset++, 1,1,Qt::AlignLeft|Qt::AlignTop);
         AddWidget(w, mainLayout->rowCount()-1,paramColOffset++, 1, 1);
 
         // Adding event parameters
@@ -105,9 +97,6 @@ void EventEntry::Remake()
                 w = CreateParameterWidget(event.params.at(i), record, Tables::creature_ai_scripts::event_paramN(eventParamNum++), this);
             }
             AddWidget(w, mainLayout->rowCount()-1,paramColOffset++, 1, 1);
-            //widgets.push_back(w);
-            //mainLayout->addWidget(w,mainLayout->rowCount()-1,paramColOffset++, 1,1, Qt::AlignLeft|Qt::AlignTop);
-            //eWidgets.push_back(w);
         }
     }
 
@@ -133,9 +122,8 @@ void EventEntry::Remake()
         Q_ASSERT(0);
         }
 
-        //widgets.push_back(currentActionTypes[i]);
-        //mainLayout->addWidget(currentActionTypes[i], mainLayout->rowCount(),0,1,1,Qt::AlignTop|Qt::AlignLeft);
         AddWidget(currentActionTypes[i], mainLayout->rowCount(),0,1,1);
+
         // Adding the action parameters
         for(int p = 0; p < 3; p++){
             QWidget* w;
@@ -143,11 +131,8 @@ void EventEntry::Remake()
                 w = new QWidget(this);
             }else{
                 const Parameter& actParam = eventAction.params.at(p);
-                qDebug() << Tables::creature_ai_scripts::actionX_paramY(i+1,p+1);
                 w = CreateParameterWidget(actParam, record, Tables::creature_ai_scripts::actionX_paramY(i+1,p+1), this/*actionFrame*/);
             }
-            //widgets.push_back(w);
-            //mainLayout->addWidget(w, mainLayout->rowCount()-1, p*2+1, 1, 2, Qt::AlignTop|Qt::AlignLeft);
             AddWidget(w, mainLayout->rowCount()-1, p*2+1, 1, 2);
         }
     }
@@ -360,6 +345,10 @@ void EventEntry::mouseReleaseEvent(QMouseEvent *event)
         currHover->pressed = false;
         currHover->clicked = true;
         repaint();
+        QVariant v = currHover->w->property("clickWidget");
+        ClickableWidget* c = v.value<ClickableWidget*>();
+        Q_ASSERT(c);
+        c->OnClicked();
     }
 }
 

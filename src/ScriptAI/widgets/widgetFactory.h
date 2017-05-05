@@ -5,6 +5,7 @@
 #include <QLineEdit>
 #include <QDebug>
 #include <QVBoxLayout>
+#include <QMouseEvent>
 
 #include "eventaidef.h"
 #include "spellidwidget.h"
@@ -13,7 +14,7 @@
 #include "eventwidgetclasses.h"
 #include "MillisecondsWidget.h"
 #include "flagswidget.h"
-#include <QMouseEvent>
+#include "clickablewidget.h"
 
 static QWidget* CreateParameterWidget(const EventAI::Parameter& param, QSqlRecord& record, const QString& field, QWidget* parent = nullptr){
     QWidget* w = new QWidget(parent);
@@ -50,6 +51,8 @@ static QWidget* CreateParameterWidget(const EventAI::Parameter& param, QSqlRecor
         rw = new SpellIDWidget(record, field, param, w);
         w->setProperty("hoverable", true);
         w->setMouseTracking(true);
+
+        w->setProperty("clickWidget", QVariant::fromValue(rw));
         break;
     case EventAI::FACTION_ID_FLAGS:
         rw = new TypeValueWidget(EventAI::factionFlags, record, field, w);
@@ -105,12 +108,6 @@ static QWidget* CreateParameterWidget(const EventAI::Parameter& param, QSqlRecor
     case EventAI::EVENT_PHASE_MASK: rw = new DefaultLineEdit(record, field, param, w); break;
     }
     Q_ASSERT(rw);
-    //rw->setContentsMargins(0,0,0,0);
-    //l->addWidget(rw, 0, Qt::AlignTop | Qt::AlignLeft);
-    //return rw;
     l->addWidget(rw);
-    //w->setMouseTracking(true);
-    //l->setSizeConstraint(QLayout::SetMinimumSize);
-    //w->setMinimumSize(100,100);
     return w;
 }

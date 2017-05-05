@@ -30,7 +30,8 @@ src/ScriptAI/widgets/ \
 HEADERS += $$files(src/*.h) \
     src/collapsableframe.h \
     qswwrapper.h \
-    src/ScriptAI/widgets/flagswidget.h
+    src/ScriptAI/widgets/flagswidget.h \
+    src/ScriptAI/widgets/clickablewidget.h
 HEADERS += $$files(src/CreatureTabs/*.h)
 HEADERS += $$files(src/ScriptAI/*.h)
 HEADERS += $$files(src/ScriptAI/widgets/*.h)

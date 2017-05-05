@@ -31,8 +31,6 @@ public:
 
 private:
     QVector<QWidget*> widgets;
-    QVector<QWidget*> eWidgets;
-    QVector<QWidget*> spellWidgets;
 
     QGridLayout* mainLayout;
     void Remake();

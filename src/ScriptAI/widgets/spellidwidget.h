@@ -2,6 +2,7 @@
 #define SPELLIDWIDGET_H
 
 #include "eventaidef.h"
+#include "clickablewidget.h"
 
 #include <QWidget>
 #include <QSqlRecord>
@@ -9,7 +10,7 @@
 
 class QPushButton;
 
-class SpellIDWidget : public QWidget
+class SpellIDWidget : public ClickableWidget
 {
     Q_OBJECT
 public:
@@ -27,6 +28,10 @@ private:
     QLabel* iconLabel;
 
     void UpdateInfo();
+
+    // ClickableWidget interface
+public:
+    void OnClicked() override;
 };
 
 #endif // SPELLIDWIDGET_H
