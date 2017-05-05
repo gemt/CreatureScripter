@@ -6,6 +6,7 @@ DefaultLineEdit::DefaultLineEdit(QSqlRecord &r, const QString fieldName, const E
 {
     rIdx = record.indexOf(fieldName);
     setText(record.value(rIdx).toString());
+    setToolTip(param.description);
     connect(this, &QLineEdit::textChanged, this, &DefaultLineEdit::onTextChange);
 }
 

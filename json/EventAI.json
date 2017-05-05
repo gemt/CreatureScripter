@@ -135,7 +135,18 @@
 			"type" : 11,
 			"name" : "DispellType",
 			"desc" : "Dispel Type to trigger the event"
+		},
+		{
+			"type" : 35,
+			"name" : "spawnEventMode",
+			"desc" : "0: works always, 1: works on map in Parameter 2, 2: works on zone/subzone in Parameter 2"
+		},
+		{
+			"type" : 36,
+			"name" : "mapAreaId",
+			"desc" : "depends on Parameter 1: for 1 it is map ID, for 2 it is area ID to check"
 		}
+
 	],
 				
 	"events": [
@@ -263,6 +274,8 @@
 			"d1" 	: "Expires on initial spawn and respawn of the NPC (Useful for setting Ranged Movement/Summoning Pets/Applying Buffs).",
 			"t"		: "BOTH",
 			"params":[
+                "spawnEventMode",
+                "mapAreaId"
 			]
 		},
 		{

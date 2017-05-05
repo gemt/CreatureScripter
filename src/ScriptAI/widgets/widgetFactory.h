@@ -43,7 +43,7 @@ static QWidget* CreateParameterWidget(const EventAI::Parameter& param, QSqlRecor
         w->setProperty("clickWidget", QVariant::fromValue(rw));
         break;
     case EventAI::FACTION_ID_FLAGS:
-        rw = new TypeValueWidget(EventAI::factionFlags, record, field, w);
+        rw = new FlagsWidget(EventAI::factionFlags, record, field, w, verbose);
         break;
     case EventAI::TARGET:
         rw =new TypeValueWidget(EventAI::TargetTypes, record, field, w);
@@ -55,7 +55,7 @@ static QWidget* CreateParameterWidget(const EventAI::Parameter& param, QSqlRecor
         rw = new TypeValueWidget(EventAI::SheetState, record, field, w);
         break;
     case EventAI::EVENT_TYPE_MASK:
-        rw = new TypeValueWidget(EventAI::EventTypeMask, record, field, w);
+        rw = new FlagsWidget(EventAI::EventTypeMask, record, field, w, verbose);
         break;
     case EventAI::STAND_STATE:
         rw = new TypeValueWidget(EventAI::StandState, record, field, w);
@@ -66,6 +66,10 @@ static QWidget* CreateParameterWidget(const EventAI::Parameter& param, QSqlRecor
     case EventAI::REACT_STATE:
         rw = new TypeValueWidget(EventAI::ReactState, record, field, w);
         break;
+    case EventAI::SPAWN_EVENT_MODE:
+        rw = new TypeValueWidget(EventAI::SpawnedEventMode, record, field, w);
+        break;
+    case EventAI::MAP_AREA_ID: //map id or area id
     case EventAI::UNUSED:
     case EventAI::SPELL_SCHOOL:
     case EventAI::DISTANCE:
@@ -90,6 +94,7 @@ static QWidget* CreateParameterWidget(const EventAI::Parameter& param, QSqlRecor
     case EventAI::CREATURE_TEMPLATE_ID:
     case EventAI::RADIUS:
     case EventAI::CHANCE:
+
         rw = new DefaultLineEdit(record, field, param, w);
         break;
     ///////////////////
