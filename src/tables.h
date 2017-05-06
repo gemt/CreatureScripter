@@ -2,6 +2,7 @@
 #define TABLES_H
 
 #include "cache.h"
+#include "mangosrecord.h"
 
 #include <QSqlRecord>
 #include <QString>
@@ -44,8 +45,8 @@ public:
 
     QString table() const {return _t;}
 
-    QVector<QSqlRecord> Query(const QVariant& value, const QString tarKey, int expectSize = -1);
-    QSqlRecord Query1(const QVariant& value, const QString tarKey, bool assert = true);
+    QVector<MangosRecord> Query(const QVariant& value, const QString tarKey, int expectSize = -1);
+    MangosRecord Query1(const QVariant& value, const QString tarKey, bool assert = true);
 
     QString dbTable();
 };
@@ -57,7 +58,7 @@ struct creature : public Table{
     static const QString map;
 
     creature(quint32 entry);
-    QVector<QSqlRecord> records;
+    QVector<MangosRecord> records;
 };
 
 struct creature_template : public Table{
@@ -70,7 +71,7 @@ struct creature_template : public Table{
     static const QString modelid_4;
     static const QString equipment_id;
     creature_template(quint32 entry);
-    QSqlRecord record;
+    MangosRecord record;
 
     creature* creatures;
     creature_ai_scripts* scripts;
@@ -95,7 +96,7 @@ struct creature_equip_template : public Table{
     static const QString t;
     static const QString entry;
     creature_equip_template(const QVariant& v);
-    QSqlRecord record;
+    MangosRecord record;
 };
 
 
@@ -141,8 +142,8 @@ struct creature_ai_scripts : public Table{
     static const int num_cols = 23;
 
     creature_ai_scripts(quint32 entry);
-    QVector<QSqlRecord> records;
-    QVector<QSqlRecord> originalRecords;
+    QVector<MangosRecord> records;
+    QVector<MangosRecord> originalRecords;
 private:
     static const QString event_param_n;
     static const QString action_n_type;

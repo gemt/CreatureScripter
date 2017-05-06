@@ -8,6 +8,7 @@
 #include <QSqlField>
 #include <QDebug>
 
+#if 0
 Migrations::Migration::Migration(const QString& table, const QString& pKey, const QString pVal)
     : _key(pKey)
 {
@@ -71,8 +72,9 @@ QString Migrations::toString()
     }
     return ret;
 }
+#endif
 
-UpdateMigration::UpdateMigration(const QString &table,  const QSqlRecord& newRecord, const QSqlRecord& oldRecord)
+UpdateMigration::UpdateMigration(const QString &table,  const MangosRecord& newRecord, const MangosRecord& oldRecord)
     : table(table),
       newRecord(newRecord),
       oldRecord(oldRecord)

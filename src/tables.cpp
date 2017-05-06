@@ -69,7 +69,7 @@ const QString map_template::t = "map_template";
 const QString map_template::entry = "Entry";
 const QString map_template::mapname = "MapName";
 
-QVector<QSqlRecord> Table::Query(const QVariant &value, const QString tarKey, int expectSize)
+QVector<MangosRecord> Table::Query(const QVariant &value, const QString tarKey, int expectSize)
 {
     if(!value.isValid()) {
         throw std::runtime_error("Query got invalid value");
@@ -95,18 +95,18 @@ QVector<QSqlRecord> Table::Query(const QVariant &value, const QString tarKey, in
         throw std::runtime_error(QString("Query returned %1 result(s), expected 1")
                                  .arg(q.size()).toStdString().c_str());
     }
-    QVector<QSqlRecord> ret;
+    QVector<MangosRecord> ret;
     while(q.next()){
-        ret.push_back(q.record());
+        ret.push_back(MangosRecord(q.record(), _t));
     }
 
     return ret;
 }
 
-QSqlRecord Table::Query1(const QVariant &value, const QString tarKey, bool assert)
+MangosRecord Table::Query1(const QVariant &value, const QString tarKey, bool assert)
 {
-    QVector<QSqlRecord> records = Query(value, tarKey, assert ? 1 : -1);
-    return records.empty() ? QSqlRecord() : records.takeFirst();
+    QVector<MangosRecord> records = Query(value, tarKey, assert ? 1 : -1);
+    return records.empty() ? MangosRecord() : records.takeFirst();
 }
 
 QString Table::dbTable() {

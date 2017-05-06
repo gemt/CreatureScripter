@@ -1,16 +1,41 @@
 #ifndef MANGOSRECORD_H
 #define MANGOSRECORD_H
 
+#include <QObject>
 #include <QSqlRecord>
-class MangosRecord : public QSqlRecord
+#include <QVariant>
+#include <QSqlField>
+
+class MangosRecord : public QObject
 {
+    Q_OBJECT
 public:
-    MangosRecord(const QSqlRecord& other, const QString& pk, const QString& pv);
-    QString key();
-    QString keyVal();
+    MangosRecord(){}
+    MangosRecord(const MangosRecord& other);
+    MangosRecord(const QSqlRecord& other, const QString& table);
+    ~MangosRecord(){}
+    void operator=(const MangosRecord& other);
+
+    QVariant value(int index) const;
+    QVariant value(const QString& name) const;
+    QString fieldName(int index) const;
+    QSqlField field(int index) const;
+    QSqlField field(const QString& name) const;
+    int indexOf(const QString& name) const;
+    int count() const;
+
+    void setValue(int index, const QVariant& val);
+    void setValue(const QString& name, const QVariant& val);
+
+    QString GetChanges() const;
+
+signals:
+    void valueChanged(QString name, QVariant val);
+
 private:
-    QString pKey;
-    QString pVal;
+    QSqlRecord original;
+    QSqlRecord editable;
+    QString table;
 };
 
 #endif // MANGOSRECORD_H

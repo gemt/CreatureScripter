@@ -1,6 +1,7 @@
 #ifndef TYPEVALUEWIDGET_H
 #define TYPEVALUEWIDGET_H
 
+#include "mangosrecord.h"
 #include "eventaidef.h"
 
 #include <QComboBox>
@@ -9,10 +10,10 @@
 class TypeValueWidget : public QComboBox
 {
 public:
-    TypeValueWidget(const QVector<EventAI::TypeValue>& values, QSqlRecord& r, const QString fieldName, QWidget* parent);
+    TypeValueWidget(const QVector<EventAI::TypeValue>& values, MangosRecord& r, const QString fieldName, QWidget* parent);
 
 private:
-    QSqlRecord& record;
+    MangosRecord& record;
     int rIdx;
     const QVector<EventAI::TypeValue>& values;
 };

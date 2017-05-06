@@ -14,7 +14,7 @@ public:
     }
 };
 
-InversePhaseMaskWidget::InversePhaseMaskWidget(QSqlRecord &r, const QString &fieldName, QWidget *parent, bool verbose) :
+InversePhaseMaskWidget::InversePhaseMaskWidget(MangosRecord &r, const QString &fieldName, QWidget *parent, bool verbose) :
      QWidget(parent),
      record(r),
      fieldName(fieldName)
@@ -44,7 +44,7 @@ QSize InversePhaseMaskWidget::minimumSizeHint() const
 }
 
 
-PhaseWidgetList::PhaseWidgetList(QSqlRecord &r, const QString &fieldName, InversePhaseMaskWidget *parent) :
+PhaseWidgetList::PhaseWidgetList(MangosRecord &r, const QString &fieldName, InversePhaseMaskWidget *parent) :
     QComboBox(parent),
     is_shown(false),
     record(r),

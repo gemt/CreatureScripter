@@ -12,7 +12,7 @@ public:
     }
 };
 
-FlagsWidget::FlagsWidget(const QVector<EventAI::TypeValue> &values, QSqlRecord &r,
+FlagsWidget::FlagsWidget(const QVector<EventAI::TypeValue> &values, MangosRecord &r,
                          const QString &fieldName, QWidget *parent, bool verbose) :
     QWidget(parent),
     _verbose(verbose),
@@ -52,7 +52,7 @@ void FlagsWidget::SetLabels(const QStringList& lbls)
 
 
 
-FlagsWidgetList::FlagsWidgetList(const QVector<EventAI::TypeValue>& values, QSqlRecord& r,
+FlagsWidgetList::FlagsWidgetList(const QVector<EventAI::TypeValue>& values, MangosRecord& r,
                                  const QString& fn, FlagsWidget* parent) :
     QComboBox(parent),
     is_shown(false),

@@ -38,7 +38,7 @@ static const EventAI_Action& GetEventAction(int actionId)
     return *aIt;
 }
 
-EventEntry::EventEntry(QSqlRecord &record, QWidget* parent) :
+EventEntry::EventEntry(MangosRecord &record, QWidget* parent) :
     QWidget(parent),
     record(record),
     mainLayout(nullptr)
@@ -374,10 +374,10 @@ CreatureEventAI::CreatureEventAI(std::shared_ptr<Tables::creature_template> crea
        PrintMigrations();
     });
     */
-    QVector<QSqlRecord>& records = _creature->scripts->records;
+    QVector<MangosRecord>& records = _creature->scripts->records;
 
-    for(QVector<QSqlRecord>::iterator it = records.begin(); it != records.end(); it++){
-        QSqlRecord& r = *it;
+    for(QVector<MangosRecord>::iterator it = records.begin(); it != records.end(); it++){
+        MangosRecord& r = *it;
 
         CollapsibleFrame* frame = new CollapsibleFrame(
                     "Event entry " +r.value(Tables::creature_ai_scripts::id).toString(),
@@ -394,7 +394,7 @@ CreatureEventAI::CreatureEventAI(std::shared_ptr<Tables::creature_template> crea
 
 void CreatureEventAI::PrintMigrations()
 {
-    QVector<QSqlRecord>& records = _creature->scripts->originalRecords;
+    QVector<MangosRecord>& records = _creature->scripts->originalRecords;
     Q_ASSERT(records.size() == entryWidgets.size());
     for(int i = 0; i < records.size(); i++)
     {

@@ -35,7 +35,9 @@ HEADERS += $$files(src/*.h) \
     src/ScriptAI/eventaidefelysium.h \
     src/ScriptAI/eventaidefcmangos.h \
     src/ScriptAI/widgets/inversephasemaskwidget.h \
-    src/ScriptAI/eventaidefcommon.h
+    src/ScriptAI/eventaidefcommon.h \
+    src/ScriptAI/changeswidget.h \
+    src/ScriptAI/widgets/boolwidget.h
 HEADERS += $$files(src/CreatureTabs/*.h)
 HEADERS += $$files(src/ScriptAI/*.h)
 HEADERS += $$files(src/ScriptAI/widgets/*.h)
@@ -45,7 +47,9 @@ SOURCES += $$files(src/*.cpp) \
     qswwrapper.cpp \
     src/ScriptAI/widgets/flagswidget.cpp \
     src/ScriptAI/widgets/inversephasemaskwidget.cpp \
-    src/ScriptAI/eventaidefcommon.cpp
+    src/ScriptAI/eventaidefcommon.cpp \
+    src/ScriptAI/changeswidget.cpp \
+    src/ScriptAI/widgets/boolwidget.cpp
 SOURCES += $$files(src/CreatureTabs/*.cpp)
 SOURCES += $$files(src/ScriptAI/*.cpp)
 SOURCES += $$files(src/ScriptAI/widgets/*.cpp)

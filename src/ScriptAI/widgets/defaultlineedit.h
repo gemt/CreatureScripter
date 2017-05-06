@@ -4,18 +4,19 @@
 #include <QLineEdit>
 #include <QSqlRecord>
 
+#include "mangoscreature.h"
 #include "eventaidef.h"
 
 class DefaultLineEdit : public QLineEdit
 {
 public:
-    DefaultLineEdit(QSqlRecord& r, const QString fieldName, const EventAI::Parameter& param,  QWidget* parent = nullptr);
+    DefaultLineEdit(MangosRecord& r, const QString fieldName, const EventAI::Parameter& param,  QWidget* parent = nullptr);
 
 private slots:
     void onTextChange(const QString& newText);
 
 private:
-    QSqlRecord& record;
+    MangosRecord& record;
     const EventAI::Parameter& parameter;
     int rIdx;
 };

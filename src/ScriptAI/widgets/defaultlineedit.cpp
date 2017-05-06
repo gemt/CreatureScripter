@@ -3,7 +3,7 @@
 #include <QDebug>
 #include <QIntValidator>
 
-DefaultLineEdit::DefaultLineEdit(QSqlRecord &r, const QString fieldName, const EventAI::Parameter &param, QWidget *parent)
+DefaultLineEdit::DefaultLineEdit(MangosRecord &r, const QString fieldName, const EventAI::Parameter &param, QWidget *parent)
     : QLineEdit(parent), record(r), parameter(param)
 {
     setValidator(new QIntValidator(std::numeric_limits<int>::min(), std::numeric_limits<int>::max()));

@@ -2,7 +2,7 @@
 
 
 
-MillisecondsWidget::MillisecondsWidget(QSqlRecord &r, const QString fieldName, const EventAI::Parameter &param, QWidget *parent)
+MillisecondsWidget::MillisecondsWidget(MangosRecord &r, const QString fieldName, const EventAI::Parameter &param, QWidget *parent)
     : QSpinBox(parent),
       record(r),
       parameter(param)

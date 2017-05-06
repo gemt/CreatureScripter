@@ -260,7 +260,7 @@ public:
         }
         return false;
     }
-
+/*
     Migrations GetMigrations()
     {
         Migrations mig;
@@ -279,6 +279,7 @@ public:
             }
         }
     }
+    */
 };
 
 class TemplateTreeView : public QTreeView

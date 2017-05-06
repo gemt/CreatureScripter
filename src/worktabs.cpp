@@ -5,6 +5,7 @@
 #include "creaturetables.h"
 #include "templatetables.h"
 #include "creatureeventai.h"
+#include "changeswidget.h"
 
 #include <QVBoxLayout>
 #include <QHBoxLayout>
@@ -41,6 +42,9 @@ WorkTab::WorkTab(uint entry, QString name, QWidget *parent) :
     //addTab(cm, "Modifier");
     addTab(templateTable, "Template Tables");
     //addTab(rawTables, "Raw Tables");
+
+    changesTab = new ChangesWidget(this);
+    addTab(changesTab, "Changes");
 
 }
 

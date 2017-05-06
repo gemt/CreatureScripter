@@ -19,7 +19,7 @@
 #include <QProcess>
 
 
-SpellIDWidget::SpellIDWidget(QSqlRecord& r, const QString fieldName, const EventAI::Parameter& param, QWidget* parent)
+SpellIDWidget::SpellIDWidget(MangosRecord& r, const QString fieldName, const EventAI::Parameter& param, QWidget* parent)
  : ClickableWidget(parent),
    record(r),
    parameter(param)

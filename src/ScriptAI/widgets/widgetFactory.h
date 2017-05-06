@@ -7,6 +7,7 @@
 #include <QVBoxLayout>
 #include <QMouseEvent>
 #include <QFont>
+#include "mangosrecord.h"
 #include "eventaidef.h"
 #include "spellidwidget.h"
 #include "defaultlineedit.h"
@@ -16,8 +17,9 @@
 #include "flagswidget.h"
 #include "clickablewidget.h"
 #include "inversephasemaskwidget.h"
+#include "boolwidget.h"
 
-static QWidget* CreateParameterWidget(const EventAI::Parameter& param, QSqlRecord& record,
+static QWidget* CreateParameterWidget(const EventAI::Parameter& param, MangosRecord& record,
                                       const QString& field, QWidget* parent, bool verbose){
     QWidget* w = new QWidget(parent);
     w->setSizePolicy(QSizePolicy::Minimum,QSizePolicy::Minimum);
@@ -40,7 +42,6 @@ static QWidget* CreateParameterWidget(const EventAI::Parameter& param, QSqlRecor
         rw = new SpellIDWidget(record, field, param, w);
         w->setProperty("hoverable", true);
         w->setMouseTracking(true);
-
         w->setProperty("clickWidget", QVariant::fromValue(rw));
         break;
     case EventAI::FACTION_ID_FLAGS:
@@ -70,11 +71,13 @@ static QWidget* CreateParameterWidget(const EventAI::Parameter& param, QSqlRecor
     case EventAI::SPAWN_EVENT_MODE:
         rw = new TypeValueWidget(EventAI::SpawnedEventMode, record, field, w);
         break;
+    case EventAI::BOOL:
+        rw = new boolWidget(record, field, param, w);
+        break;
     case EventAI::MAP_AREA_ID: //map id or area id
     case EventAI::UNUSED:
     case EventAI::SPELL_SCHOOL:
     case EventAI::DISTANCE:
-    case EventAI::BOOL:
     case EventAI::HP:
     case EventAI::NUMBER:
     case EventAI::EMOTE_ID:

@@ -2,6 +2,7 @@
 #define INVERSEPHASEMASKWIDGET_H
 
 #include "eventaidef.h"
+#include "mangosrecord.h"
 
 #include <QWidget>
 #include <QSqlRecord>
@@ -18,10 +19,10 @@
 class InversePhaseMaskWidget : public QWidget
 {
 public:
-    InversePhaseMaskWidget(QSqlRecord& r, const QString& fieldName, QWidget* parent, bool verbose);
+    InversePhaseMaskWidget(MangosRecord& r, const QString& fieldName, QWidget* parent, bool verbose);
     void UpdateVerboseLabel();
 private:
-    QSqlRecord& record;
+    MangosRecord& record;
     const QString fieldName;
 
     // QWidget interface
@@ -35,7 +36,7 @@ class PhaseWidgetList : public QComboBox
 {
     Q_OBJECT
 public:
-    PhaseWidgetList(QSqlRecord &r, const QString &fieldName, InversePhaseMaskWidget* parent);
+    PhaseWidgetList(MangosRecord &r, const QString &fieldName, InversePhaseMaskWidget* parent);
     QStandardItem* addCheckItem(const QString &label, const QVariant &data, const Qt::CheckState checkState);
 protected:
     bool eventFilter(QObject* _object, QEvent* _event);
@@ -43,7 +44,7 @@ private:
     QStandardItemModel* m_model;
     void updateText();
     bool is_shown;
-    QSqlRecord& record;
+    MangosRecord& record;
     const QString fieldName;
     InversePhaseMaskWidget* _parent;
 private slots:

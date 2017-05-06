@@ -6,6 +6,7 @@
 #include <QTabWidget>
 #include <QMap>
 
+class ChangesWidget;
 class CreatureTables;
 class WorkTab : public QTabWidget
 {
@@ -20,6 +21,7 @@ private:
 
     CreatureTables* rawTables;
     CreatureData* data;
+    ChangesWidget* changesTab;
 };
 
 class WorkTabs : public QTabWidget

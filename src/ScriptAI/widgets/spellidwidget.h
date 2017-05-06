@@ -3,6 +3,7 @@
 
 #include "eventaidef.h"
 #include "clickablewidget.h"
+#include "mangosrecord.h"
 
 #include <QWidget>
 #include <QSqlRecord>
@@ -14,13 +15,13 @@ class SpellIDWidget : public ClickableWidget
 {
     Q_OBJECT
 public:
-    SpellIDWidget(QSqlRecord& r, const QString fieldName, const EventAI::Parameter& param,  QWidget* parent = nullptr);
+    SpellIDWidget(MangosRecord& r, const QString fieldName, const EventAI::Parameter& param,  QWidget* parent = nullptr);
 
 private slots:
     void onChangeSpellBtn();
 
 private:
-    QSqlRecord& record;
+    MangosRecord& record;
     const EventAI::Parameter& parameter;
     int rIdx;
     QLabel* idLabel;

@@ -1,6 +1,6 @@
 #include "typevaluewidget.h"
 
-TypeValueWidget::TypeValueWidget(const QVector<EventAI::TypeValue> &values, QSqlRecord &r,
+TypeValueWidget::TypeValueWidget(const QVector<EventAI::TypeValue> &values, MangosRecord &r,
                                  const QString fieldName, QWidget *parent)
     : QComboBox(parent),
       record(r),

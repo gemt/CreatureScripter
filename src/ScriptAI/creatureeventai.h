@@ -2,6 +2,7 @@
 #define CREATUREEVENTAI_H
 
 #include "eventaidef.h"
+#include "mangosrecord.h"
 
 #include <QWidget>
 #include <QSqlRecord>
@@ -26,9 +27,9 @@ class type_ActionType;
 
 class EventEntry : public QWidget {
 public:
-    EventEntry(QSqlRecord& record, QWidget* parent);
+    EventEntry(MangosRecord& record, QWidget* parent);
 
-    QSqlRecord& record;
+    MangosRecord& record;
     bool verbose = false;
     void Remake();
 

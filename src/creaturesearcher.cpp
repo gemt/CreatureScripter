@@ -193,7 +193,7 @@ CreatureSearcher::CreatureSearcher(QWidget *parent, const QSqlDatabase &db) :
     setModel(model);
     horizontalHeader()->setStretchLastSection(true);
     verticalHeader()->hide();
-    connect(this, &QTableView::activated, this, &CreatureSearcher::onActivated);
+    connect(this, &QTableView::clicked, this, &CreatureSearcher::onActivated);
 
 }
 

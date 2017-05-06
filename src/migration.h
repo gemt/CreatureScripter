@@ -1,6 +1,8 @@
 #ifndef PATCH_H
 #define PATCH_H
 
+#include "mangosrecord.h"
+
 #include <QString>
 #include <QSqlRecord>
 #include <QMap>
@@ -9,14 +11,14 @@
 class UpdateMigration
 {
 public:
-    UpdateMigration(const QString& table, const QSqlRecord& newRecord, const QSqlRecord& oldRecord);
+    UpdateMigration(const QString& table, const MangosRecord& newRecord, const MangosRecord& oldRecord);
     QString toString();
 private:
     QString table;
-    const QSqlRecord& newRecord;
-    const QSqlRecord& oldRecord;
+    const MangosRecord& newRecord;
+    const MangosRecord& oldRecord;
 };
-
+#if 0
 class Migrations
 {
 private:
@@ -44,5 +46,5 @@ private:
 
 
 };
-
+#endif
 #endif // PATCH_H
