@@ -96,7 +96,7 @@ void Cache::LoadMaps()
     QString qry = QString("SELECT %1, %2 FROM %3").arg(
                 db.driver()->escapeIdentifier(Tables::map_template::entry, QSqlDriver::FieldName),
                 db.driver()->escapeIdentifier(Tables::map_template::mapname, QSqlDriver::FieldName),
-                db.driver()->escapeIdentifier(Tables::map_template::t(),QSqlDriver::TableName));
+                db.driver()->escapeIdentifier(Tables::worldTable<Tables::map_template>(), QSqlDriver::TableName));
     bool ret = q.exec(qry);
     int entryField = q.record().indexOf(Tables::map_template::entry);
     int nameField = q.record().indexOf(Tables::map_template::mapname);
@@ -109,5 +109,11 @@ void Cache::LoadMaps()
         QString n = q.value(nameField).toString();//.toLower();
         unsigned int e = q.value(entryField).toUInt();
         maps[e] = n;
+        map_vec.push_back(std::make_pair(e,n));
     }
+}
+
+const QVector<std::pair<unsigned int, QString> > &Cache::GetMapVec()
+{
+    return map_vec;
 }

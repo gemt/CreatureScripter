@@ -10,6 +10,7 @@
 namespace Tables {
 const QString creature::t = "creature";
 const QString creature::id = "id";
+const QString creature::map = "Map";
 
 const QString creature_template::t = "creature_template";
 const QString creature_template::entry = "entry";
@@ -64,6 +65,9 @@ const QString creature_ai_scripts::action_x_param_y = "action%1_param%2";
 
 const QString item_template::t = "item_template";
 
+const QString map_template::t = "map_template";
+const QString map_template::entry = "Entry";
+const QString map_template::mapname = "MapName";
 
 QVector<QSqlRecord> Table::Query(const QVariant &value, const QString tarKey, int expectSize)
 {

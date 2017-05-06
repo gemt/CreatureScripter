@@ -36,9 +36,10 @@
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent),
-      currentDisplayedSearch("-@g17h49j)=!ar676-&@jn0fgmq!`?=?ml&a1519&s36mc")
+      currentDisplayedSearch("-@g17h49j)=!ar676-&@jn0fgmq!`?=?ml&a1519&s36mc"),
+      currentDIsplayedMapSearch("-@g17h49j)=!ar676-&@jn0fgmq!`?=?ml&a1519&s36mc")
 {
-    qputenv("QT_AUTO_SCREEN_SCALE_FACTOR", "1");
+    //qputenv("QT_AUTO_SCREEN_SCALE_FACTOR", "1");
 
     setCentralWidget(new QSplitter(Qt::Horizontal, this));
     QRect rec = QApplication::desktop()->screenGeometry();
@@ -63,14 +64,21 @@ void MainWindow::InitWindow()
 
     QFormLayout* sl = new QFormLayout();
     bl->addLayout(sl);
-    nameSearch = new QLineEdit(searchWidget);
-    connect(nameSearch, &QLineEdit::returnPressed, this, &MainWindow::onNameSearch);
-    connect(nameSearch, &QLineEdit::textChanged, this, &MainWindow::onNameSearchChange);
-    sl->addRow(new QLabel("Name/Entry"), nameSearch);
+    nameEntrySearch = new QLineEdit(searchWidget);
+    //connect(nameEntrySearch, &QLineEdit::returnPressed, this, &MainWindow::onNameSearch);
+    connect(nameEntrySearch, &QLineEdit::textChanged, this, &MainWindow::onNameSearchChange);
+    sl->addRow(new QLabel("Name/Entry"), nameEntrySearch);
+
+    mapSearch = new QLineEdit(searchWidget);
+    sl->addRow(new QLabel("Map"), mapSearch);
+
 
     QSqlDatabase db = QSqlDatabase::database(settings.value("connectionName").toString());
     searcher = new CreatureSearcher(searchWidget, db);
     bl->addWidget(searcher);
+
+
+    connect(mapSearch, &QLineEdit::textChanged, this, &MainWindow::onNameSearchChange);
 
     workTabs = new WorkTabs(this);
     splitter->addWidget(workTabs);
@@ -149,16 +157,21 @@ void MainWindow::onNameSearchChange(const QString&)
 {
     //if query ends up slow it's possible to set this to something higher
     // so we don't do a new search for every keypress in the searchfield
-    nameSearchTimer.start(0);
+    nameSearchTimer.start(100);
 }
 
 void MainWindow::onNameSearchTimeout()
 {
     nameSearchTimer.stop();
-    if(currentDisplayedSearch == nameSearch->text())
+    if(currentDisplayedSearch != nameEntrySearch->text()){
+        currentDisplayedSearch = nameEntrySearch->text();
+        searcher->Search(currentDisplayedSearch);
+    }
+    if(currentDIsplayedMapSearch != mapSearch->text()){
+        currentDIsplayedMapSearch = mapSearch->text();
+        searcher->SetZoneFilter(currentDIsplayedMapSearch);
+    }
         return;
-    currentDisplayedSearch = nameSearch->text();
-    searcher->Search(currentDisplayedSearch);
 }
 
 void MainWindow::closeEvent(QCloseEvent *event)

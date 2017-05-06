@@ -29,6 +29,7 @@ public:
 
     void LoadMaps();
 
+    const QVector<std::pair<unsigned int, QString>>& GetMapVec();
     QString MapName(unsigned int entry);
     QSettings settings;
     //SpellInfoInterface* spellInfo;
@@ -37,6 +38,7 @@ public:
 private:
     Cache();
     QMap<unsigned int, QString> maps;
+    QVector<std::pair<unsigned int, QString>> map_vec;
 };
 
 namespace Tables{
@@ -54,12 +56,12 @@ static const QString creature_movement_template  = "creature_movement_template";
 static const QString creature_onkill_reputation  = "creature_onkill_reputation";
 static const QString creature_questrelation      = "creature_questrelation";
 static const QString creature_spells             = "creature_spells";
-
+/*
 namespace map_template{
 static const QString t(){return Cache::Get().Table("map_template");}
 static const QString entry = "Entry";
 static const QString mapname = "MapName";
 }
-
+*/
 }
 #endif // CREATURECACHE_H

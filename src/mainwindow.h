@@ -33,11 +33,13 @@ private:
     QSettings settings;
     CreatureSearcher* searcher;
 
-    QLineEdit* nameSearch;
+    QLineEdit* nameEntrySearch;
+    QLineEdit* mapSearch;
     QToolBar* toolbar;
     WorkTabs* workTabs;
 
     QString currentDisplayedSearch;
+    QString currentDIsplayedMapSearch;
     QTimer nameSearchTimer;
 
 

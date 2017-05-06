@@ -251,13 +251,6 @@ void EventEntry::paintEvent(QPaintEvent* e)
         //QRect rightRect = mainLayout->cellRect(1, mainLayout->columnCount()-1);
         QRect eventRect(mainLayout->cellRect(0,0).topLeft(),
                         mainLayout->cellRect(0, mainLayout->columnCount()-1).bottomRight());
-                        //mainLayout->cellRect(1, mainLayout->columnCount()-1).topRight());
-        //QPointF leftP = QPointF(leftRect.left(), leftRect.center().y());
-        //QPointF rightP = QPointF(rightRect.right(), rightRect.center().y());
-        //QLinearGradient gradient(leftP, rightP);
-        //gradient.setColorAt(0, QColor(255,0,0, 50));
-        //gradient.setColorAt(1, QColor(255,0,0,0));
-        //painter.fillRect(eventRect, gradient);
         painter.fillRect(eventRect, QColor(0,0,255, 25));
     }
 
@@ -267,11 +260,6 @@ void EventEntry::paintEvent(QPaintEvent* e)
         QRect rightRect = mainLayout->cellRect(mainLayout->rowCount()-1, mainLayout->columnCount()-1);
         rightRect.setBottom(bottom);
         QRect eventRect(leftRect.topLeft(), rightRect.bottomRight());
-        //QPointF leftP = QPointF(leftRect.left(), leftRect.center().y());
-        //QPointF rightP = QPointF(rightRect.right(), rightRect.center().y());
-        //QLinearGradient gradient(leftP, rightP);
-        //gradient.setColorAt(0, QColor(0,0,255, 50));
-        //gradient.setColorAt(1, QColor(0,0,255,0));
         painter.fillRect(eventRect, QColor(255,0,0, 25));
     }
 

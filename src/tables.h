@@ -6,12 +6,23 @@
 #include <QSqlRecord>
 #include <QString>
 #include <QVector>
-
+#include <QSqlField>
+#include <QSqlDatabase>
+#include <QSqlDriver>
+#include <QVariant>
 namespace Tables
 {
 template <typename T>
-QString worldTable(){
+static QString worldTable(){
     return QString("%1.%2").arg(Cache::Get().settings.value("worldDB").toString(), T::t);
+}
+
+static QString EscapedVal(const QVariant& val){
+    QSqlDatabase db = Cache::Get().GetDB();
+    QSqlField f;
+    f.setType(val.type());
+    f.setValue(val);
+    return db.driver()->formatValue(f);
 }
 
 struct Table;
@@ -42,6 +53,9 @@ public:
 struct creature : public Table{
     static const QString t;
     static const QString id;
+
+    static const QString map;
+
     creature(quint32 entry);
     QVector<QSqlRecord> records;
 };
@@ -140,6 +154,12 @@ struct item_template : public Table{
     item_template():Table(t){}
 };
 
+struct map_template : public Table{
+    static const QString t;
+    map_template() :Table(t){}
+    static const QString entry;
+    static const QString mapname;
+};
 
 }
 
