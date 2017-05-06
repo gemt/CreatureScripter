@@ -100,7 +100,12 @@ QFile f(":/eventai/json/EventAI_cmangos.json");
 
 void EventAIStorage::LoadActions()
 {
-    QFile f(":/eventai/json/Actions.json");
+#ifdef ELYSIUM
+QFile f(":/eventai/json/Actions_elysium.json");
+#else
+QFile f(":/eventai/json/Actions_cmangos.json");
+#endif
+
     if(!f.open(QIODevice::ReadOnly)){
         throw std::runtime_error(QString("Unable to open file: %1").arg(f.fileName()).toStdString());
     }

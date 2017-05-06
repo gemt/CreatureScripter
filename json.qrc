@@ -1,7 +1,8 @@
 <RCC>
     <qresource prefix="/eventai">
-        <file>json/Actions.json</file>
         <file>json/EventAI_cmangos.json</file>
         <file>json/EventAI_elysium.json</file>
+        <file>json/Actions_cmangos.json</file>
+        <file>json/Actions_elysium.json</file>
     </qresource>
 </RCC>
