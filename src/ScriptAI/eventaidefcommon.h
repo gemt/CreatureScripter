@@ -101,8 +101,17 @@ static const QString short_phasemask_tooltip =
         " inverse phase-mask in the core, meaning you need to uncheck phases where"
         " the event should NOT be active.";
 
+static const QVector<TypeValue> SpellSchoolMask =
+{
+    TypeValue{1,  "PHYSICAL", "Referred to as SPELL_SCHOOL_NORMAL in the core"},
+    TypeValue{2,  "HOLY",   ""},
+    TypeValue{4,  "FIRE",   ""},
+    TypeValue{8,  "NATURE", ""},
+    TypeValue{16, "FROST",  ""},
+    TypeValue{32, "SHADOW", ""},
+    TypeValue{64, "ARCANE", ""},
+};
 
-}
-
+} // EventAI
 
 #endif // EVENTAIDEFCOMMON_H

@@ -36,28 +36,35 @@ static QWidget* CreateParameterWidget(const EventAI::Parameter& param, MangosRec
 
     QWidget* rw = nullptr;
     switch(param.type){
-    case EventAI::MILLISECONDS: rw = new MillisecondsWidget(record, field, param, w); break;
-    case EventAI::PERCENTAGE: rw =  new DefaultLineEdit(record, field, param, w);break;
+    case EventAI::FACTION_ID_FLAGS:
+        rw = new FlagsWidget(EventAI::factionFlags, record, field, w, verbose);
+        break;
+    case EventAI::CAST_FLAGS:
+        rw = new FlagsWidget(EventAI::CastFlags, record, field, w, verbose); break;
+        //rw = new TypeValueWidget(EventAI::CastFlags, record, field, w);break;
+    case EventAI::EVENT_TYPE_MASK:
+        rw = new FlagsWidget(EventAI::EventTypeMask, record, field, w, verbose);
+        break;
+    case EventAI::SPELL_SCHOOL:
+        rw = new FlagsWidget(EventAI::SpellSchoolMask, record, field, w, verbose);
+        break;
+    case EventAI::MILLISECONDS:
+        rw = new MillisecondsWidget(record, field, param, w);
+        break;
+    case EventAI::PERCENTAGE:
+        rw =  new DefaultLineEdit(record, field, param, w);
+        break;
     case EventAI::SPELL_ID:
         rw = new SpellIDWidget(record, field, param, w);
         w->setProperty("hoverable", true);
         w->setMouseTracking(true);
         w->setProperty("clickWidget", QVariant::fromValue(rw));
         break;
-    case EventAI::FACTION_ID_FLAGS:
-        rw = new FlagsWidget(EventAI::factionFlags, record, field, w, verbose);
-        break;
     case EventAI::TARGET:
         rw =new TypeValueWidget(EventAI::TargetTypes, record, field, w);
         break;
-    case EventAI::CAST_FLAGS:
-        rw = new FlagsWidget(EventAI::CastFlags, record, field, w, verbose); break;
-        //rw = new TypeValueWidget(EventAI::CastFlags, record, field, w);break;
     case EventAI::SHEET:
         rw = new TypeValueWidget(EventAI::SheetState, record, field, w);
-        break;
-    case EventAI::EVENT_TYPE_MASK:
-        rw = new FlagsWidget(EventAI::EventTypeMask, record, field, w, verbose);
         break;
     case EventAI::STAND_STATE:
         rw = new TypeValueWidget(EventAI::StandState, record, field, w);
@@ -76,7 +83,6 @@ static QWidget* CreateParameterWidget(const EventAI::Parameter& param, MangosRec
         break;
     case EventAI::MAP_AREA_ID: //map id or area id
     case EventAI::UNUSED:
-    case EventAI::SPELL_SCHOOL:
     case EventAI::DISTANCE:
     case EventAI::HP:
     case EventAI::NUMBER:
