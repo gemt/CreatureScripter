@@ -42,6 +42,11 @@
 #include <QMap>
 namespace EventAI
 {
+static const QString short_phasemask_tooltip = "<b>The phase mask decides in which phases this event will trigger."
+                                               " In any phase which is checked, the event will be active. You do not"
+                                               " need to uncheck phases which are not in use. In fact, it works as an"
+                                               " inverse phase-mask in the core, meaning you need to uncheck phases where"
+                                               " the event should NOT be active.";
 enum ParameterType{
     PT_MIN = -1,
     UNUSED = 0,

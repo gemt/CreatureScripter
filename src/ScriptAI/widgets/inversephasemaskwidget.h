@@ -23,6 +23,10 @@ public:
 private:
     QSqlRecord& record;
     const QString fieldName;
+
+    // QWidget interface
+public:
+    QSize minimumSizeHint() const;
 };
 
 

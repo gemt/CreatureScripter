@@ -137,6 +137,7 @@ void FlagsWidgetList::updateText()
     }
     text.prepend(QString("%1 ").arg(num));
     lineEdit()->setText(text);
+    lineEdit()->setCursorPosition(0);
     _parent->SetLabels(parentList);
 }
 

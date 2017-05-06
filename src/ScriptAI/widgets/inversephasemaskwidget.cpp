@@ -1,5 +1,7 @@
 #include "inversephasemaskwidget.h"
 
+#include <QFontMetrics>
+
 class QCheckListStyledItemDelegate : public QStyledItemDelegate
 {
 public:
@@ -17,7 +19,9 @@ InversePhaseMaskWidget::InversePhaseMaskWidget(QSqlRecord &r, const QString &fie
      record(r),
      fieldName(fieldName)
 {
+    setToolTip(EventAI::short_phasemask_tooltip);
     setContentsMargins(0,0,0,0);
+    setSizePolicy(QSizePolicy::Minimum,QSizePolicy::Minimum);
     QVBoxLayout* l = new QVBoxLayout(this);
     l->setContentsMargins(0,0,0,0);
     setLayout(l);
@@ -29,6 +33,14 @@ InversePhaseMaskWidget::InversePhaseMaskWidget(QSqlRecord &r, const QString &fie
 void InversePhaseMaskWidget::UpdateVerboseLabel()
 {
     //Q_ASSERT(0); // todo;
+}
+
+QSize InversePhaseMaskWidget::minimumSizeHint() const
+{
+    QFont f;
+    QFontMetrics fm(f);
+    int width = fm.width("Phase 31", f.pointSize()) *2;
+    return QSize(width, size().height());
 }
 
 
@@ -111,6 +123,7 @@ void PhaseWidgetList::updateText()
     }
 
     lineEdit()->setText(text);
+    lineEdit()->setCursorPosition(0);
     _parent->UpdateVerboseLabel();
 }
 
