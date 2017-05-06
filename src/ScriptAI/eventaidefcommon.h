@@ -77,13 +77,14 @@ struct TypeValue{
 
 struct EventAI_event {
     quint8 id;
-    QString name;
+    //QString name;
     QString shortName;
     QString description;
-    QString triggerNote;
+    //QString triggerNote;
+    QVector<Parameter> params;
+
     static const Parameter phaseMask;
     static const Parameter eventFlags;
-    QVector<Parameter> params;
 };
 
 static const QString phase_mask_tooltip =

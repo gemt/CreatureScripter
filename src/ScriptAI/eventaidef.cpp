@@ -29,7 +29,12 @@ EventAIStorage::EventAIStorage()
 
 void EventAIStorage::LoadEvents()
 {
-    QFile f(":/eventai/json/EventAI.json");
+#ifdef ELYSIUM
+QFile f(":/eventai/json/EventAI_elysium.json");
+#else
+QFile f(":/eventai/json/EventAI_cmangos.json");
+#endif
+
     if(!f.open(QIODevice::ReadOnly)){
         throw std::runtime_error(QString("Unable to open file: %1").arg(f.fileName()).toStdString());
     }
@@ -73,10 +78,10 @@ void EventAIStorage::LoadEvents()
         QString name = o["name"].toString();
 
         event.id = o["id"].toInt();
-        event.name = name;
+        //event.name = name;
         event.shortName = name.remove("EVENT_T_");
         event.description = o["d1"].toString();
-        event.triggerNote = o["t"].toString();
+        //event.triggerNote = o["t"].toString();
         QJsonArray params = o["params"].toArray();
         foreach(const QJsonValue& v, params){
             qDebug() << v.toString();
