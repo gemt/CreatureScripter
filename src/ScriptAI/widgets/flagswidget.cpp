@@ -152,7 +152,7 @@ void FlagsWidgetList::on_itemPressed(const QModelIndex &index)
 
     if (item->checkState() == Qt::Checked) {
         item->setCheckState(Qt::Unchecked);
-        curVal & ~thisFlag;
+        curVal &= ~thisFlag;
     }
     else {
         item->setCheckState(Qt::Checked);
