@@ -91,12 +91,11 @@ void EventEntry::Remake()
         AddWidget(w, mainLayout->rowCount()-1,paramColOffset++, 1, 1);
 
         // Adding event parameters
-        int eventParamNum = 1;
-        for(int i = 2; i < 6; i++){
+        for(int i = 0; i < 4; i++){
             if(i >= event.params.size()){
                 w = new QWidget(this);
             }else{
-                w = CreateParameterWidget(event.params.at(i), record, Tables::creature_ai_scripts::event_paramN(eventParamNum++), this, verbose);
+                w = CreateParameterWidget(event.params.at(i), record, Tables::creature_ai_scripts::event_paramN(i+1), this, verbose);
             }
             AddWidget(w, mainLayout->rowCount()-1,paramColOffset++, 1, 1);
         }
