@@ -1,9 +1,6 @@
 #ifndef EVENTAIDEF_H
 #define EVENTAIDEF_H
 
-#define ELYSIUM
-#undef CMANGOS
-
 #ifdef ELYSIUM
 #include "eventaidefelysium.h"
 #else
@@ -42,85 +39,6 @@
 #include <QMap>
 namespace EventAI
 {
-static const QString short_phasemask_tooltip = "<b>The phase mask decides in which phases this event will trigger."
-                                               " In any phase which is checked, the event will be active. You do not"
-                                               " need to uncheck phases which are not in use. In fact, it works as an"
-                                               " inverse phase-mask in the core, meaning you need to uncheck phases where"
-                                               " the event should NOT be active.";
-enum ParameterType{
-    PT_MIN = -1,
-    UNUSED = 0,
-    // decides the returned widget-type
-    MILLISECONDS = 1,
-    PERCENTAGE = 2,
-    SPELL_ID = 3,
-    SPELL_SCHOOL = 4,
-    DISTANCE = 5,
-    BOOL = 6,
-    HP = 7,
-    NUMBER = 8,
-    EMOTE_ID = 9,
-    EVENT_TYPE = 10,
-    DISPELL_TYPE = 11,
-    CREATURE_ID = 12,
-    CONDITION = 13,
-    TEXT_ID = 14,
-    FACTION_ID = 15,
-    FACTION_ID_FLAGS = 16,
-    MODEL_ID = 17,
-    SOUND_ID = 18,
-    TARGET = 19, // valid entries are in TargetTypes enum
-    CAST_FLAGS = 20, // valid entries are in CastFlags enum
-    QUEST_ID = 21,
-    FLAGS_GENERIC = 22,
-    PHASE = 23, // must validate to number between 0,31
-    ANGLE = 24,
-    SUMMON_ID = 25,
-    TEAM = 26, // alliance/horde
-    CREATURE_TEMPLATE_ID = 27,
-    RADIUS = 28,
-    SHEET = 29,
-    CHANCE = 30,
-    EVENT_TYPE_MASK = 31,
-    STAND_STATE = 32,
-    MOVEMENT_TYPE = 33,
-    REACT_STATE = 34,
-    SPAWN_EVENT_MODE = 35,
-    MAP_AREA_ID = 36,
-
-    //==============
-    EVENT_PHASE_MASK = 50,
-    EVENT_FLAGS = 51,
-    PT_UNKNOWN
-};
-
-struct Parameter{
-    ParameterType type;
-    QString name;
-    QString description;
-};
-
-struct EventAI_Action{
-    int id;
-    QString name;
-    QString shortName;
-    QString description;
-    QVector<Parameter> params;
-};
-
-struct EventAI_event{
-    EventAI_event(){
-        params.push_back({ParameterType::EVENT_PHASE_MASK, "Phase Mask", phase_mask_tooltip});
-        params.push_back({ParameterType::EVENT_FLAGS, "Event Flags", ""});
-    }
-
-    quint8 id;
-    QString name;
-    QString shortName;
-    QString description;
-    QString triggerNote;
-    QVector<Parameter> params;
-};
 
 class EventAIStorage
 {

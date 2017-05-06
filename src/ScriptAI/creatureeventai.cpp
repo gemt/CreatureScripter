@@ -81,11 +81,11 @@ void EventEntry::Remake()
 
         // phase mask
         int paramColOffset = 1;
-        QWidget* w = CreateParameterWidget(event.params.at(0), record, Tables::creature_ai_scripts::event_inverse_phase_mask, this, verbose);
+        QWidget* w = CreateParameterWidget(event.phaseMask, record, Tables::creature_ai_scripts::event_inverse_phase_mask, this, verbose);
         AddWidget(w, mainLayout->rowCount()-1,paramColOffset++, 1, 1);
 
         // event flags
-        w = CreateParameterWidget(event.params.at(1), record, Tables::creature_ai_scripts::event_flags, this, verbose);
+        w = CreateParameterWidget(event.eventFlags, record, Tables::creature_ai_scripts::event_flags, this, verbose);
         AddWidget(w, mainLayout->rowCount()-1,paramColOffset++, 1, 1);
 
         // Adding event parameters

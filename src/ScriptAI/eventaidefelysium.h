@@ -4,21 +4,10 @@
 #include <QVector>
 #include <QMap>
 
+#include "eventaidefcommon.h"
+
 namespace EventAI
 {
-
-struct TypeValue{
-    int value;
-    QString name;
-    QString description;
-};
-
-static const QString phase_mask_tooltip =
-        "Phase mask is a bitmask of phases which shouldn't trigger this event. (ie. Phase mask of value 12 (binary 1100)<br>"
-        " results in triggering this event in phases 0, 1 and all others with exception for phases 2 and 3 (counting from 0).<br>"
-        " Phase 0 is default so this will occur in all phases unless specified. (1101 = Triggers in Phase 1 of 3, 1011 = Triggers<br>"
-        " in Phase 2 of 3, 0111 = Triggers in Phase 3 of 3, 0011 = Triggers in Both Phase 2 and 3).<br>"
-        " Take Desired Binary Configuration and convert into Decimal and this is your event_inverse_phase_mask to use in your script.<br>";
 
 static const QVector<TypeValue> SheetState =
 {

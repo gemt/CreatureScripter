@@ -138,11 +138,11 @@ void PhaseWidgetList::on_itemPressed(const QModelIndex &index)
 
     if (item->checkState() == Qt::Checked) {
         item->setCheckState(Qt::Unchecked);
-        curVal & ~thisFlag;
+        curVal |= thisFlag; // note this is sort of an intuitive reverse the phases are an INVERTED phase mask
     }
     else {
         item->setCheckState(Qt::Checked);
-        curVal |= thisFlag;
+        curVal &= ~thisFlag; // note this is sort of an intuitive reverse the phases are an INVERTED phase mask
     }
 
     record.setValue(fieldName, curVal);

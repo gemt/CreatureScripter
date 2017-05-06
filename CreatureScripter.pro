@@ -10,7 +10,7 @@ TARGET = CreatureScripter
 TEMPLATE = app
 CONFIG += debug_and_release
 CONFIG += c++11
-DEFINES += __STORMLIB_SELF__ QSW_LIB
+DEFINES += __STORMLIB_SELF__ QSW_LIB ELYSIUM #CMANGOS
 
 INCLUDEPATH += $$PWD/mpq/StormLib
 DEPENDPATH += $$PWD/mpq/StormLib
@@ -34,7 +34,8 @@ HEADERS += $$files(src/*.h) \
     src/ScriptAI/widgets/clickablewidget.h \
     src/ScriptAI/eventaidefelysium.h \
     src/ScriptAI/eventaidefcmangos.h \
-    src/ScriptAI/widgets/inversephasemaskwidget.h
+    src/ScriptAI/widgets/inversephasemaskwidget.h \
+    src/ScriptAI/eventaidefcommon.h
 HEADERS += $$files(src/CreatureTabs/*.h)
 HEADERS += $$files(src/ScriptAI/*.h)
 HEADERS += $$files(src/ScriptAI/widgets/*.h)
@@ -43,7 +44,8 @@ SOURCES += $$files(src/*.cpp) \
     src/collapsableframe.cpp \
     qswwrapper.cpp \
     src/ScriptAI/widgets/flagswidget.cpp \
-    src/ScriptAI/widgets/inversephasemaskwidget.cpp
+    src/ScriptAI/widgets/inversephasemaskwidget.cpp \
+    src/ScriptAI/eventaidefcommon.cpp
 SOURCES += $$files(src/CreatureTabs/*.cpp)
 SOURCES += $$files(src/ScriptAI/*.cpp)
 SOURCES += $$files(src/ScriptAI/widgets/*.cpp)
