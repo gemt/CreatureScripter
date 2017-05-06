@@ -78,10 +78,8 @@ QFile f(":/eventai/json/EventAI_cmangos.json");
         QString name = o["name"].toString();
 
         event.id = o["id"].toInt();
-        //event.name = name;
         event.shortName = name.remove("EVENT_T_");
         event.description = o["d1"].toString();
-        //event.triggerNote = o["t"].toString();
         QJsonArray params = o["params"].toArray();
         foreach(const QJsonValue& v, params){
             qDebug() << v.toString();

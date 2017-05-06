@@ -128,6 +128,7 @@ struct creature_ai_scripts : public Table{
 
     creature_ai_scripts(quint32 entry);
     QVector<QSqlRecord> records;
+    QVector<QSqlRecord> originalRecords;
 private:
     static const QString event_param_n;
     static const QString action_n_type;

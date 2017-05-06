@@ -71,3 +71,30 @@ QString Migrations::toString()
     }
     return ret;
 }
+
+UpdateMigration::UpdateMigration(const QString &table,  const QSqlRecord& newRecord, const QSqlRecord& oldRecord)
+    : table(table),
+      newRecord(newRecord),
+      oldRecord(oldRecord)
+{
+    Q_ASSERT(newRecord.count() == oldRecord.count());
+}
+
+QString UpdateMigration::toString()
+{
+    QString str;
+    QSqlDatabase db = Cache::Get().GetDB();
+    for(int i = 0; i < oldRecord.count(); i++){
+        if(oldRecord.value(i) != newRecord.value(i)){
+            if(!str.isEmpty())
+                str += ", ";
+            QString fieldName = db.driver()->escapeIdentifier(oldRecord.fieldName(i), QSqlDriver::FieldName);
+            QSqlField field(newRecord.field(i));
+            QString val = db.driver()->formatValue(field);
+            str += fieldName + "=" + val;
+        }
+    }
+    str.prepend(QString("UPDATE %1 SET ").arg(table));
+    str += ";";
+    return str;
+}

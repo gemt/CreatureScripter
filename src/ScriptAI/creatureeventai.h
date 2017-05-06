@@ -9,6 +9,7 @@
 #include <memory>
 #include <QVector>
 #include <QScrollArea>
+#include <QSqlField>
 
 class QVBoxLayout;
 class QGridLayout;
@@ -24,13 +25,13 @@ class type_EventType;
 class type_ActionType;
 
 class EventEntry : public QWidget {
-private:
-    QSqlRecord& record;
 public:
     EventEntry(QSqlRecord& record, QWidget* parent);
 
+    QSqlRecord& record;
     bool verbose = false;
     void Remake();
+
 private:
     QVector<QWidget*> widgets;
 
@@ -67,6 +68,8 @@ class CreatureEventAI : public QScrollArea
 {
 public:
     CreatureEventAI(std::shared_ptr<Tables::creature_template> creature, QWidget* parent);
+
+    void PrintMigrations();
 
 private:
     std::shared_ptr<Tables::creature_template> _creature;

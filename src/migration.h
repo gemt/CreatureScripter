@@ -5,6 +5,18 @@
 #include <QSqlRecord>
 #include <QMap>
 #include <QDebug>
+
+class UpdateMigration
+{
+public:
+    UpdateMigration(const QString& table, const QSqlRecord& newRecord, const QSqlRecord& oldRecord);
+    QString toString();
+private:
+    QString table;
+    const QSqlRecord& newRecord;
+    const QSqlRecord& oldRecord;
+};
+
 class Migrations
 {
 private:

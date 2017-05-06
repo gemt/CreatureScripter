@@ -5,6 +5,7 @@
 #include "widgetFactory.h"
 #include "collapsableframe.h"
 #include "flagswidget.h"
+#include "migration.h"
 
 #include <QSqlRecord>
 #include <QFormLayout>
@@ -17,6 +18,7 @@
 #include <QCursor>
 
 namespace EventAI{
+
 QTableWidgetItem* HeaderItem(const Parameter& type){
     QTableWidgetItem* itm = new QTableWidgetItem(type.name);
     itm->setToolTip(type.description);
@@ -371,16 +373,23 @@ CreatureEventAI::CreatureEventAI(std::shared_ptr<Tables::creature_template> crea
     scrollAreaWidget->setSizePolicy(QSizePolicy::Maximum,QSizePolicy::Maximum);
 
     QVBoxLayout* vl = new QVBoxLayout(scrollAreaWidget);
+
     vl->setContentsMargins(0,0,0,0);
     scrollAreaWidget->setLayout(vl);
 
     setWidget(scrollAreaWidget);
 
+    /*
+    QPushButton* b = new QPushButton("changes", scrollAreaWidget);
+    vl->addWidget(b);
+    connect(b, &QPushButton::clicked, [this](){
+       PrintMigrations();
+    });
+    */
     QVector<QSqlRecord>& records = _creature->scripts->records;
 
     for(QVector<QSqlRecord>::iterator it = records.begin(); it != records.end(); it++){
         QSqlRecord& r = *it;
-
 
         CollapsibleFrame* frame = new CollapsibleFrame(
                     "Event entry " +r.value(Tables::creature_ai_scripts::id).toString(),
@@ -393,6 +402,18 @@ CreatureEventAI::CreatureEventAI(std::shared_ptr<Tables::creature_template> crea
         //vl->setAlignment(frame, Qt::AlignTop);
     }
     adjustSize();
+}
+
+void CreatureEventAI::PrintMigrations()
+{
+    QVector<QSqlRecord>& records = _creature->scripts->originalRecords;
+    Q_ASSERT(records.size() == entryWidgets.size());
+    for(int i = 0; i < records.size(); i++)
+    {
+        EventEntry* ew = entryWidgets.at(i);
+        UpdateMigration mig(Tables::creature_ai_scripts::t, ew->record, records.at(i));
+        qDebug() << mig.toString();
+    }
 }
 
 

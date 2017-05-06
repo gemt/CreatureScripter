@@ -25,7 +25,7 @@ CollapsibleFrame::CollapsibleFrame(const QString& buttonText, const QString& lab
     //l->setContentsMargins(0,0,0,0);
     setLayout(l);
 
-    QHBoxLayout* headerLayout = new QHBoxLayout(this);
+    QHBoxLayout* headerLayout = new QHBoxLayout();
     headerLayout->setContentsMargins(0,0,0,0);
     l->addLayout(headerLayout);
     l->setAlignment(headerLayout, Qt::AlignLeft);

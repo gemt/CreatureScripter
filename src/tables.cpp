@@ -144,6 +144,7 @@ creature_ai_scripts::creature_ai_scripts(quint32 entry) :
     Table(t)
 {
     records = Query(entry, creature_ai_scripts::creature_id);
+    originalRecords = records;
 }
 
 
