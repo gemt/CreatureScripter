@@ -4,6 +4,8 @@
 #include "creature.h"
 #include "dbconnectionsettings.h"
 #include "eventaidef.h"
+#include "loadingscreen.h"
+#include "qswwrapper.h"
 
 #include <QApplication>
 #include <QSettings>
@@ -61,10 +63,16 @@ bool CheckConnectionSettings(MainWindow& mw)
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
+    LoadingScreen loadingScreen(nullptr);
+    loadingScreen.raise();
+    loadingScreen.show();
+    a.processEvents();
+
     SetStyle();
     SetAppInfo();
+    a.processEvents();
+
     MainWindow w;
-    w.show();
 
     try {
         EventAI::EventAIStorage::Get();
@@ -76,7 +84,9 @@ int main(int argc, char *argv[])
         return 1;
     }
 
-    w.InitWindow();
+    w.InitWindow(loadingScreen);
 
+    loadingScreen.finish(&w);
+    w.show();
     return a.exec();
 }

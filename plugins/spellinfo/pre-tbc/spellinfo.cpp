@@ -3,6 +3,7 @@
 #include <QBuffer>
 #include <QSet>
 #include <QDebug>
+#include "loadingscreen.h"
 
 quint8 m_locale = 0;
 EnumHash m_enums;
@@ -34,8 +35,9 @@ QMap<quint32, QString> procFlags = {
     { 0x00200000, "21 On trap activation" },
 };
 
-bool SpellInfo::init() const
+bool SpellInfo::init(LoadingScreen& ls) const
 {
+    ls.SetMessage("Loading DBC information");
     if (!SkillLine::getDbc().load())
         return false;
 
@@ -72,6 +74,8 @@ bool SpellInfo::init() const
     qDeleteAll(m_metaSpells);
     m_metaSpells.clear();
     QSet<QString> names;
+    ls.SetMessage("Loading Spells");
+    ls.InitProgress(Spell::getRecordCount());
     for (quint32 i = 0; i < Spell::getRecordCount(); ++i) {
         if (const Spell::entry* spellInfo = Spell::getRecord(i)) {
             m_metaSpells << new Spell::meta(spellInfo);
@@ -79,6 +83,7 @@ bool SpellInfo::init() const
             if (names.find(name) == names.end())
                 names << name;
         }
+        ls.setProgress(i);
     }
 
     m_names = names.toList();

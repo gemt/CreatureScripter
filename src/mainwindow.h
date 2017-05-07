@@ -6,6 +6,8 @@
 #include <vector>
 #include <QSettings>
 
+#include "loadingscreen.h"
+
 class QTableWidget;
 class QLineEdit;
 class Creature;
@@ -22,7 +24,7 @@ public:
     MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
-    void InitWindow();
+    void InitWindow(LoadingScreen& ls);
 
 private slots:
     void onNameSearch();

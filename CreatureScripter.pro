@@ -39,7 +39,8 @@ HEADERS += $$files(src/*.h) \
     src/ScriptAI/changeswidget.h \
     src/ScriptAI/widgets/boolwidget.h \
     src/ScriptAI/widgets/conditionwidget.h \
-    src/ScriptAI/widgets/eventtypewidget.h
+    src/ScriptAI/widgets/eventtypewidget.h \
+    src/loadingscreen.h
 HEADERS += $$files(src/CreatureTabs/*.h)
 HEADERS += $$files(src/ScriptAI/*.h)
 HEADERS += $$files(src/ScriptAI/widgets/*.h)
@@ -53,7 +54,8 @@ SOURCES += $$files(src/*.cpp) \
     src/ScriptAI/changeswidget.cpp \
     src/ScriptAI/widgets/boolwidget.cpp \
     src/ScriptAI/widgets/conditionwidget.cpp \
-    src/ScriptAI/widgets/eventtypewidget.cpp
+    src/ScriptAI/widgets/eventtypewidget.cpp \
+    src/loadingscreen.cpp
 SOURCES += $$files(src/CreatureTabs/*.cpp)
 SOURCES += $$files(src/ScriptAI/*.cpp)
 SOURCES += $$files(src/ScriptAI/widgets/*.cpp)

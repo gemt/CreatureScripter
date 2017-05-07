@@ -9,6 +9,7 @@ namespace Spell{
 struct entry;
 }
 extern quint8 m_locale;
+class LoadingScreen;
 class SpellInfo : public QObject, SpellInfoInterface
 {
     Q_OBJECT
@@ -17,7 +18,7 @@ class SpellInfo : public QObject, SpellInfoInterface
 
     public:
 
-        bool init() const;
+        bool init(LoadingScreen& ls) const;
 
         void setEnums(EnumHash enums);
 

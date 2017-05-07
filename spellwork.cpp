@@ -9,6 +9,7 @@
 #include "models.h"
 #include "blp/BLP.h"
 #include "mpq/MPQ.h"
+#include "loadingscreen.h"
 
 #include "mustache/mustache.h"
 
@@ -18,7 +19,7 @@ SpellWork::SpellWork(MainForm* form)
     loadPlugins();
 }
 
-void SpellWork::setActivePlugin(QString name)
+void SpellWork::setActivePlugin(QString name, LoadingScreen* ls)
 {
     m_activeSpellInfoPlugin = nullptr;
 
@@ -37,7 +38,7 @@ void SpellWork::setActivePlugin(QString name)
 
         MPQ::setMpqFiles(plugin->getMPQFiles());
 
-        if (!plugin->init()) {
+        if (!plugin->init(ls)) {
             qCritical("Plugin '%s' is not loaded!", qPrintable(name));
             QMessageBox::warning(m_form, "Warning", "Please check directories settings!", QMessageBox::StandardButton::Ok);
             return;

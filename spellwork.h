@@ -19,6 +19,7 @@ typedef QPair<QJsonObject, SpellInfoInterface*> SpellInfoPluginPair;
 typedef QHash<QString, SpellInfoPluginPair> SpellInfoPlugins;
 
 class MainForm;
+class LoadingScreen;
 class SpellWork : public QObject
 {
     Q_OBJECT
@@ -28,7 +29,7 @@ class SpellWork : public QObject
         ~SpellWork() {}
 
         void loadPlugins();
-        void setActivePlugin(QString name);
+        void setActivePlugin(QString name,LoadingScreen* ls=nullptr);
         void setActivePlugin2(QPair<QString, SpellInfoPluginPair> p);
         QPair<QString, SpellInfoPluginPair> GetActivePlugin();
 

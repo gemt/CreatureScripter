@@ -54,7 +54,7 @@ MainWindow::~MainWindow()
 
 }
 
-void MainWindow::InitWindow()
+void MainWindow::InitWindow(LoadingScreen& ls)
 {
     QSplitter* splitter = static_cast<QSplitter*>(centralWidget());
     QWidget* searchWidget = new QWidget();
@@ -74,7 +74,7 @@ void MainWindow::InitWindow()
 
 
     QSqlDatabase db = QSqlDatabase::database(settings.value("connectionName").toString());
-    searcher = new CreatureSearcher(searchWidget, db);
+    searcher = new CreatureSearcher(searchWidget, db, ls);
     bl->addWidget(searcher);
 
 
@@ -88,6 +88,9 @@ void MainWindow::InitWindow()
     splitter->setStretchFactor(0, 0);
     splitter->setStretchFactor(1, 1000);
     splitter->setContentsMargins(0,0,0,0);
+
+    ls.SetMessage("Initializing QSpellWorks");
+    QSWWrapper::Get().qsw;
 
     QMenu* menu = QMainWindow::menuBar()->addMenu("Database");
     QAction* dbAct = new QAction(QIcon(":/icons/ico/Data-Settings-48.png"), "Connection Settings");
@@ -145,7 +148,7 @@ void MainWindow::InitWindow()
             }
         });
     }
-    QSWWrapper::Get().qsw->m_sw->setActivePlugin(start_plugin);
+    QSWWrapper::Get().qsw->m_sw->setActivePlugin(start_plugin, &ls);
 }
 
 void MainWindow::onNameSearch()

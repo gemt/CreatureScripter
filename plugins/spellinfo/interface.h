@@ -9,12 +9,13 @@
 namespace Spell{
 struct entry;
 }
+class LoadingScreen;
 class SpellInfoInterface
 {
     public:
         virtual ~SpellInfoInterface() {}
 
-        virtual bool init() const = 0;
+        virtual bool init(LoadingScreen* ls) const = 0;
 
         virtual void setEnums(EnumHash enums) = 0;
 
