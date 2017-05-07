@@ -150,10 +150,6 @@ protected:
     bool filterAcceptsRow(int source_row, const QModelIndex &source_parent) const
     {
         QModelIndex index0 = sourceModel()->index(source_row, 0, source_parent);
-        QModelIndex index1 = sourceModel()->index(source_row, 1, source_parent);
-        QModelIndex index2 = sourceModel()->index(source_row, 2, source_parent);
-        QString entry = sourceModel()->data(index0, Qt::UserRole+1).toString();
-        QString nameLower = sourceModel()->data(index1, Qt::UserRole+1).toString();
         QSet<int> mapset = sourceModel()->data(index0, Qt::UserRole+2).value<QSet<int>>();
         bool inmap = false;
         for(int i = 0; i < maps.size(); i++){
@@ -164,8 +160,9 @@ protected:
         }
         if(!inmap) return false;
 
-        return sourceModel()->data(index0).toString().contains(entry)
-                || sourceModel()->data(index1).toString().contains(nameLower);
+        QString entry = sourceModel()->data(index0, Qt::UserRole+1).toString();
+        QString nameLower = sourceModel()->data(sourceModel()->index(source_row, 1, source_parent), Qt::UserRole+1).toString();
+        return entry.contains(nameFilt) || nameLower.contains(nameFilt);
 
 
     }
