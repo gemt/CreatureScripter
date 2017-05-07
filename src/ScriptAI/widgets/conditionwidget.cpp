@@ -11,13 +11,19 @@ ConditionWidget::ConditionWidget(MangosRecord &r, const QString &field, QWidget 
       verbose(verbose)
 {
     using namespace EventAI;
-
+    setContentsMargins(0,0,0,0);
     QVBoxLayout* l = new QVBoxLayout(this);
+    l->setContentsMargins(5,0,0,5);
     bool ok;
     int currVal = record.value(fieldName).toInt(&ok);
     Q_ASSERT(ok);
 
-    l->addWidget(new QLabel("Condition"));
+    QLabel* lbl = new QLabel("Condition");
+    QFont f = lbl->font();
+    f.setUnderline(true);
+    lbl->setFont(f);
+    lbl->setContentsMargins(0,0,0,0);
+    l->addWidget(lbl);
 
     QComboBox* comboBox = new QComboBox(this);
     l->addWidget(comboBox);
