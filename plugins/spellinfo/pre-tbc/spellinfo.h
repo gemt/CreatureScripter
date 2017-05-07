@@ -18,7 +18,7 @@ class SpellInfo : public QObject, SpellInfoInterface
 
     public:
 
-        bool init(LoadingScreen& ls) const;
+        bool init(LoadingScreen* ls) const;
 
         void setEnums(EnumHash enums);
 

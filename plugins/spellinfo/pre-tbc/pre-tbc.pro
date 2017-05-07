@@ -1,11 +1,13 @@
+QT += core widgets gui
 TEMPLATE        = lib
 CONFIG         += plugin
 HEADERS         = spellinfo.h \
-    structure.h
+    structure.h \
+    ..\..\..\src\loadingscreen.h
 SOURCES         = spellinfo.cpp \
-    structure.cpp
+    structure.cpp \
+    ..\..\..\src\loadingscreen.cpp
 TARGET          = pre-tbc
-
 defineTest(copyToDestdir) {
     files = $$1
 
