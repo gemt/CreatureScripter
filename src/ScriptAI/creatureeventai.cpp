@@ -6,6 +6,7 @@
 #include "collapsableframe.h"
 #include "flagswidget.h"
 #include "migration.h"
+#include "warnings.h"
 
 #include <QSqlRecord>
 #include <QFormLayout>
@@ -46,7 +47,16 @@ EventEntry::EventEntry(MangosRecord &record, QWidget* parent) :
     setMouseTracking(true);
     setContentsMargins(0,0,0,0);
     Q_ASSERT(record.count() == Tables::creature_ai_scripts::num_cols);
-    Remake();
+    DoRemake();
+}
+
+void EventEntry::DoRemake()
+{
+    try{
+        Remake();
+    }catch(std::exception& e){
+        Warnings::Warning(e.what());
+    }
 }
 
 void EventEntry::Remake()
@@ -91,13 +101,52 @@ void EventEntry::Remake()
         AddWidget(w, mainLayout->rowCount()-1,paramColOffset++, 1, 1);
 
         // Adding event parameters
+        int event_param = 1;
         for(int i = 0; i < 4; i++){
             if(i >= event.params.size()){
                 w = new QWidget(this);
+                AddWidget(w, mainLayout->rowCount()-1,paramColOffset++, 1, 1);
             }else{
-                w = CreateParameterWidget(event.params.at(i), record, Tables::creature_ai_scripts::event_paramN(i+1), this, verbose);
+                if(event.params.at(i).type == CONDITION){
+                    if(event.params.size() < i+3)
+                        throw std::logic_error("Event type Condition requires 3 fields. Only " + std::to_string(4-i) + " available.");
+                    if(event.params.at(i+1).type != COND_VAL1 || event.params.at(i+2).type != COND_VAL2) {
+                        throw std::logic_error("Event type Condition, but following 2 fields were types: "
+                                               + std::to_string(event.params.at(i+1).type) + ", "
+                                               + std::to_string(event.params.at(i+2).type));
+                    }
+                    bool ok;
+                    int cond = record.value(Tables::creature_ai_scripts::event_paramN(event_param++)).toInt(&ok);
+                    Q_ASSERT(ok);
+                    //w = CreateConditionWidget(event.params.at(i), record, Tables::creature_ai_scripts::event_paramN(event_param++), this, verbose);
+                    w = CreateConditionWidget(record, Tables::creature_ai_scripts::event_paramN(event_param), {}, this, verbose);
+                    AddWidget(w, mainLayout->rowCount()-1,paramColOffset++, 1, 1);
+                    foreach(const Condition& c, Conditions){
+                        if(c.id != cond) continue;
+                        for(int j = 0; j < c.params.size(); j++){
+                            const Parameter& p = c.params.at(j);
+                            w = CreateParameterWidget(p, record,
+                                                                        Tables::creature_ai_scripts::event_paramN(event_param++),
+                                                                        this, verbose);
+                            AddWidget(w, mainLayout->rowCount()-1,paramColOffset++, 1, 1);
+                            i++;
+                        }
+                        break;
+                    }
+                    /*
+                    //QString condFieldName = Tables::creature_ai_scripts::event_paramN(event_param++);
+                    QVector<QString> condKeys={
+                        {Tables::creature_ai_scripts::event_paramN(event_param++)},
+                        {Tables::creature_ai_scripts::event_paramN(event_param++)}
+                    };
+                    w = CreateConditionWidget(record, condFieldName, condKeys, this, verbose);
+                    i += 2; // skipping 2 forward as we already used them
+                    */
+                }else{
+                    w = CreateParameterWidget(event.params.at(i), record, Tables::creature_ai_scripts::event_paramN(event_param++), this, verbose);
+                    AddWidget(w, mainLayout->rowCount()-1,paramColOffset++, 1, 1);
+                }
             }
-            AddWidget(w, mainLayout->rowCount()-1,paramColOffset++, 1, 1);
         }
     }
 
@@ -156,7 +205,7 @@ void EventEntry::onDoRemakeFromEvent(int i)
     bool ok;
     record.setValue(Tables::creature_ai_scripts::event_type, currentEventType->itemData(i).toInt(&ok));
     Q_ASSERT(ok);
-    Remake();
+    DoRemake();
 }
 
 void EventEntry::onDoRemakeFromAction1(int i)
@@ -164,7 +213,7 @@ void EventEntry::onDoRemakeFromAction1(int i)
     bool ok;
     record.setValue(Tables::creature_ai_scripts::action1_type, currentActionTypes[0]->itemData(i).toInt(&ok));
     Q_ASSERT(ok);
-    Remake();
+    DoRemake();
 }
 
 void EventEntry::onDoRemakeFromAction2(int i)
@@ -172,7 +221,7 @@ void EventEntry::onDoRemakeFromAction2(int i)
     bool ok;
     record.setValue(Tables::creature_ai_scripts::action2_type, currentActionTypes[1]->itemData(i).toInt(&ok));
     Q_ASSERT(ok);
-    Remake();
+    DoRemake();
 }
 
 void EventEntry::onDoRemakeFromAction3(int i)
@@ -180,7 +229,7 @@ void EventEntry::onDoRemakeFromAction3(int i)
     bool ok;
     record.setValue(Tables::creature_ai_scripts::action3_type, currentActionTypes[2]->itemData(i).toInt(&ok));
     Q_ASSERT(ok);
-    Remake();
+    DoRemake();
 }
 
 void EventEntry::paintEvent(QPaintEvent* e)
@@ -377,7 +426,7 @@ CreatureEventAI::CreatureEventAI(std::shared_ptr<Tables::creature_template> crea
 
     for(QVector<MangosRecord>::iterator it = records.begin(); it != records.end(); it++){
         MangosRecord& r = *it;
-
+        try{
         CollapsibleFrame* frame = new CollapsibleFrame(
                     "Event entry " +r.value(Tables::creature_ai_scripts::id).toString(),
                     r.value(Tables::creature_ai_scripts::comment).toString(),
@@ -386,6 +435,10 @@ CreatureEventAI::CreatureEventAI(std::shared_ptr<Tables::creature_template> crea
         frame->SetWidget(ew);
         vl->addWidget(frame, 0, Qt::AlignTop|Qt::AlignLeft);
         entryWidgets.push_back(ew);
+        }catch(std::exception& e){
+            Warnings::Warning(e.what());
+        }
+
         //vl->setAlignment(frame, Qt::AlignTop);
     }
     adjustSize();

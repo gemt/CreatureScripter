@@ -31,9 +31,9 @@ public:
 
     MangosRecord& record;
     bool verbose = false;
-    void Remake();
-
+    void DoRemake();
 private:
+    void Remake();
     QVector<QWidget*> widgets;
 
     QGridLayout* mainLayout;

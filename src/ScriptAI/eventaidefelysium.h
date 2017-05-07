@@ -142,6 +142,10 @@ TypeValue{0, /*SPAWNED_EVENT_*/  "ALWAYS", ""},
 TypeValue{1, /*"SPAWNED_EVENT_*/ "MAP",    ""},
 TypeValue{2, /*"SPAWNED_EVENT_*/ "ZONE",   ""}
 };
+
+
+
+
 /*
 static const QMap<int,EventAI_event> event_map =
 {

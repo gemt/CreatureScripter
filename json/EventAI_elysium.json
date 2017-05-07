@@ -150,7 +150,23 @@
             "type" : 21,
             "name" : "QuestId",
             "desc" : ""
+        },
+        {
+            "type" : 52,
+            "name" : "CondVal1",
+            "desc" : ""
+        },
+        {
+            "type" : 53,
+            "name" : "CondVal2",
+            "desc" : ""
+        },
+        {
+            "type" : 54,
+            "name" : "CondVal3",
+            "desc" : ""
         }
+
 	],
 				
 	"events": [
@@ -226,6 +242,7 @@
 			"d1" 	: "Expires on the NPC's Death. (This Triggers At The Moment The NPC Dies).",
 			"t"		: "BOTH",
 			"params":[
+                "Condition"
 			]
 		},
 		{
@@ -391,7 +408,10 @@
 			"d1" 	: "Expires when a creature receives an emote with emote text id (enum TextEmotes from SharedDefines.h in Mangos Source) in (Param1). Conditions can be defined (Param2) with optional values (Param3,Param4), see (enum ConditionType) in ObjectMgr.h (Mangos Source).",
 			"params":[
 				"EmoteId",
-				"Condition"
+                "Condition",
+                "CondVal1",
+                "CondVal2",
+                "CondVal3"
 			]
 		},
 		{

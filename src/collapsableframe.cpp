@@ -52,7 +52,7 @@ CollapsibleFrame::CollapsibleFrame(const QString& buttonText, const QString& lab
     connect(verboseBtn, &QPushButton::clicked, [this](){
         Q_ASSERT(_w);
         _w->verbose = !_w->verbose;
-        _w->Remake();
+        _w->DoRemake();
     });
 }
 

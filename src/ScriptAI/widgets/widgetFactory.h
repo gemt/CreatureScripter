@@ -18,6 +18,14 @@
 #include "clickablewidget.h"
 #include "inversephasemaskwidget.h"
 #include "boolwidget.h"
+#include "conditionwidget.h"
+
+static QWidget* CreateConditionWidget(MangosRecord& r, const QString& field,
+                                      const QVector<QString>& condValKeys,
+                                      QWidget* parent, bool verbose)
+{
+    return new ConditionWidget(r, field, condValKeys, parent, verbose);
+}
 
 static QWidget* CreateParameterWidget(const EventAI::Parameter& param, MangosRecord& record,
                                       const QString& field, QWidget* parent, bool verbose){
@@ -81,6 +89,21 @@ static QWidget* CreateParameterWidget(const EventAI::Parameter& param, MangosRec
     case EventAI::BOOL:
         rw = new boolWidget(record, field, param, w);
         break;
+    case EventAI::GENDER:
+        rw = new TypeValueWidget(EventAI::Genders, record, field, w);
+        break;
+    case EventAI::DEAD_GRP:
+        rw = new TypeValueWidget(EventAI::DeadState, record, field, w);
+        break;
+    case EventAI::ELG:
+        rw = new TypeValueWidget(EventAI::ExactLesserEqualGreater, record, field, w);
+        break;
+    case EventAI::EFFECT_INDEX:
+        rw = new TypeValueWidget(EventAI::EffectIndex, record, field, w);
+        break;
+    case EventAI::REPUTATION_RANK:
+        rw = new TypeValueWidget(EventAI::ReputationRank, record, field, w);
+        break;
     case EventAI::MAP_AREA_ID: //map id or area id
     case EventAI::UNUSED:
     case EventAI::DISTANCE:
@@ -90,7 +113,6 @@ static QWidget* CreateParameterWidget(const EventAI::Parameter& param, MangosRec
     case EventAI::EVENT_TYPE:
     case EventAI::DISPELL_TYPE:
     case EventAI::CREATURE_ID:
-    case EventAI::CONDITION:
     case EventAI::TEXT_ID:
     case EventAI::FACTION_ID:
     case EventAI::MODEL_ID:
@@ -104,9 +126,19 @@ static QWidget* CreateParameterWidget(const EventAI::Parameter& param, MangosRec
     case EventAI::CREATURE_TEMPLATE_ID:
     case EventAI::RADIUS:
     case EventAI::CHANCE:
-
+    case EventAI::ITEM_ID:
+    case EventAI::LEVEL:
+    case EventAI::HOLLYDAY_ID:
+    case EventAI::WAYPOINT_ID:
+    case EventAI::SKILL:
+    case EventAI::SKILL_LEVEL:
+    case EventAI::RACE_MASK:
+    case EventAI::CLASS_MASK:
+    case EventAI::AREA_FLAG:
+    case EventAI::ZONE_OR_MAP_ID:
         rw = new DefaultLineEdit(record, field, param, w);
         break;
+
     ///////////////////
     case EventAI::EVENT_FLAGS:
         rw = new FlagsWidget(EventAI::EventFlags, record, field, w, verbose);
@@ -114,6 +146,14 @@ static QWidget* CreateParameterWidget(const EventAI::Parameter& param, MangosRec
     case EventAI::EVENT_PHASE_MASK:
         rw = new InversePhaseMaskWidget(record, field, w, verbose);
         break;
+
+    case EventAI::CONDITION:
+    case EventAI::COND_VAL1:
+    case EventAI::COND_VAL2:
+        throw std::logic_error("Condition in CreateParameterWidget. Should be in CreateConditionWidget");
+
+    default:
+        throw std::logic_error("CreateParameterWidget unhandled EventAI ParamType: " + std::to_string(param.type));
     }
     Q_ASSERT(rw);
     l->addWidget(rw);

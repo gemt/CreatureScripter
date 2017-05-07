@@ -16,6 +16,15 @@ DefaultLineEdit::DefaultLineEdit(MangosRecord &r, const QString fieldName, const
 void DefaultLineEdit::onTextChange(const QString &newText)
 {
     bool ok;
-    record.setValue(rIdx, newText.toInt(&ok));
-    Q_ASSERT(ok);
+    int val = newText.toInt(&ok);
+    if(!ok) {
+        QPalette pal = palette();
+        pal.setBrush(QPalette::Base, QColor(Qt::red));
+        setPalette(pal);
+    }else{
+        setPalette(QPalette());
+        setFont(QFont());
+        record.setValue(rIdx, val);
+
+    }
 }
