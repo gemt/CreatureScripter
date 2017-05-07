@@ -70,6 +70,7 @@ struct creature_template : public Table{
     static const QString modelid_3;
     static const QString modelid_4;
     static const QString equipment_id;
+    static const QString AIName;
     creature_template(quint32 entry);
     MangosRecord record;
 

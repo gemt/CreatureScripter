@@ -20,6 +20,7 @@ const QString creature_template::modelid_2 = "modelid_2";
 const QString creature_template::modelid_3 = "modelid_3";
 const QString creature_template::modelid_4 = "modelid_4";
 const QString creature_template::equipment_id = "equipment_id";
+const QString creature_template::AIName = "AIName";
 
 const QString creature_template_addon::t = "creature_template_addon";
 const QString creature_template_addon::entry = "entry";
