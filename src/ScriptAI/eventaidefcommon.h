@@ -118,6 +118,12 @@ static const QString short_phasemask_tooltip =
         " inverse phase-mask in the core, meaning you need to uncheck phases where"
         " the event should NOT be active.";
 
+static const QVector<TypeValue> Team =
+{
+    TypeValue{469, "Alliance", ""},
+    TypeValue{67,  "Horde", ""}
+};
+
 static const QVector<TypeValue> ReputationRank =
 {
     TypeValue{0, "HATED",       ""},
@@ -181,22 +187,32 @@ static const QVector<Condition> Conditions = {
     Condition{-2,  "OR"                             ,{{CONDITION,   "cond-id-1", ""},{CONDITION, "cond-id-2", ""},  "returns cond-id-1 OR cond-id-2"},
     Condition{-1,  "AND"                            ,{{CONDITION,   "cond-id-1", ""},{CONDITION, "cond-id-2", ""},  "returns cond-id-1 AND cond-id-2"},
    */
-    Condition{ 0,  "NONE"                           ,{}, "Always true"},
-    Condition{ 1,  "AURA"                           ,{{SPELL_ID,    "spell_id", ""}, {EFFECT_INDEX, "effindex", ""}}, "True when player has aura (spell_id) on effect_index"},
-    Condition{ 2,  "ITEM"                           ,{{ITEM_ID,     "item_id", ""}, {NUMBER, "count", ""}},"check present req. amount items in inventory"},
-    Condition{ 3,  "ITEM_EQUIPPED"                  ,{{ITEM_ID,     "item_id", ""}}, "True when item_id is equipped"},
-    Condition{ 4,  "AREAID"                         ,{{ZONE_OR_MAP_ID, "area_id", "Zone or Map ID"}, {BOOL, "bool", "false: in (sub)area, 1: not in (sub)area)"}}, ""},
-    Condition{ 5,  "REPUTATION_RANK_MIN"            ,{{FACTION_ID,  "faction_id", ""}, {REPUTATION_RANK, "min_rank", ""}}, ""},
-    Condition{ 6,  "TEAM"                           ,{{TEAM,        "player_team", ""}}, "(469 - Alliance 67 - Horde)"},
-    Condition{ 7,  "SKILL"                          ,{{SKILL, "skill_id", ""}, {SKILL_LEVEL, "skill_value", ""}}, ""},
-    Condition{ 8,  "QUESTREWARDED"                  ,{{QUEST_ID,    "quest_id", ""}}, ""},
-    Condition{ 9,  "QUESTTAKEN"                     ,{{QUEST_ID,    "quest_id", ""}, {NUMBER,"0,1,2", ""}},"for condition true while quest active (0 any state, 1 if quest incomplete, 2 if quest completed)."},
+    Condition{ 0,  "NONE"                           ,{},
+               "Always true"},
+    Condition{ 1,  "AURA"                           ,{{SPELL_ID,    "spell_id", ""}, {EFFECT_INDEX, "effindex", ""}},
+               "True when player has aura (spell_id) on effect_index"},
+    Condition{ 2,  "ITEM"                           ,{{ITEM_ID,     "item_id", ""}, {NUMBER, "count", ""}},
+               "check present req. amount items in inventory"},
+    Condition{ 3,  "ITEM_EQUIPPED"                  ,{{ITEM_ID,     "item_id", ""}},
+               "True when item_id is equipped"},
+    Condition{ 4,  "AREAID"                         ,{{ZONE_OR_MAP_ID, "area_id", "Zone or Map ID"}, {BOOL, "bool", ""}},
+               "false: in (sub)area, 1: not in (sub)area)"},
+    Condition{ 5,  "REPUTATION_RANK_MIN"            ,{{FACTION_ID,  "faction_id", ""}, {REPUTATION_RANK, "min_rank", ""}},
+               "True when factio_id reputation rank is minimum min_rank"},
+    Condition{ 6,  "TEAM"                           ,{{TEAM,        "player_team", ""}},
+               "(469 - Alliance 67 - Horde)"},
+    Condition{ 7,  "SKILL"                          ,{{SKILL, "skill_id", ""}, {SKILL_LEVEL, "skill_value", ""}},
+               "True when skill_id is at least skill_value"},
+    Condition{ 8,  "QUESTREWARDED"                  ,{{QUEST_ID,    "quest_id", ""}},
+               "True when quest_id is rewarded"},
+    Condition{ 9,  "QUESTTAKEN"                     ,{{QUEST_ID,    "quest_id", ""}, {NUMBER,"0,1,2", ""}},
+               "for condition true while quest active (0 any state, 1 if quest incomplete, 2 if quest completed)."},
+    Condition{ 12, "ACTIVE_GAME_EVENT"              ,{{EVENT_TYPE,  "event_id", ""}},
+               "True when event_id is active"}
+
     /*
     Condition{ 10, "AD_COMMISSION_AURA"             ,{{NUMBER, "0", ""}, {NUMBER, "0", ""}}, "for condition true while one from AD commission aura active"},
     Condition{ 11, "NO_AURA"                        ,{{SPELL_ID,    "spell_id", ""},{EFFECT_INDEX, "effindex", ""}}, "True when player does not have the given aura"},
-    */
-    Condition{ 12, "ACTIVE_GAME_EVENT"              ,{{EVENT_TYPE,  "event_id", ""}}, ""}
-    /*
     Condition{ 13, "AREA_FLAG"                      ,{{AREA_FLAG, "area_flag", ""},{AREA_FLAG, "area_flag_not", ""}}, ""},
     Condition{ 14, "RACE_CLASS"                     ,{{RACE_MASK, "race_mask", ""}, {CLASS_MASK, "class_mask", ""}}, ""},
     Condition{ 15, "LEVEL"                          ,{{LEVEL,       "player_level", ""}, {ELG, "Condition", "0, 1 or 2 (0: equal to, 1: equal or higher than, 2: equal or less than)"}}, ""},
@@ -224,7 +240,17 @@ static const QVector<Condition> Conditions = {
         //Condition{ 31, "CONDITION_RESERVED_3"           ,{{"reserved for"        3.x and later
         //Condition{ 34, "CONDITION_RESERVED_4"           ,{{"reserved for"        3.x and later
 
+static const Condition& GetCondition(int num){
+    // Will be the case for all except num==12 atm
+    if(Conditions.size() >= num && Conditions.at(num).id == num)
+        return Conditions.at(num);
 
+    // sucks, but quickfix for num==12
+    for(int i = 0; i < Conditions.size(); i++){
+        if(Conditions.at(i).id == num)
+            return Conditions.at(i);
+    }
+}
 } // EventAI
 
 #endif // EVENTAIDEFCOMMON_H

@@ -19,13 +19,7 @@
 #include "inversephasemaskwidget.h"
 #include "boolwidget.h"
 #include "conditionwidget.h"
-
-static QWidget* CreateConditionWidget(MangosRecord& r, const QString& field,
-                                      const QVector<QString>& condValKeys,
-                                      QWidget* parent, bool verbose)
-{
-    return new ConditionWidget(r, field, condValKeys, parent, verbose);
-}
+#include "eventtypewidget.h"
 
 static QWidget* CreateParameterWidget(const EventAI::Parameter& param, MangosRecord& record,
                                       const QString& field, QWidget* parent, bool verbose){
@@ -104,13 +98,18 @@ static QWidget* CreateParameterWidget(const EventAI::Parameter& param, MangosRec
     case EventAI::REPUTATION_RANK:
         rw = new TypeValueWidget(EventAI::ReputationRank, record, field, w);
         break;
+    case EventAI::TEAM:
+        rw = new TypeValueWidget(EventAI::Team, record, field, w);
+        break;
+    case EventAI::EVENT_TYPE:
+        rw = new EventTypeWidget(record, field, parent, verbose);
+        break;
     case EventAI::MAP_AREA_ID: //map id or area id
     case EventAI::UNUSED:
     case EventAI::DISTANCE:
     case EventAI::HP:
     case EventAI::NUMBER:
     case EventAI::EMOTE_ID:
-    case EventAI::EVENT_TYPE:
     case EventAI::DISPELL_TYPE:
     case EventAI::CREATURE_ID:
     case EventAI::TEXT_ID:
@@ -122,7 +121,6 @@ static QWidget* CreateParameterWidget(const EventAI::Parameter& param, MangosRec
     case EventAI::PHASE:
     case EventAI::ANGLE:
     case EventAI::SUMMON_ID:
-    case EventAI::TEAM:
     case EventAI::CREATURE_TEMPLATE_ID:
     case EventAI::RADIUS:
     case EventAI::CHANCE:
@@ -150,7 +148,7 @@ static QWidget* CreateParameterWidget(const EventAI::Parameter& param, MangosRec
     case EventAI::CONDITION:
     case EventAI::COND_VAL1:
     case EventAI::COND_VAL2:
-        throw std::logic_error("Condition in CreateParameterWidget. Should be in CreateConditionWidget");
+        throw std::logic_error("Condition in CreateParameterWidget. Should be handled directly in EventEntry::AddConditionWidget");
 
     default:
         throw std::logic_error("CreateParameterWidget unhandled EventAI ParamType: " + std::to_string(param.type));

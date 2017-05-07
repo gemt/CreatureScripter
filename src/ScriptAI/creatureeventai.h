@@ -31,9 +31,13 @@ public:
 
     MangosRecord& record;
     bool verbose = false;
+
+public slots:
     void DoRemake();
+
 private:
     void Remake();
+    void AddConditionWidget(const EventAI_event& event, int& paramColOffset, int& i, int& event_param);
     QVector<QWidget*> widgets;
 
     QGridLayout* mainLayout;

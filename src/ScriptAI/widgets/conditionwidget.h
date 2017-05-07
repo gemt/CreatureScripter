@@ -3,17 +3,20 @@
 #include "eventaidef.h"
 #include "mangosrecord.h"
 
-#include <QWidget>
+#include <QComboBox>
 class QGridLayout;
 class ConditionWidget : public QWidget
 {
+    Q_OBJECT
 public:
-    ConditionWidget(MangosRecord& r, const QString& field,const QVector<QString>& condValKeys,QWidget* parent, bool verbose);
+    ConditionWidget(MangosRecord& r, const QString& field, QWidget* parent, bool verbose);
+signals:
+    void ConditionChanged();
+
 private:
     QGridLayout* mainLayout;
     MangosRecord& record;
     const QString fieldName;
-    const QVector<QString> condValKeys;
     bool verbose;
 };
 

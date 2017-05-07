@@ -107,41 +107,10 @@ void EventEntry::Remake()
                 w = new QWidget(this);
                 AddWidget(w, mainLayout->rowCount()-1,paramColOffset++, 1, 1);
             }else{
+                // Special case for parameters of CONDITION type, as the following parameters
+                // will depend on the type of condition
                 if(event.params.at(i).type == CONDITION){
-                    if(event.params.size() < i+3)
-                        throw std::logic_error("Event type Condition requires 3 fields. Only " + std::to_string(4-i) + " available.");
-                    if(event.params.at(i+1).type != COND_VAL1 || event.params.at(i+2).type != COND_VAL2) {
-                        throw std::logic_error("Event type Condition, but following 2 fields were types: "
-                                               + std::to_string(event.params.at(i+1).type) + ", "
-                                               + std::to_string(event.params.at(i+2).type));
-                    }
-                    bool ok;
-                    int cond = record.value(Tables::creature_ai_scripts::event_paramN(event_param++)).toInt(&ok);
-                    Q_ASSERT(ok);
-                    //w = CreateConditionWidget(event.params.at(i), record, Tables::creature_ai_scripts::event_paramN(event_param++), this, verbose);
-                    w = CreateConditionWidget(record, Tables::creature_ai_scripts::event_paramN(event_param), {}, this, verbose);
-                    AddWidget(w, mainLayout->rowCount()-1,paramColOffset++, 1, 1);
-                    foreach(const Condition& c, Conditions){
-                        if(c.id != cond) continue;
-                        for(int j = 0; j < c.params.size(); j++){
-                            const Parameter& p = c.params.at(j);
-                            w = CreateParameterWidget(p, record,
-                                                                        Tables::creature_ai_scripts::event_paramN(event_param++),
-                                                                        this, verbose);
-                            AddWidget(w, mainLayout->rowCount()-1,paramColOffset++, 1, 1);
-                            i++;
-                        }
-                        break;
-                    }
-                    /*
-                    //QString condFieldName = Tables::creature_ai_scripts::event_paramN(event_param++);
-                    QVector<QString> condKeys={
-                        {Tables::creature_ai_scripts::event_paramN(event_param++)},
-                        {Tables::creature_ai_scripts::event_paramN(event_param++)}
-                    };
-                    w = CreateConditionWidget(record, condFieldName, condKeys, this, verbose);
-                    i += 2; // skipping 2 forward as we already used them
-                    */
+                    AddConditionWidget(event, paramColOffset, i, event_param);
                 }else{
                     w = CreateParameterWidget(event.params.at(i), record, Tables::creature_ai_scripts::event_paramN(event_param++), this, verbose);
                     AddWidget(w, mainLayout->rowCount()-1,paramColOffset++, 1, 1);
@@ -188,6 +157,39 @@ void EventEntry::Remake()
     }
     adjustSize();
     updateGeometry();
+}
+
+void EventEntry::AddConditionWidget(const EventAI_event& event, int& paramColOffset, int& i, int& event_param)
+{
+    if(event.params.size() < i+3)
+        throw std::logic_error("Event type Condition requires 3 fields. Only " + std::to_string(4-i) + " available.");
+    if(event.params.at(i+1).type != COND_VAL1 || event.params.at(i+2).type != COND_VAL2) {
+        throw std::logic_error("Event type Condition, but following 2 fields were types: "
+                               + std::to_string(event.params.at(i+1).type) + ", "
+                               + std::to_string(event.params.at(i+2).type));
+    }
+    const QString ep_cond = Tables::creature_ai_scripts::event_paramN(event_param++);
+    const QString ep_condvals[2] = {Tables::creature_ai_scripts::event_paramN(event_param++),
+                                    Tables::creature_ai_scripts::event_paramN(event_param++)};
+    ConditionWidget* condWidg = new ConditionWidget(record, ep_cond, this, verbose);
+    AddWidget(condWidg, mainLayout->rowCount()-1,paramColOffset++, 1, 1);
+    connect(condWidg, &ConditionWidget::ConditionChanged, this, &EventEntry::DoRemake, Qt::DirectConnection);
+
+    bool ok;
+    QWidget* w = nullptr;
+    int currentCondition = record.value(ep_cond).toInt(&ok);
+    Q_ASSERT(ok);
+    const Condition& condition = GetCondition(currentCondition);
+    for(int j = 0; j < 2; j++){
+        if(j >= condition.params.size()){
+            w = new QWidget(this); // empty widget if condition requires less than 2 params
+        }else{
+            const Parameter& p = condition.params.at(j);
+            w = CreateParameterWidget(p, record, ep_condvals[j],this, verbose);
+        }
+        AddWidget(w, mainLayout->rowCount()-1,paramColOffset++, 1, 1);
+        i++;
+    }
 }
 
 void EventEntry::AddWidget(QWidget *w, int r, int c, int nr, int nc)

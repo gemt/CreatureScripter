@@ -1,36 +1,42 @@
 #include "conditionwidget.h"
 #include "widgetFactory.h"
 
-#include <QGridLayout>
+#include <QVBoxLayout>
 #include <QLabel>
-ConditionWidget::ConditionWidget(MangosRecord &r, const QString &field, const QVector<QString> &condValKeys, QWidget *parent, bool verbose)
+
+ConditionWidget::ConditionWidget(MangosRecord &r, const QString &field, QWidget *parent, bool verbose)
     : QWidget(parent),
       record(r),
       fieldName(field),
-      condValKeys(condValKeys),
       verbose(verbose)
 {
     using namespace EventAI;
-    mainLayout = new QGridLayout(this);
 
+    QVBoxLayout* l = new QVBoxLayout(this);
     bool ok;
-    int cond = r.value(field).toInt(&ok);
+    int currVal = record.value(fieldName).toInt(&ok);
     Q_ASSERT(ok);
 
-    // XXX: placeholder
+    l->addWidget(new QLabel("Condition"));
+
+    QComboBox* comboBox = new QComboBox(this);
+    l->addWidget(comboBox);
+    int vIdx = 0;
     foreach(const Condition& c, Conditions){
-        if(c.id != cond) continue;
-        setToolTip(c.description);
-
-        mainLayout->addWidget(new QLabel(c.name,this), 0, 0, 1, 1, Qt::AlignTop|Qt::AlignLeft);
-
-        /*
-        for(int i = 0; i < c.params.size(); i++){
-            const Parameter& p = c.params.at(i);
-            QWidget* condWidget = CreateParameterWidget(p, r, condValKeys.at(i), this, verbose);
-            mainLayout->addWidget(condWidget, 0, 1+i, 1, 1, Qt::AlignLeft|Qt::AlignTop);
+        comboBox->addItem(c.name, c.id);
+        if(c.id == currVal){
+            comboBox->setCurrentIndex(vIdx);
+            comboBox->setToolTip(c.description);
         }
-        */
-        break;
+        vIdx++;
     }
+
+    connect(comboBox, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
+            [this, comboBox](int){
+        bool ok;
+        int currentVal = comboBox->currentData().toInt(&ok);
+        Q_ASSERT(ok);
+        record.setValue(fieldName, currentVal);
+        emit ConditionChanged();
+    });
 }
