@@ -120,7 +120,6 @@ const QString CreatureSearcherModel::nameAndMapQ =
 struct CreatureModelCreature {
     CreatureModelCreature()
     {
-
     }
 
     int entry;
@@ -140,8 +139,9 @@ public:
 class ProxyModel : public QSortFilterProxyModel
 {
 public:
-    ProxyModel(QWidget* parent){
-
+    ProxyModel(QWidget* parent)
+        :QSortFilterProxyModel(parent)
+    {
     }
     QString nameFilt;
     QVector<int> maps;
@@ -196,27 +196,20 @@ CreatureSearcher::CreatureSearcher(QWidget *parent, const QSqlDatabase &db, Load
         model->setItem(rowc, 2, aiItem);
         rowc++;
     }
-/*
-    foreach(QStandardItem* cmc, creatureslst){
-        QList<QStandardItem*> lst;
-        lst.push_back(cmc);
-        model->appendRow(lst);
-
-    }
-*/
+    model->setHorizontalHeaderLabels(QStringList{"Entry", "Name", "AI type"});
     proxyModel = new ProxyModel(this);
     proxyModel->setSourceModel(model);
     setModel(proxyModel);
     horizontalHeader()->setStretchLastSection(true);
     verticalHeader()->hide();
     connect(this, &QTableView::clicked, this, &CreatureSearcher::onActivated);
+    SetZoneFilter("");
 }
 
 void CreatureSearcher::Search(const QString &s)
 {
     proxyModel->nameFilt = s.toLower();
     proxyModel->setFilterRegExp("");
-    //model->Search(s);
 }
 
 void CreatureSearcher::SetZoneFilter(const QString &s)
