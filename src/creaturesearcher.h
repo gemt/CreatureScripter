@@ -7,11 +7,12 @@
 
 #include "loadingscreen.h"
 
-class CreatureSearchModel2;
+class QStandardItemModel;
 class Creature;
 class CreatureModelCreature;
 class QSqlDatabase;
-
+class QStandardItem;
+class ProxyModel;
 class CreatureSearcher : public QTableView
 {
     Q_OBJECT
@@ -27,8 +28,10 @@ private slots:
     void onActivated(const QModelIndex& idx);
 
 private:
-    CreatureSearchModel2* model;
-    QMap<int,CreatureModelCreature> creatures;
+    QStandardItemModel* model;
+    ProxyModel* proxyModel;
+    QMap<int,CreatureModelCreature*> creatures;
+    QList<CreatureModelCreature*> creatureslst;
     void Load(LoadingScreen& ls);
 };
 

@@ -9,6 +9,8 @@ LoadingScreen::LoadingScreen(QApplication *app, QWidget *parent)
     : QSplashScreen(parent),
       app(app)
 {
+    setWindowFlags(Qt::WindowStaysOnTopHint);
+    setWindowFlags(Qt::FramelessWindowHint);
     QRect r = QApplication::desktop()->screenGeometry();
     resize(r.width()/4, r.height()/4);
     window()->setGeometry(QStyle::alignedRect(Qt::LeftToRight,Qt::AlignCenter,window()->size(),

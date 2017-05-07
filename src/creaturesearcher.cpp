@@ -19,6 +19,9 @@
 #include <QStandardItemModel>
 #include <QSet>
 #include <QVector>
+#include <QStandardItem>
+#include <QSortFilterProxyModel>
+#include <QTableWidget>
 
 class CreatureSearcherModel : public QSqlQueryModel
 {
@@ -114,32 +117,58 @@ const QString CreatureSearcherModel::nameAndMapQ =
         " INNER JOIN %4 ON %6.%9=%4.%10"
         " WHERE (%1.%3 LIKE _@NAMEFILTER@_ OR %1.%2 LIKE _@NAMEFILTER@_) AND %4.%8 IN (%11)";
 
-struct CreatureModelCreature{
+struct CreatureModelCreature {
+    CreatureModelCreature()
+    {
+
+    }
+
     int entry;
     QString name;
     QSet<int> maps;
     QString aiType;
+
+    // QStandardItem interface
+public:
+    QVariant data(int role) const{
+        //QStandardItem::data(role);
+        return QString("%1 %2").arg(entry, -6, 10).arg(name);
+    }
 };
 
-class CreatureSearchModel2 : public QStandardItemModel
+
+class ProxyModel : public QSortFilterProxyModel
 {
 public:
-    CreatureSearchModel2(QWidget* parent)
-        :QStandardItemModel(parent)
+    ProxyModel(QWidget* parent){
+
+    }
+    QString nameFilt;
+    QVector<int> maps;
+
+protected:
+    bool filterAcceptsRow(int source_row, const QModelIndex &source_parent) const
     {
-    }
-    void SetItem(CreatureModelCreature& c){
+        QModelIndex index0 = sourceModel()->index(source_row, 0, source_parent);
+        QModelIndex index1 = sourceModel()->index(source_row, 1, source_parent);
+        QModelIndex index2 = sourceModel()->index(source_row, 2, source_parent);
+        QString entry = sourceModel()->data(index0, Qt::UserRole+1).toString();
+        QString nameLower = sourceModel()->data(index1, Qt::UserRole+1).toString();
+        QSet<int> mapset = sourceModel()->data(index0, Qt::UserRole+2).value<QSet<int>>();
+        bool inmap = false;
+        for(int i = 0; i < maps.size(); i++){
+            if(mapset.contains(maps[i])){
+                inmap = true;
+                break;
+            }
+        }
+        if(!inmap) return false;
+
+        return sourceModel()->data(index0).toString().contains(entry)
+                || sourceModel()->data(index1).toString().contains(nameLower);
+
 
     }
-    void Search(const QString &s){
-
-    }
-    void SetZoneFilter(const QString &s){
-
-    }
-
-private:
-
 };
 
 CreatureSearcher::CreatureSearcher(QWidget *parent, const QSqlDatabase &db, LoadingScreen& ls) :
@@ -147,26 +176,62 @@ CreatureSearcher::CreatureSearcher(QWidget *parent, const QSqlDatabase &db, Load
 {
     setEditTriggers(QAbstractItemView::NoEditTriggers);
 
-    model = new CreatureSearchModel2(this);
-    setModel(model);
-    horizontalHeader()->setStretchLastSection(true);
-    verticalHeader()->hide();
-    connect(this, &QTableView::clicked, this, &CreatureSearcher::onActivated);
     try{
         Load(ls);
     }catch(std::exception& e){
         Warnings::Warning(e.what());
     }
+    model = new QStandardItemModel(creatures.size(), 3);
+    qRegisterMetaType<QSet<int>>("QSet<int>");
+    int rowc = 0;
+    foreach(CreatureModelCreature* cmc, creatures){
+        QStandardItem* entryItem = new QStandardItem(QString::number(cmc->entry));
+        entryItem->setData(QString::number(cmc->entry));
+        QVariant v;
+        v.setValue(cmc->maps);
+        entryItem->setData(v, Qt::UserRole+2);
+
+        QStandardItem* nameItem = new QStandardItem(cmc->name);
+        nameItem->setData(cmc->name.toLower());
+        QStandardItem* aiItem = new QStandardItem(cmc->aiType);
+        model->setItem(rowc, 0, entryItem);
+        model->setItem(rowc, 1, nameItem);
+        model->setItem(rowc, 2, aiItem);
+        rowc++;
+    }
+/*
+    foreach(QStandardItem* cmc, creatureslst){
+        QList<QStandardItem*> lst;
+        lst.push_back(cmc);
+        model->appendRow(lst);
+
+    }
+*/
+    proxyModel = new ProxyModel(this);
+    proxyModel->setSourceModel(model);
+    setModel(proxyModel);
+    horizontalHeader()->setStretchLastSection(true);
+    verticalHeader()->hide();
+    connect(this, &QTableView::clicked, this, &CreatureSearcher::onActivated);
 }
 
 void CreatureSearcher::Search(const QString &s)
 {
-    model->Search(s);
+    proxyModel->nameFilt = s.toLower();
+    proxyModel->setFilterRegExp("");
+    //model->Search(s);
 }
 
 void CreatureSearcher::SetZoneFilter(const QString &s)
 {
-    model->SetZoneFilter(s);
+    proxyModel->maps.clear();
+    const QVector<std::pair<unsigned int, QString>>& maps = Cache::Get().GetMapVec();
+    for(int i = 0; i < maps.size(); i++){
+        if(maps.at(i).second.toLower().contains(s)){
+            proxyModel->maps.push_back(maps.at(i).first);
+        }
+    }
+    proxyModel->setFilterRegExp("");
 }
 
 void CreatureSearcher::onActivated(const QModelIndex &idx)
@@ -206,16 +271,17 @@ void CreatureSearcher::Load(LoadingScreen& ls){
 
     while(template_query.next()){
         ls.setProgress(ls.getProgress()+1);
-        CreatureModelCreature creature;
-        creature.entry = template_query.value(0).toInt();
-        creature.name = template_query.value(1).toString();
-        creature.aiType = template_query.value(2).toString();
-        creatures.insert(creature.entry, std::move(creature));
+        CreatureModelCreature* creature = new CreatureModelCreature();
+        creature->entry = template_query.value(0).toInt();
+        creature->name = template_query.value(1).toString();
+        creature->aiType = template_query.value(2).toString();
+        creatures.insert(creature->entry, creature);
+        creatureslst.push_back(creature);
     }
 
     if(creatures.empty())
         throw std::runtime_error("No creatures loaded");
-    CreatureModelCreature* currCreature = &creatures.first();
+    CreatureModelCreature* currCreature = creatures.first();
     while(creature_query.next()){
         ls.setProgress(ls.getProgress()+1);
         int entry = creature_query.value(0).toInt();
@@ -227,7 +293,7 @@ void CreatureSearcher::Load(LoadingScreen& ls){
                 qWarning() << "Loaded creature with entry: " << entry << ", but no creature_template loaded for this entry";
                 continue;
             }
-            currCreature = &(*it);
+            currCreature = (*it);
         }
         currCreature->maps.insert(map);
     }
