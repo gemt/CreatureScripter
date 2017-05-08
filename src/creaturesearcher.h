@@ -21,6 +21,8 @@ public:
 public slots:
     void Search(const QString& s);
     void SetZoneFilter( const QString& s);
+    void OnlyEventAI(bool on);
+
 signals:
     void entrySelected(uint entry, QString name);
 

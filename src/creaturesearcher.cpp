@@ -126,7 +126,7 @@ struct CreatureModelCreature {
     QString name;
     QSet<int> maps;
     QString aiType;
-
+    bool eventAI;
     // QStandardItem interface
 public:
     QVariant data(int role) const{
@@ -139,13 +139,15 @@ public:
 class ProxyModel : public QSortFilterProxyModel
 {
 public:
-    ProxyModel(QWidget* parent)
-        :QSortFilterProxyModel(parent)
-    {
-    }
     QString nameFilt;
     QVector<int> maps;
+    bool onlyEventAI;
 
+    ProxyModel(QWidget* parent)
+        :QSortFilterProxyModel(parent),
+          onlyEventAI(false)
+    {
+    }
 protected:
     bool filterAcceptsRow(int source_row, const QModelIndex &source_parent) const
     {
@@ -160,11 +162,12 @@ protected:
         }
         if(!inmap) return false;
 
+        if(onlyEventAI && !sourceModel()->data(index0, Qt::UserRole+3).toBool())
+            return false;
+
         QString entry = sourceModel()->data(index0, Qt::UserRole+1).toString();
         QString nameLower = sourceModel()->data(sourceModel()->index(source_row, 1, source_parent), Qt::UserRole+1).toString();
         return entry.contains(nameFilt) || nameLower.contains(nameFilt);
-
-
     }
 };
 
@@ -178,7 +181,7 @@ CreatureSearcher::CreatureSearcher(QWidget *parent, const QSqlDatabase &db, Load
     }catch(std::exception& e){
         Warnings::Warning(e.what());
     }
-    model = new QStandardItemModel(creatures.size(), 3);
+    model = new QStandardItemModel(creatures.size(), 2);
     qRegisterMetaType<QSet<int>>("QSet<int>");
     int rowc = 0;
     foreach(CreatureModelCreature* cmc, creatures){
@@ -187,16 +190,16 @@ CreatureSearcher::CreatureSearcher(QWidget *parent, const QSqlDatabase &db, Load
         QVariant v;
         v.setValue(cmc->maps);
         entryItem->setData(v, Qt::UserRole+2);
-
+        entryItem->setData(cmc->eventAI, Qt::UserRole+3);
         QStandardItem* nameItem = new QStandardItem(cmc->name);
         nameItem->setData(cmc->name.toLower());
         QStandardItem* aiItem = new QStandardItem(cmc->aiType);
         model->setItem(rowc, 0, entryItem);
         model->setItem(rowc, 1, nameItem);
-        model->setItem(rowc, 2, aiItem);
+        //model->setItem(rowc, 2, aiItem);
         rowc++;
     }
-    model->setHorizontalHeaderLabels(QStringList{"Entry", "Name", "AI type"});
+    model->setHorizontalHeaderLabels(QStringList{"Entry", "Name"});
     proxyModel = new ProxyModel(this);
     proxyModel->setSourceModel(model);
     setModel(proxyModel);
@@ -204,6 +207,7 @@ CreatureSearcher::CreatureSearcher(QWidget *parent, const QSqlDatabase &db, Load
     verticalHeader()->hide();
     connect(this, &QTableView::clicked, this, &CreatureSearcher::onActivated);
     SetZoneFilter("");
+    resizeColumnsToContents();
 }
 
 void CreatureSearcher::Search(const QString &s)
@@ -221,6 +225,12 @@ void CreatureSearcher::SetZoneFilter(const QString &s)
             proxyModel->maps.push_back(maps.at(i).first);
         }
     }
+    proxyModel->setFilterRegExp("");
+}
+
+void CreatureSearcher::OnlyEventAI(bool on)
+{
+    proxyModel->onlyEventAI = on;
     proxyModel->setFilterRegExp("");
 }
 
@@ -265,6 +275,7 @@ void CreatureSearcher::Load(LoadingScreen& ls){
         creature->entry = template_query.value(0).toInt();
         creature->name = template_query.value(1).toString();
         creature->aiType = template_query.value(2).toString();
+        creature->eventAI = creature->aiType.contains("EventAI");
         creatures.insert(creature->entry, creature);
         creatureslst.push_back(creature);
     }

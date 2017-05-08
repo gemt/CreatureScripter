@@ -29,6 +29,7 @@
 #include <QRadioButton>
 #include <QButtonGroup>
 #include <QPropertyAnimation>
+#include <QCheckBox>
 
 #define QT_DEBUG_PLUGINS
 
@@ -72,11 +73,17 @@ void MainWindow::InitWindow(LoadingScreen& ls)
     mapSearch = new QLineEdit(searchWidget);
     sl->addRow(new QLabel("Map"), mapSearch);
 
+    QCheckBox* onlyEventAICheckbox = new QCheckBox(this);
+    sl->addRow("Only EventAI", onlyEventAICheckbox);
+    onlyEventAICheckbox->setChecked(false);
+
 
     QSqlDatabase db = QSqlDatabase::database(settings.value("connectionName").toString());
     searcher = new CreatureSearcher(searchWidget, db, ls);
     bl->addWidget(searcher);
-
+    connect(onlyEventAICheckbox, &QCheckBox::stateChanged, [this](int state){
+        searcher->OnlyEventAI(state == Qt::Checked);
+    });
 
     connect(mapSearch, &QLineEdit::textChanged, this, &MainWindow::onNameSearchChange);
 
