@@ -118,6 +118,9 @@ creature_template::creature_template(quint32 entry) :
     Table(t)
 {
     record = Query1(entry, creature_template::entry);
+    record.table = t;
+    record.pk = creature_template::entry;
+
     creatures = new creature(entry);
     scripts = new creature_ai_scripts(entry);
     equipment = new creature_equip_template(record.value(equipment_id));
@@ -149,7 +152,10 @@ creature_ai_scripts::creature_ai_scripts(quint32 entry) :
     Table(t)
 {
     records = Query(entry, creature_ai_scripts::creature_id);
-    originalRecords = records;
+    for(auto it = records.begin(); it != records.end(); it++){
+        (*it).table = t;
+        (*it).pk = creature_ai_scripts::id;
+    }
 }
 
 

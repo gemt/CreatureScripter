@@ -242,8 +242,8 @@
 			"d1" 	: "Expires on the NPC's Death. (This Triggers At The Moment The NPC Dies).",
 			"t"		: "BOTH",
 			"params":[
-                "Condition"
-			]
+            ],
+            "__comment": "this has a condition in cmangos, but it's not parsed in elysium."
 		},
 		{
 			"id"	: 7,

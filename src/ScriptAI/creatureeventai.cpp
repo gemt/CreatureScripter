@@ -446,19 +446,5 @@ CreatureEventAI::CreatureEventAI(std::shared_ptr<Tables::creature_template> crea
     adjustSize();
 }
 
-void CreatureEventAI::PrintMigrations()
-{
-    QVector<MangosRecord>& records = _creature->scripts->originalRecords;
-    Q_ASSERT(records.size() == entryWidgets.size());
-    for(int i = 0; i < records.size(); i++)
-    {
-        EventEntry* ew = entryWidgets.at(i);
-        UpdateMigration mig(Tables::creature_ai_scripts::t, ew->record, records.at(i));
-        qDebug() << mig.toString();
-    }
-}
-
-
-
 }
 

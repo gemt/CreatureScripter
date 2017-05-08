@@ -43,7 +43,7 @@ WorkTab::WorkTab(uint entry, QString name, QWidget *parent) :
     addTab(templateTable, "Template Tables");
     //addTab(rawTables, "Raw Tables");
 
-    changesTab = new ChangesWidget(this);
+    changesTab = new ChangesWidget(this, data->creature);
     addTab(changesTab, "Changes");
 
 }

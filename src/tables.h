@@ -144,7 +144,6 @@ struct creature_ai_scripts : public Table{
 
     creature_ai_scripts(quint32 entry);
     QVector<MangosRecord> records;
-    QVector<MangosRecord> originalRecords;
 private:
     static const QString event_param_n;
     static const QString action_n_type;

@@ -74,8 +74,6 @@ class CreatureEventAI : public QScrollArea
 public:
     CreatureEventAI(std::shared_ptr<Tables::creature_template> creature, QWidget* parent);
 
-    void PrintMigrations();
-
 private:
     std::shared_ptr<Tables::creature_template> _creature;
     QVector<EventEntry*> entryWidgets;

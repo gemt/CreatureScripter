@@ -4,7 +4,9 @@
 MangosRecord::MangosRecord(const MangosRecord &other) :
     original(other.original),
     editable(other.editable),
-    table(other.table)
+    table(other.table),
+    pk(other.pk)
+
 {
 }
 
@@ -21,6 +23,7 @@ void MangosRecord::operator=(const MangosRecord &other)
     this->editable = other.editable;
     this->original = other.original;
     this->table = other.table;
+    this->pk = other.pk;
 }
 
 QVariant MangosRecord::value(int index) const
@@ -61,13 +64,15 @@ int MangosRecord::count() const
 void MangosRecord::setValue(int index, const QVariant &val)
 {
     editable.setValue(index, val);
-    emit valueChanged(fieldName(index), val);
+    //emit valueChanged(table, fieldName(index), val, pk, original.value(pk));
+    emit valueChanged(*this);
 }
 
 void MangosRecord::setValue(const QString &name, const QVariant &val)
 {
     editable.setValue(name, val);
-    emit valueChanged(name, val);
+    //emit valueChanged(table, name, val, pk, original.value(pk));
+    emit valueChanged(*this);
 }
 
 QString MangosRecord::GetChanges() const

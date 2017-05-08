@@ -193,7 +193,7 @@ CreatureSearcher::CreatureSearcher(QWidget *parent, const QSqlDatabase &db, Load
         entryItem->setData(cmc->eventAI, Qt::UserRole+3);
         QStandardItem* nameItem = new QStandardItem(cmc->name);
         nameItem->setData(cmc->name.toLower());
-        QStandardItem* aiItem = new QStandardItem(cmc->aiType);
+        //QStandardItem* aiItem = new QStandardItem(cmc->aiType);
         model->setItem(rowc, 0, entryItem);
         model->setItem(rowc, 1, nameItem);
         //model->setItem(rowc, 2, aiItem);

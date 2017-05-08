@@ -29,13 +29,15 @@ public:
 
     QString GetChanges() const;
 
-signals:
-    void valueChanged(QString name, QVariant val);
-
-private:
+    QString table;
+    QString pk;
     QSqlRecord original;
     QSqlRecord editable;
-    QString table;
+signals:
+    //void valueChanged(QString table, QString field, QVariant value, QString pk, QVariant pkVal);
+    void valueChanged(MangosRecord rec);
+
+private:
 };
 
 #endif // MANGOSRECORD_H
