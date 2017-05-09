@@ -19,7 +19,7 @@ SpellWork::SpellWork(MainForm* form)
     loadPlugins();
 }
 
-void SpellWork::setActivePlugin(QString name, LoadingScreen* ls)
+bool SpellWork::setActivePlugin(QString name, LoadingScreen* ls)
 {
     m_activeSpellInfoPlugin = nullptr;
 
@@ -41,19 +41,25 @@ void SpellWork::setActivePlugin(QString name, LoadingScreen* ls)
         if (!plugin->init(ls)) {
             qCritical("Plugin '%s' is not loaded!", qPrintable(name));
             QMessageBox::warning(m_form, "Warning", "Please check directories settings!", QMessageBox::StandardButton::Ok);
-            return;
+            return false;
         }
 
         QFile templateFile(qApp->applicationDirPath() + "/plugins/spellinfo/" + metaData.value("htmlFile").toString());
         if (templateFile.open(QFile::ReadOnly)) {
             m_templateHtml = templateFile.readAll();
             templateFile.close();
+        }else{
+            QMessageBox::warning(m_form, "Warning", "Unable to open expansion-plugin html file!", QMessageBox::StandardButton::Ok);
+            return true; // nothing we can do about it, so no point returning false
         }
 
         QFile styleFile(qApp->applicationDirPath() + "/plugins/spellinfo/" + metaData.value("cssFile").toString());
         if (styleFile.open(QFile::ReadOnly)) {
             m_styleCss = styleFile.readAll();
             styleFile.close();
+        }else{
+            QMessageBox::warning(m_form, "Warning", "Unable to open expansion-plugin css file!", QMessageBox::StandardButton::Ok);
+            return true; // nothing we can do about it, so no point returning false
         }
 
         EnumHash enums = QSW::loadEnumFile(qApp->applicationDirPath() + "/plugins/spellinfo/" + metaData.value("xmlFile").toString());
@@ -65,6 +71,7 @@ void SpellWork::setActivePlugin(QString name, LoadingScreen* ls)
         m_form->setLocale(plugin->getLocale());
         m_activeSpellInfoPlugin = plugin;
     }
+    return true;
 }
 
 void SpellWork::setActivePlugin2(QPair<QString, SpellInfoPluginPair> p)

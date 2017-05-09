@@ -29,7 +29,7 @@ class SpellWork : public QObject
         ~SpellWork() {}
 
         void loadPlugins();
-        void setActivePlugin(QString name,LoadingScreen* ls=nullptr);
+        bool setActivePlugin(QString name,LoadingScreen* ls=nullptr);
         void setActivePlugin2(QPair<QString, SpellInfoPluginPair> p);
         QPair<QString, SpellInfoPluginPair> GetActivePlugin();
 

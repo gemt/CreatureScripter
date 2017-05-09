@@ -114,7 +114,6 @@ void MainWindow::InitWindow(LoadingScreen& ls)
     connect(qswAct , &QAction::triggered, [this](){
         SettingsForm s(this);
         if(s.exec() == QDialog::Accepted){
-            //todo: reconnect to db, i guess
         }
     });
     menu->addActions(QList<QAction*>{dbAct});
@@ -155,7 +154,11 @@ void MainWindow::InitWindow(LoadingScreen& ls)
             }
         });
     }
-    QSWWrapper::Get().qsw->m_sw->setActivePlugin(start_plugin, &ls);
+    if(!QSWWrapper::Get().qsw->m_sw->setActivePlugin(start_plugin, &ls)){
+        ls.hide();
+        emit qswAct->trigger();
+        ls.show();
+    }
 }
 
 void MainWindow::onNameSearch()
