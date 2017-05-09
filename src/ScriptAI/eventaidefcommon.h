@@ -104,6 +104,25 @@ struct EventAI_event {
     static const Parameter eventFlags;
 };
 
+enum WidgetType{
+    UNASSIGNED = 0,
+    CONSTANT = 1,
+    DROPDOWN_WIDGET=2,
+    FLAGS_WIDGET=3,
+    NUMBER_WIDGET=4,
+
+};
+
+struct TableTypeValue{
+    TableTypeValue(ParameterType t, QString _f, const QString& tt, const QString& v) :
+        _type(t),_field(_f),tooltip(tt),values(v)
+    {}
+    const ParameterType _type;
+    QString _field;
+    const QString tooltip;
+    const QVector<TypeValue> values;
+};
+
 static const QString phase_mask_tooltip =
     "Phase mask is a bitmask of phases which shouldn't trigger this event. (ie. Phase mask of value 12 (binary 1100)<br>"
     " results in triggering this event in phases 0, 1 and all others with exception for phases 2 and 3 (counting from 0).<br>"
@@ -117,6 +136,122 @@ static const QString short_phasemask_tooltip =
         " need to uncheck phases which are not in use. In fact, it works as an"
         " inverse phase-mask in the core, meaning you need to uncheck phases where"
         " the event should NOT be active.";
+
+// Only used if creature_template::CreatureType is 1 (beast)
+/*static const QVector<TypeValue> Family =
+{
+    TypeValue{1, "Wolf", ""},
+    TypeValue{2, "Cat", ""},
+    TypeValue{3, "Spider", ""},
+    TypeValue{4, "Bear", ""},
+    TypeValue{5, "Boar", ""},
+    TypeValue{6, "Crocolisk", ""},
+    TypeValue{7, "Carrion Bird", ""},
+    TypeValue{8, "Crab", ""},
+    TypeValue{9, "Gorilla", ""},
+    TypeValue{10, "Raptor", ""},
+    TypeValue{11, "Tallstrider", ""},
+    TypeValue{12, "Felhunter", ""},
+    TypeValue{13, "Voidwalker", ""},
+    TypeValue{14, "Succubus", ""},
+    TypeValue{15, "Doomguard", ""},
+    TypeValue{16, "Scorpid", ""},
+    TypeValue{17, "Turtle", ""},
+    TypeValue{18, "Imp", ""},
+    TypeValue{19, "Bat", ""},
+    TypeValue{20, "Hyena", ""},
+    TypeValue{21, "Bird of Prey", ""},
+    TypeValue{22, "Wind Serpent", ""},
+    TypeValue{23, "Remote Control", ""},
+    TypeValue{24, "Felguard", ""},
+    TypeValue{25, "Dragonhawk", ""},
+    TypeValue{26, "Ravager", ""},
+    TypeValue{27, "Warp Stalker", ""},
+    TypeValue{28, "Sporebat", ""},
+    TypeValue{29, "Nether Ray", ""},
+    TypeValue{30, "Serpent", ""},
+    TypeValue{31, "Moth", ""},
+    TypeValue{32, "Chimaera", ""},
+    TypeValue{33, "Devilsaur", ""},
+    TypeValue{34, "Ghoul", ""},
+    TypeValue{35, "Silithid", ""},
+    TypeValue{36, "Worm", ""},
+    TypeValue{37, "Rhino", ""},
+    TypeValue{38, "Wasp", ""},
+    TypeValue{39, "Core Hound", ""},
+    TypeValue{40, "Spirit Beast", ""}
+};*/
+
+static const QVector<TypeValue> CreatureType =
+{
+    {0 , "None", ""},
+    {1 , "Beast", ""},
+    {2 , "Dragonkin", ""},
+    {3 , "Demon", ""},
+    {4 , "Elemental", ""},
+    {5 , "Giant", ""},
+    {6 , "Undead", ""},
+    {7 , "Humanoid", ""},
+    {8 , "Critter", ""},
+    {9 , "Mechanical", ""},
+    {10, "Not specified", ""},
+    {11, "Totem", ""},
+    {12, "Non-combat Pet", ""},
+    {13, "Gas Cloud", ""}
+};
+
+static const QVector<TypeValue> InhabitType =
+{
+    {1,	"Ground Movement Only", ""},
+    {2,	"Water Movement Only", ""},
+    {3,	"Both Ground And Water Movement", ""},
+    {4,	"Always Flying", ""},
+    {5,	"Over Ground Always Flying," ""},
+    {6,	"Over Water Always Flying", ""},
+    {7,	"Always Flying Over Anything", ""}
+};
+
+static const QVector<TypeValue> RegenerateStats
+{
+    {0,	"NPC Does NOT Regenerate Stats When Out Of Combat", ""},
+    {1,	"NPC DOES Regenerate Health When Out Of Combat", ""},
+    {2,	"NPC DOES Regenerate Power (Mana) When Out Of Combat", ""},
+    {3,	"NPC DOES Regenerate Health AND Power (Mana) When Out Of Combat", ""}
+};
+
+static const QVector<TypeValue> RacialLeader
+{
+    {0,	"NPC is NOT a racial Leader", ""},
+    {1,	"NPC IS a racial Leader", ""},
+};
+
+static const QVector<TypeValue> NpcFlags
+{
+    {1,         "Gossip",               "If creature has more gossip options, add this flag to bring up a menu."},
+    {2,         "Quest Giver",          "Any creature giving or taking quests needs to have this flag."},
+    {16,        "Trainer",              "Allows the creature to have a trainer list to teach spells"},
+    {32,        "Trainer_Class",        "Allows the creature to have a class trainer list to teach spells. {(MUST USE WITH FLAG: 16)"},
+    {64,        "Trainer_Profession",	"Allows the creature to have a profession trainer list to teach spells. {(MUST USE WITH FLAG: 16)"},
+    {128,       "Vendor",               "Any creature selling items needs to have this flag."},
+    {256,       "Vendor_Ammo",          "Any creature selling ammo items needs to have this flag. {(MUST USE WITH FLAG: 128)"},
+    {512,       "Vendor_Food",          "Any creature selling food items needs to have this flag. {(MUST USE WITH FLAG: 128)"},
+    {1024,      "Vendor_Poison",        "Any creature selling poison items needs to have this flag. {(MUST USE WITH FLAG: 128)"},
+    {2048,      "Vendor_Reagent",       "Any creature selling reagent items needs to have this flag. (MUST USE WITH FLAG: 128)"},
+    {4096,      "Repairer",             "Creatures with this flag can repair items."},
+    {8192,      "Flight Master",        "Any creature serving as fly master has this."},
+    {16384,     "Spirit Healer",        "Makes the creature invisible to alive characters and has the resurrect function."},
+    {32768,     "Spirit Guide",         ""},
+    {65536,     "Innkeeper",            "Creatures with this flag can set hearthstone locations."},
+    {131072,	"Banker",               "Creatures with this flag can show the bank"},
+    {262144,	"Petitioner",           ""},
+    {524288,	"Tabard Designer",      "Allows the designing of guild tabards."},
+    {1048576,	"Battlemaster",         "Creatures with this flag port players to battlegrounds."},
+    {2097152,	"Auctioneer",           "Allows creature to display auction list."},
+    {4194304,	"Stable Master",        "Has the option to stable pets for hunters."},
+    {16777216,	"Instantloot",          "NPC could be loot immediately without killing, just after clicking on it. (Npc_spellclick_spells)"},
+    {33554432,	"Player Vehicle",       "players with mounts that have vehicle data should have it set"},
+    {268435456,	"Guard ????",           "Creatures with this flag act as guards in cities."},
+};
 
 static const QVector<TypeValue> Team =
 {
@@ -250,7 +385,9 @@ static const Condition& GetCondition(int num){
         if(Conditions.at(i).id == num)
             return Conditions.at(i);
     }
+    throw std::runtime_error("static const Condition& GetCondition(int num): No condition found");
 }
+
 } // EventAI
 
 #endif // EVENTAIDEFCOMMON_H

@@ -3,6 +3,7 @@
 
 #include "cache.h"
 #include "mangosrecord.h"
+#include "eventaidefcommon.h"
 
 #include <QSqlRecord>
 #include <QString>
@@ -70,7 +71,78 @@ struct creature_template : public Table{
     static const QString modelid_3;
     static const QString modelid_4;
     static const QString equipment_id;
+    static const QString Unit_flags;
+    static const QString Dynamicflags;
+    static const QString Family;
+    static const QString KillCredit1;
+    static const QString KillCredit2;
+    static const QString subname;
+    static const QString gossip_menu_id;
+    static const QString minlevel;
+    static const QString maxlevel;
+    static const QString minhealth;
+    static const QString maxhealth;
+    static const QString minmana;
+    static const QString maxmana;
+    static const QString armor;
+    static const QString faction_A;
+    static const QString faction_H;
+    static const QString npcflag;
+    static const QString speed_walk;
+    static const QString speed_run;
+    static const QString scale;
+    static const QString rank;
+    static const QString mindmg;
+    static const QString maxdmg;
+    static const QString dmgschool;
+    static const QString attackpower;
+    static const QString dmg_multiplier;
+    static const QString baseattacktime;
+    static const QString rangeattacktime;
+    static const QString unit_class;
+    static const QString unit_flags;
+    static const QString dynamicflags;
+    static const QString family;
+    static const QString trainer_type;
+    static const QString trainer_spell;
+    static const QString trainer_class;
+    static const QString trainer_race;
+    static const QString minrangedmg;
+    static const QString maxrangedmg;
+    static const QString rangedattackpower;
+    static const QString type;
+    static const QString type_flags;
+    static const QString lootid;
+    static const QString pickpocketloot;
+    static const QString skinloot;
+    static const QString resistance1;
+    static const QString resistance2;
+    static const QString resistance3;
+    static const QString resistance4;
+    static const QString resistance5;
+    static const QString resistance6;
+    static const QString spell1;
+    static const QString spell2;
+    static const QString spell3;
+    static const QString spell4;
+    static const QString PetSpellDataId;
+    static const QString mingold;
+    static const QString maxgold;
+    static const QString MovementType;
+    static const QString InhabitType;
+    static const QString Civilian;
+    static const QString RacialLeader;
+    static const QString RegenHealth;
+    static const QString trainer_id;
+    static const QString vendor_id;
+    static const QString MechanicImmuneMask;
+    static const QString SchoolImmuneMask;
+    static const QString flags_extra;
     static const QString AIName;
+    static const QString ScriptName;
+
+    static const QVector<EventAI::TableTypeValue> FieldTypes;
+
     creature_template(quint32 entry);
     MangosRecord record;
 

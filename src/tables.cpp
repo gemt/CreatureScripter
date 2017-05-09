@@ -12,16 +12,6 @@ const QString creature::t = "creature";
 const QString creature::id = "id";
 const QString creature::map = "Map";
 
-const QString creature_template::t = "creature_template";
-const QString creature_template::entry = "entry";
-const QString creature_template::name = "name";
-const QString creature_template::modelid_1 = "modelid_1";
-const QString creature_template::modelid_2 = "modelid_2";
-const QString creature_template::modelid_3 = "modelid_3";
-const QString creature_template::modelid_4 = "modelid_4";
-const QString creature_template::equipment_id = "equipment_id";
-const QString creature_template::AIName = "AIName";
-
 const QString creature_template_addon::t = "creature_template_addon";
 const QString creature_template_addon::entry = "entry";
 

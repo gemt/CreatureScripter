@@ -40,10 +40,12 @@ HEADERS += $$files(src/*.h) \
     src/ScriptAI/widgets/boolwidget.h \
     src/ScriptAI/widgets/conditionwidget.h \
     src/ScriptAI/widgets/eventtypewidget.h \
-    src/loadingscreen.h
+    src/loadingscreen.h \
+    src/ScriptAI/statstemplate.h
 HEADERS += $$files(src/CreatureTabs/*.h)
 HEADERS += $$files(src/ScriptAI/*.h)
 HEADERS += $$files(src/ScriptAI/widgets/*.h)
+HEADERS += $$files(src/Tables/*.h)
 
 SOURCES += $$files(src/*.cpp) \
     src/collapsableframe.cpp \
@@ -55,11 +57,12 @@ SOURCES += $$files(src/*.cpp) \
     src/ScriptAI/widgets/boolwidget.cpp \
     src/ScriptAI/widgets/conditionwidget.cpp \
     src/ScriptAI/widgets/eventtypewidget.cpp \
-    src/loadingscreen.cpp
+    src/loadingscreen.cpp \
+    src/ScriptAI/statstemplate.cpp
 SOURCES += $$files(src/CreatureTabs/*.cpp)
 SOURCES += $$files(src/ScriptAI/*.cpp)
 SOURCES += $$files(src/ScriptAI/widgets/*.cpp)
-
+SOURCES += $$files(src/Tables/*.cpp)
 
 
 SOURCES += \

@@ -20,6 +20,8 @@ class ChangesWidget : public QWidget
 public:
     ChangesWidget(QWidget* parent, std::shared_ptr<Tables::creature_template> creature);
 
+    bool AnyNewChanges();
+
 public slots:
     //void ValueChanged(QString table, QString field, QVariant value, QString pk, QVariant pkVal);
     void ValueChanged(MangosRecord rec);

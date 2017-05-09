@@ -2,7 +2,8 @@
 #define TEMPLATETABLES_H
 
 #include <QWidget>
-#include <QSqlRecord>
+
+#include "mangosrecord.h"
 
 class QTreeView;
 class TemplateTableModel;

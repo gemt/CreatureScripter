@@ -133,9 +133,34 @@
 
     {
         "field": "npcflag",
-        "type": 0,
+        "type": 3,
         "desc": "",
-        "params": []
+        "params": [
+            {"v": 1,         "n": "Gossip",               "d": "If creature has more gossip options, add this flag to bring up a menu."},
+            {"v": 2,         "n": "Quest Giver",          "d": "Any creature giving or taking quests needs to have this flag."},
+            {"v": 16,        "n": "Trainer",              "d": "Allows the creature to have a trainer list to teach spells"},
+            {"v": 32,        "n": "Trainer_Class",        "d": "Allows the creature to have a class trainer list to teach spells. {(MUST USE WITH FLAG: 16)"},
+            {"v": 64,        "n": "Trainer_Profession",   "d": "Allows the creature to have a profession trainer list to teach spells. {(MUST USE WITH FLAG: 16)"},
+            {"v": 128,       "n": "Vendor",               "d": "Any creature selling items needs to have this flag."},
+            {"v": 256,       "n": "Vendor_Ammo",          "d": "Any creature selling ammo items needs to have this flag. {(MUST USE WITH FLAG: 128)"},
+            {"v": 512,       "n": "Vendor_Food",          "d": "Any creature selling food items needs to have this flag. {(MUST USE WITH FLAG: 128)"},
+            {"v": 1024,      "n": "Vendor_Poison",        "d": "Any creature selling poison items needs to have this flag. {(MUST USE WITH FLAG: 128)"},
+            {"v": 2048,      "n": "Vendor_Reagent",       "d": "Any creature selling reagent items needs to have this flag. (MUST USE WITH FLAG: 128)"},
+            {"v": 4096,      "n": "Repairer",             "d": "Creatures with this flag can repair items."},
+            {"v": 8192,      "n": "Flight Master",        "d": "Any creature serving as fly master has this."},
+            {"v": 16384,     "n": "Spirit Healer",        "d": "Makes the creature invisible to alive characters and has the resurrect function."},
+            {"v": 32768,     "n": "Spirit Guide",         "d": ""},
+            {"v": 65536,     "n": "Innkeeper",            "d": "Creatures with this flag can set hearthstone locations."},
+            {"v": 131072,    "n": "Banker",               "d": "Creatures with this flag can show the bank"},
+            {"v": 262144,    "n": "Petitioner",           "d": ""},
+            {"v": 524288,    "n": "Tabard Designer",      "d": "Allows the designing of guild tabards."},
+            {"v": 1048576,   "n": "Battlemaster",         "d": "Creatures with this flag port players to battlegrounds."},
+            {"v": 2097152,   "n": "Auctioneer",           "d": "Allows creature to display auction list."},
+            {"v": 4194304,   "n": "Stable Master",        "d": "Has the option to stable pets for hunters."},
+            {"v": 16777216,  "n": "Instantloot",          "d": "NPC could be loot immediately without killing, just after clicking on it. (Npc_spellclick_spells)"},
+            {"v": 33554432,  "n": "Player Vehicle",       "d": "players with mounts that have vehicle data should have it set"},
+            {"v": 268435456, "n": "Guard ????",           "d": "Creatures with this flag act as guards in cities."}
+        ]
     },
 
     {
@@ -453,17 +478,35 @@
     },
 
     {
+        "__COMMENT": "CreatureType",
         "field": "type",
         "type": 0,
         "desc": "",
-        "params": []
+        "params": [
+            {"v":0 , "n": "None"},
+            {"v":1 , "n": "Beast"},
+            {"v":2 , "n": "Dragonkin"},
+            {"v":3 , "n": "Demon"},
+            {"v":4 , "n": "Elemental"},
+            {"v":5 , "n": "Giant"},
+            {"v":6 , "n": "Undead"},
+            {"v":7 , "n": "Humanoid"},
+            {"v":8 , "n": "Critter"},
+            {"v":9 , "n": "Mechanical"},
+            {"v":10, "n": "Not specified"},
+            {"v":11, "n": "Totem"},
+            {"v":12, "n": "Non-combat Pet"},
+            {"v":13, "n": "Gas Cloud"}
+        ]
     },
 
     {
         "field": "type_flags",
         "type": 0,
         "desc": "",
-        "params": []
+        "params": [
+
+        ]
     },
 
     {

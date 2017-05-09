@@ -12,7 +12,6 @@ ChangesWidget::ChangesWidget(QWidget *parent, std::shared_ptr<Tables::creature_t
     :QWidget(parent)
 {
     l = new QVBoxLayout(this);
-
     //textEdit = new QTextEdit(this);
     //textEdit->setReadOnly(true);
     //l->addWidget(textEdit);
@@ -74,8 +73,9 @@ void ChangesWidget::ValueChanged(MangosRecord rec)
                 .arg(escaped_pkv);
         if(it == changes.end()){
             QLabel* lbl = new QLabel(updateStr, this);
+            lbl->setTextInteractionFlags(Qt::TextSelectableByMouse);
             lbl->setWordWrap(true);
-            l->addWidget(lbl);
+            l->addWidget(lbl, 0, Qt::AlignLeft|Qt::AlignTop);
             changes[change_identifier] = lbl;
         }else{
             QLabel* lbl = static_cast<QLabel*>(it.value());
