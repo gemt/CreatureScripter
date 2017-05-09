@@ -1,0 +1,671 @@
+[{
+        "field": "entry",
+        "type": 1,
+        "desc": "This is the Primary NPC Entry Number and is Also the Dungeon Normal Mode / Raid 10-Man Normal Mode Entry.",
+        "params": []
+    },
+
+    {
+        "field": "KillCredit1",
+        "type": 0,
+        "desc": "",
+        "params": []
+    },
+
+    {
+        "field": "KillCredit2",
+        "type": 0,
+        "desc": "",
+        "params": []
+    },
+
+    {
+        "field": "modelid_1",
+        "type": 0,
+        "desc": "",
+        "params": []
+    },
+
+    {
+        "field": "modelid_2",
+        "type": 0,
+        "desc": "",
+        "params": []
+    },
+
+    {
+        "field": "modelid_3",
+        "type": 0,
+        "desc": "",
+        "params": []
+    },
+
+    {
+        "field": "modelid_4",
+        "type": 0,
+        "desc": "",
+        "params": []
+    },
+
+    {
+        "field": "name",
+        "type": 0,
+        "desc": "",
+        "params": []
+    },
+
+    {
+        "field": "subname",
+        "type": 0,
+        "desc": "",
+        "params": []
+    },
+
+    {
+        "field": "gossip_menu_id",
+        "type": 0,
+        "desc": "",
+        "params": []
+    },
+
+    {
+        "field": "minlevel",
+        "type": 0,
+        "desc": "",
+        "params": []
+    },
+
+    {
+        "field": "maxlevel",
+        "type": 0,
+        "desc": "",
+        "params": []
+    },
+
+    {
+        "field": "minhealth",
+        "type": 0,
+        "desc": "",
+        "params": []
+    },
+
+    {
+        "field": "maxhealth",
+        "type": 0,
+        "desc": "",
+        "params": []
+    },
+
+    {
+        "field": "minmana",
+        "type": 0,
+        "desc": "",
+        "params": []
+    },
+
+    {
+        "field": "maxmana",
+        "type": 0,
+        "desc": "",
+        "params": []
+    },
+
+    {
+        "field": "armor",
+        "type": 0,
+        "desc": "",
+        "params": []
+    },
+
+    {
+        "field": "faction_A",
+        "type": 0,
+        "desc": "",
+        "params": []
+    },
+
+    {
+        "field": "faction_H",
+        "type": 0,
+        "desc": "",
+        "params": []
+    },
+
+    {
+        "field": "npcflag",
+        "type": 0,
+        "desc": "",
+        "params": []
+    },
+
+    {
+        "field": "speed_walk",
+        "type": 0,
+        "desc": "",
+        "params": []
+    },
+
+    {
+        "field": "speed_run",
+        "type": 0,
+        "desc": "",
+        "params": []
+    },
+
+    {
+        "field": "scale",
+        "type": 0,
+        "desc": "",
+        "params": []
+    },
+
+    {
+        "field": "rank",
+        "type": 0,
+        "desc": "",
+        "params": []
+    },
+
+    {
+        "field": "mindmg",
+        "type": 0,
+        "desc": "",
+        "params": []
+    },
+
+    {
+        "field": "maxdmg",
+        "type": 0,
+        "desc": "",
+        "params": []
+    },
+
+    {
+        "field": "dmgschool",
+        "type": 0,
+        "desc": "",
+        "params": []
+    },
+
+    {
+        "field": "attackpower",
+        "type": 0,
+        "desc": "",
+        "params": []
+    },
+
+    {
+        "field": "dmg_multiplier",
+        "type": 0,
+        "desc": "",
+        "params": []
+    },
+
+    {
+        "field": "baseattacktime",
+        "type": 0,
+        "desc": "",
+        "params": []
+    },
+
+    {
+        "field": "rangeattacktime",
+        "type": 0,
+        "desc": "",
+        "params": []
+    },
+
+    {
+        "field": "unit_class",
+        "type": 0,
+        "desc": "",
+        "params": []
+    },
+
+    {
+        "field": "unit_flags",
+        "type": 0,
+        "desc": "",
+        "params": []
+    },
+
+    {
+        "field": "dynamicflags",
+        "type": 0,
+        "desc": "",
+        "params": []
+    },
+
+    {
+        "field": "family",
+        "type": 2,
+        "desc": "This Defines The Family That This Creature Belongs To. This Is Only Used If CreatureType Is 1 (Beast).",
+        "params": [{
+                "v": 1,
+                "n": "Wolf"
+            },
+            {
+                "v": 2,
+                "n": "Cat"
+            },
+            {
+                "v": 3,
+                "n": "Spider"
+            },
+            {
+                "v": 4,
+                "n": "Bear"
+            },
+            {
+                "v": 5,
+                "n": "Boar"
+            },
+            {
+                "v": 6,
+                "n": "Crocolis"
+            },
+            {
+                "v": 7,
+                "n": "Carrion Bird"
+            },
+            {
+                "v": 8,
+                "n": "Crab"
+            },
+            {
+                "v": 9,
+                "n": "Gorilla"
+            },
+            {
+                "v": 10,
+                "n": "Raptor"
+            },
+            {
+                "v": 11,
+                "n": "Tallstrider"
+            },
+            {
+                "v": 12,
+                "n": "Felhunter"
+            },
+            {
+                "v": 13,
+                "n": "Voidwalker"
+            },
+            {
+                "v": 14,
+                "n": "Succubus"
+            },
+            {
+                "v": 15,
+                "n": "Doomguard"
+            },
+            {
+                "v": 16,
+                "n": "Scorpid"
+            },
+            {
+                "v": 17,
+                "n": "Turtle"
+            },
+            {
+                "v": 18,
+                "n": "Imp"
+            },
+            {
+                "v": 19,
+                "n": "Bat"
+            },
+            {
+                "v": 20,
+                "n": "Hyena"
+            },
+            {
+                "v": 21,
+                "n": "Bird of Prey"
+            },
+            {
+                "v": 22,
+                "n": "Wind Serpent"
+            },
+            {
+                "v": 23,
+                "n": "Remote Control"
+            },
+            {
+                "v": 24,
+                "n": "Felguard"
+            },
+            {
+                "v": 25,
+                "n": "Dragonhawk"
+            },
+            {
+                "v": 26,
+                "n": "Ravager"
+            },
+            {
+                "v": 27,
+                "n": "Warp Stalker"
+            },
+            {
+                "v": 28,
+                "n": "Sporebat"
+            },
+            {
+                "v": 29,
+                "n": "Nether Ray"
+            },
+            {
+                "v": 30,
+                "n": "Serpent"
+            },
+            {
+                "v": 31,
+                "n": "Moth"
+            },
+            {
+                "v": 32,
+                "n": "Chimaera"
+            },
+            {
+                "v": 33,
+                "n": "Devilsaur"
+            },
+            {
+                "v": 34,
+                "n": "Ghoul"
+            },
+            {
+                "v": 35,
+                "n": "Silithid"
+            },
+            {
+                "v": 36,
+                "n": "Worm"
+            },
+            {
+                "v": 37,
+                "n": "Rhino"
+            },
+            {
+                "v": 38,
+                "n": "Wasp"
+            },
+            {
+                "v": 39,
+                "n": "Core Hound"
+            },
+            {
+                "v": 40,
+                "n": "Spirit Beast"
+            }
+        ]
+    },
+
+    {
+        "field": "trainer_type",
+        "type": 0,
+        "desc": "",
+        "params": []
+    },
+
+    {
+        "field": "trainer_spell",
+        "type": 0,
+        "desc": "",
+        "params": []
+    },
+
+    {
+        "field": "trainer_class",
+        "type": 0,
+        "desc": "",
+        "params": []
+    },
+
+    {
+        "field": "trainer_race",
+        "type": 0,
+        "desc": "",
+        "params": []
+    },
+
+    {
+        "field": "minrangedmg",
+        "type": 0,
+        "desc": "",
+        "params": []
+    },
+
+    {
+        "field": "maxrangedmg",
+        "type": 0,
+        "desc": "",
+        "params": []
+    },
+
+    {
+        "field": "rangedattackpower",
+        "type": 0,
+        "desc": "",
+        "params": []
+    },
+
+    {
+        "field": "type",
+        "type": 0,
+        "desc": "",
+        "params": []
+    },
+
+    {
+        "field": "type_flags",
+        "type": 0,
+        "desc": "",
+        "params": []
+    },
+
+    {
+        "field": "lootid",
+        "type": 0,
+        "desc": "",
+        "params": []
+    },
+
+    {
+        "field": "pickpocketloot",
+        "type": 0,
+        "desc": "",
+        "params": []
+    },
+
+    {
+        "field": "skinloot",
+        "type": 0,
+        "desc": "",
+        "params": []
+    },
+
+    {
+        "field": "resistance1",
+        "type": 0,
+        "desc": "",
+        "params": []
+    },
+
+    {
+        "field": "resistance2",
+        "type": 0,
+        "desc": "",
+        "params": []
+    },
+
+    {
+        "field": "resistance3",
+        "type": 0,
+        "desc": "",
+        "params": []
+    },
+
+    {
+        "field": "resistance4",
+        "type": 0,
+        "desc": "",
+        "params": []
+    },
+
+    {
+        "field": "resistance5",
+        "type": 0,
+        "desc": "",
+        "params": []
+    },
+
+    {
+        "field": "resistance6",
+        "type": 0,
+        "desc": "",
+        "params": []
+    },
+
+    {
+        "field": "spell1",
+        "type": 0,
+        "desc": "",
+        "params": []
+    },
+
+    {
+        "field": "spell2",
+        "type": 0,
+        "desc": "",
+        "params": []
+    },
+
+    {
+        "field": "spell3",
+        "type": 0,
+        "desc": "",
+        "params": []
+    },
+
+    {
+        "field": "spell4",
+        "type": 0,
+        "desc": "",
+        "params": []
+    },
+
+    {
+        "field": "PetSpellDataId",
+        "type": 0,
+        "desc": "",
+        "params": []
+    },
+
+    {
+        "field": "mingold",
+        "type": 0,
+        "desc": "",
+        "params": []
+    },
+
+    {
+        "field": "maxgold",
+        "type": 0,
+        "desc": "",
+        "params": []
+    },
+
+    {
+        "field": "AIName",
+        "type": 0,
+        "desc": "",
+        "params": []
+    },
+
+    {
+        "field": "MovementType",
+        "type": 0,
+        "desc": "",
+        "params": []
+    },
+
+    {
+        "field": "InhabitType",
+        "type": 0,
+        "desc": "",
+        "params": []
+    },
+
+    {
+        "field": "Civilian",
+        "type": 0,
+        "desc": "",
+        "params": []
+    },
+
+    {
+        "field": "RacialLeader",
+        "type": 0,
+        "desc": "",
+        "params": []
+    },
+
+    {
+        "field": "RegenHealth",
+        "type": 0,
+        "desc": "",
+        "params": []
+    },
+
+    {
+        "field": "equipment_id",
+        "type": 0,
+        "desc": "",
+        "params": []
+    },
+
+    {
+        "field": "trainer_id",
+        "type": 0,
+        "desc": "",
+        "params": []
+    },
+
+    {
+        "field": "vendor_id",
+        "type": 0,
+        "desc": "",
+        "params": []
+    },
+
+    {
+        "field": "MechanicImmuneMask",
+        "type": 0,
+        "desc": "",
+        "params": []
+    },
+
+    {
+        "field": "SchoolImmuneMask",
+        "type": 0,
+        "desc": "",
+        "params": []
+    },
+
+    {
+        "field": "flags_extra",
+        "type": 0,
+        "desc": "",
+        "params": []
+    },
+
+    {
+        "field": "ScriptName",
+        "type": 0,
+        "desc": "",
+        "params": []
+    }
+]
