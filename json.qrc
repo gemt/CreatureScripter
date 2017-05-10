@@ -4,5 +4,6 @@
         <file>json/EventAI_elysium.json</file>
         <file>json/Actions_cmangos.json</file>
         <file>json/Actions_elysium.json</file>
+        <file>json/CreatureTemplate.json</file>
     </qresource>
 </RCC>
