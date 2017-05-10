@@ -114,6 +114,11 @@ creature_template::creature_template(quint32 entry) :
     creatures = new creature(entry);
     scripts = new creature_ai_scripts(entry);
     equipment = new creature_equip_template(record.value(equipment_id));
+    template_addon = new creature_template_addon(entry);
+    model_info[0] = new creature_model_info(record.value(modelid_1));
+    model_info[1] = new creature_model_info(record.value(modelid_2));
+    model_info[2] = new creature_model_info(record.value(modelid_3));
+    model_info[3] = new creature_model_info(record.value(modelid_4));
 
     //makeRelation<creature_template_addon>(entry, creature_template_addon::entry),
     //makeRelation<creature_model_info>(modelid_1, creature_model_info::modelid),
@@ -146,6 +151,19 @@ creature_ai_scripts::creature_ai_scripts(quint32 entry) :
         (*it).table = t;
         (*it).pk = creature_ai_scripts::id;
     }
+}
+
+creature_template_addon::creature_template_addon(const QVariant &v):
+    Table(t),
+    record(Query1(v, creature_template_addon::entry, false))
+{
+}
+
+creature_model_info::creature_model_info(QVariant v) :
+    Table(t),
+    record(Query1(v, creature_model_info::modelid, false))
+{
+
 }
 
 

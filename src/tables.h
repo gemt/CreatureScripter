@@ -30,6 +30,8 @@ static QString EscapedVal(const QVariant& val){
 struct Table;
 struct creature_ai_scripts;
 struct creature_equip_template;
+struct creature_template_addon;
+struct creature_model_info;
 
 struct relation{
     Table* table;
@@ -144,22 +146,28 @@ struct creature_template : public Table{
     creature_template(quint32 entry);
     MangosRecord record;
 
+    // XXX: add a dtor and delete this stuff
     creature* creatures;
     creature_ai_scripts* scripts;
     creature_equip_template* equipment;
+    creature_template_addon* template_addon;
+    static constexpr int MAX_MODEL_INFO = 4;
+    creature_model_info* model_info[MAX_MODEL_INFO];
 };
 
 struct creature_template_addon : public Table{
     static const QString t;
     static const QString entry;
-    creature_template_addon():Table(t){}
+    MangosRecord record;
+    creature_template_addon(const QVariant &v);
 };
 
 
 struct creature_model_info : public Table{
     static const QString t;
     static const QString modelid;
-    creature_model_info():Table(t){}
+    creature_model_info(QVariant v);
+    MangosRecord record;
 };
 
 

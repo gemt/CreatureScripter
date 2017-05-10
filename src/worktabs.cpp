@@ -32,13 +32,12 @@ WorkTab::WorkTab(uint entry, QString name, QWidget *parent) :
     //rawTables = new CreatureTables(entry,this);
     StatsTemplate* creatureTemplate = new StatsTemplate(data->creature, this);
 
-    QVector<std::pair<QString,QSqlRecord>> templateRecords;
     //templateRecords.push_back(std::move(rawTables->GetSingleRecord(Tables::creature_template::dbTable())));
     //templateRecords.push_back(std::move(rawTables->GetSingleRecord(Tables::creature_template_addon::t())));
     //templateRecords.push_back(std::move(rawTables->GetSingleRecord(Tables::creature_equip_template::t())));
     //templateRecords.push_back(std::move(rawTables->GetSingleRecord(Tables::creature_equip_template_raw::t())));
     //templateRecords.push_back(std::move(rawTables->GetSingleRecord(Tables::)));
-    TemplateTables* templateTable = new TemplateTables(templateRecords, this);
+    TemplateTables* templateTable = new TemplateTables(data->creature, this);
     addTab(templateTable, "Template Tables");
 
     addTab(creatureTemplate, "CreatureTemplate");
