@@ -88,6 +88,7 @@ struct EventAI_Action{
 
 struct TypeValue{
     int value;
+    QString altValue;
     QString name;
     QString description;
 };
@@ -104,24 +105,8 @@ struct EventAI_event {
     static const Parameter eventFlags;
 };
 
-enum WidgetType{
-    UNASSIGNED = 0,
-    CONSTANT = 1,
-    DROPDOWN_WIDGET=2,
-    FLAGS_WIDGET=3,
-    NUMBER_WIDGET=4,
 
-};
 
-struct TableTypeValue{
-    TableTypeValue(ParameterType t, QString _f, const QString& tt, const QString& v) :
-        _type(t),_field(_f),tooltip(tt),values(v)
-    {}
-    const ParameterType _type;
-    QString _field;
-    const QString tooltip;
-    const QVector<TypeValue> values;
-};
 
 static const QString phase_mask_tooltip =
     "Phase mask is a bitmask of phases which shouldn't trigger this event. (ie. Phase mask of value 12 (binary 1100)<br>"

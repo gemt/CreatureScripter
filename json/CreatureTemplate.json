@@ -251,180 +251,89 @@
         "field": "unit_flags",
         "type": 0,
         "desc": "",
-        "params": []
+        "params": [
+            {"v": 0,                "n": "UNIT_FLAG_NONE"                 , "d": ""},
+            {"v": 1,                "n": "UNIT_FLAG_UNK_0"                , "d": ""},
+            {"v": 2,                "n": "UNIT_FLAG_NON_ATTACKABLE"       , "d": "not attackable"},
+            {"v": 4,                "n": "UNIT_FLAG_DISABLE_MOVE"         , "d": ""},
+            {"v": 8,                "n": "UNIT_FLAG_PVP_ATTACKABLE"       , "d": "allow apply pvp rules to attackable state in addition to faction dependent state, UNIT_FLAG_UNKNOWN1 in pre-bc mangos"},
+            {"v": 16,               "n": "UNIT_FLAG_PET_RENAME"           , "d": "Old pet rename: moved to UNIT_FIELD_BYTES_2,2 in TBC+"},
+            {"v": 32,               "n": "UNIT_FLAG_PET_ABANDON"          , "d": "Old pet abandon: moved to UNIT_FIELD_BYTES_2,2 in TBC+"},
+            {"v": 64,               "n": "UNIT_FLAG_UNK_6"                , "d": ""},
+            {"v": 128,              "n": "UNIT_FLAG_OOC_NOT_ATTACKABLE"   , "d": "(OOC Out Of Combat) Can not be attacked when not in combat. Removed if unit for some reason enter combat (flag probably removed for the attacked and it's party/group only)"},
+            {"v": 256,              "n": "UNIT_FLAG_PASSIVE"              , "d": "makes you unable to attack everything. Almost identical to our >civilian<-term. Will ignore it's surroundings and not engage in combat unless >called upon< or engaged by another unit."},
+            {"v": 4096,             "n": "UNIT_FLAG_PVP"                  , "d": ""},
+            {"v": 8192,             "n": "UNIT_FLAG_SILENCED"             , "d": "silenced, 2.1.1"},
+            {"v": 16384,            "n": "UNIT_FLAG_UNK_14"               , "d": ""},
+            {"v": 32768,            "n": "UNIT_FLAG_USE_SWIM_ANIMATION"   , "d": ""},
+            {"v": 65536,            "n": "UNIT_FLAG_UNK_16"               , "d": "removes attackable icon"},
+            {"v": 131072,           "n": "UNIT_FLAG_PACIFIED"             , "d": ""},
+            {"v": 262144,           "n": "UNIT_FLAG_DISABLE_ROTATE"       , "d": ""},
+            {"v": 524288,           "n": "UNIT_FLAG_IN_COMBAT"            , "d": ""},
+            {"v": 33554432,         "n": "UNIT_FLAG_NOT_SELECTABLE"       , "d": ""},
+            {"v": 67108864,         "n": "UNIT_FLAG_SKINNABLE"            , "d": ""},
+            {"v": 134217728,        "n": "UNIT_FLAG_AURAS_VISIBLE"        , "d": "magic detect"},
+            {"v": 1073741824,       "n": "UNIT_FLAG_SHEATHE"              , "d": ""},
+            {"v": 2147483648,       "n": "UNIT_FLAG_NO_KILL_REWARD"       , "d": "Unit should yield no reward (Honor/XP/Rep) on kill"},
+
+            {"v": 128,              "n": "TBC?_UNIT_FLAG_NOT_ATTACKABLE_1"  , "d": "?? (UNIT_FLAG_PVP_ATTACKABLE | UNIT_FLAG_NOT_ATTACKABLE_1) is NON_PVP_ATTACKABLE"},
+            {"v": 1024,             "n": "TBC?_UNIT_FLAG_LOOTING"           , "d": "loot animation"},
+            {"v": 2048,             "n": "TBC?_UNIT_FLAG_PET_IN_COMBAT"     , "d": "in combat?, 2.0.8"},
+            {"v": 262144,           "n": "TBC?_UNIT_FLAG_STUNNED"           , "d": "stunned, 2.1.1"},
+            {"v": 1048576,          "n": "TBC?_UNIT_FLAG_TAXI_FLIGHT"       , "d": "disable casting at client side spell not allowed by taxi flight (mounted?), probably used with 0x4 flag"},
+            {"v": 2097152,          "n": "TBC?_UNIT_FLAG_DISARMED"          , "d": "disable melee spells casting..., >Required melee weapon< added to melee spells tooltip."},
+            {"v": 4194304,          "n": "TBC?_UNIT_FLAG_CONFUSED"          , "d": ""},
+            {"v": 8388608,          "n": "TBC?_UNIT_FLAG_FLEEING"           , "d": ""},
+            {"v": 16777216,         "n": "TBC?_UNIT_FLAG_PLAYER_CONTROLLED" , "d": "used in spell Eyes of the Beast for pet... let attack by controlled creature"},
+            {"v": 268435456,        "n": "TBC?_UNIT_FLAG_UNK_28"            , "d": ""},
+            {"v": 536870912,        "n": "TBC?_UNIT_FLAG_UNK_29"            , "d": "used in Feing Death spell"}
+        ]
     },
 
     {
         "field": "dynamicflags",
-        "type": 0,
+        "type": 3,
         "desc": "",
-        "params": []
+        "params": [
+            {"v": 0,  "n": "UNIT_DYNFLAG_NONE"},
+            {"v": 1,  "n": "UNIT_DYNFLAG_LOOTABLE"},
+            {"v": 2,  "n": "UNIT_DYNFLAG_TRACK_UNIT"},
+            {"v": 4,  "n": "UNIT_DYNFLAG_TAPPED", "d": "Lua_UnitIsTapped"},
+            {"v": 8,  "n": "UNIT_DYNFLAG_TAPPED_BY_PLAYER", "d": "And no *_ROOTED !"},
+            {"v": 16,  "n": "UNIT_DYNFLAG_SPECIALINFO"},
+            {"v": 32,  "n": "UNIT_DYNFLAG_DEAD"}
+        ]
     },
 
     {
         "field": "family",
         "type": 2,
         "desc": "This Defines The Family That This Creature Belongs To. This Is Only Used If CreatureType Is 1 (Beast).",
-        "params": [{
-                "v": 1,
-                "n": "Wolf"
-            },
-            {
-                "v": 2,
-                "n": "Cat"
-            },
-            {
-                "v": 3,
-                "n": "Spider"
-            },
-            {
-                "v": 4,
-                "n": "Bear"
-            },
-            {
-                "v": 5,
-                "n": "Boar"
-            },
-            {
-                "v": 6,
-                "n": "Crocolis"
-            },
-            {
-                "v": 7,
-                "n": "Carrion Bird"
-            },
-            {
-                "v": 8,
-                "n": "Crab"
-            },
-            {
-                "v": 9,
-                "n": "Gorilla"
-            },
-            {
-                "v": 10,
-                "n": "Raptor"
-            },
-            {
-                "v": 11,
-                "n": "Tallstrider"
-            },
-            {
-                "v": 12,
-                "n": "Felhunter"
-            },
-            {
-                "v": 13,
-                "n": "Voidwalker"
-            },
-            {
-                "v": 14,
-                "n": "Succubus"
-            },
-            {
-                "v": 15,
-                "n": "Doomguard"
-            },
-            {
-                "v": 16,
-                "n": "Scorpid"
-            },
-            {
-                "v": 17,
-                "n": "Turtle"
-            },
-            {
-                "v": 18,
-                "n": "Imp"
-            },
-            {
-                "v": 19,
-                "n": "Bat"
-            },
-            {
-                "v": 20,
-                "n": "Hyena"
-            },
-            {
-                "v": 21,
-                "n": "Bird of Prey"
-            },
-            {
-                "v": 22,
-                "n": "Wind Serpent"
-            },
-            {
-                "v": 23,
-                "n": "Remote Control"
-            },
-            {
-                "v": 24,
-                "n": "Felguard"
-            },
-            {
-                "v": 25,
-                "n": "Dragonhawk"
-            },
-            {
-                "v": 26,
-                "n": "Ravager"
-            },
-            {
-                "v": 27,
-                "n": "Warp Stalker"
-            },
-            {
-                "v": 28,
-                "n": "Sporebat"
-            },
-            {
-                "v": 29,
-                "n": "Nether Ray"
-            },
-            {
-                "v": 30,
-                "n": "Serpent"
-            },
-            {
-                "v": 31,
-                "n": "Moth"
-            },
-            {
-                "v": 32,
-                "n": "Chimaera"
-            },
-            {
-                "v": 33,
-                "n": "Devilsaur"
-            },
-            {
-                "v": 34,
-                "n": "Ghoul"
-            },
-            {
-                "v": 35,
-                "n": "Silithid"
-            },
-            {
-                "v": 36,
-                "n": "Worm"
-            },
-            {
-                "v": 37,
-                "n": "Rhino"
-            },
-            {
-                "v": 38,
-                "n": "Wasp"
-            },
-            {
-                "v": 39,
-                "n": "Core Hound"
-            },
-            {
-                "v": 40,
-                "n": "Spirit Beast"
-            }
+        "params": [
+            {"v": 1,  "n": "CREATURE_FAMILY_WOLF"},
+            {"v": 2,  "n": "CREATURE_FAMILY_CAT"},
+            {"v": 3,  "n": "CREATURE_FAMILY_SPIDER"},
+            {"v": 4,  "n": "CREATURE_FAMILY_BEAR"},
+            {"v": 5,  "n": "CREATURE_FAMILY_BOAR"},
+            {"v": 6,  "n": "CREATURE_FAMILY_CROCOLISK"},
+            {"v": 7,  "n": "CREATURE_FAMILY_CARRION_BIRD"},
+            {"v": 8,  "n": "CREATURE_FAMILY_CRAB"},
+            {"v": 9,  "n": "CREATURE_FAMILY_GORILLA"},
+            {"v": 10, "n": "CREATURE_FAMILY_HORSE_CUSTOM", "d": "not exist in DBC but used for horse like beasts in DB"},
+            {"v": 11, "n": "CREATURE_FAMILY_RAPTOR"},
+            {"v": 12, "n": "CREATURE_FAMILY_TALLSTRIDER"},
+            {"v": 15, "n": "CREATURE_FAMILY_FELHUNTER"},
+            {"v": 16, "n": "CREATURE_FAMILY_VOIDWALKER"},
+            {"v": 17, "n": "CREATURE_FAMILY_SUCCUBUS"},
+            {"v": 19, "n": "CREATURE_FAMILY_DOOMGUARD"},
+            {"v": 20, "n": "CREATURE_FAMILY_SCORPID"},
+            {"v": 21, "n": "CREATURE_FAMILY_TURTLE"},
+            {"v": 23, "n": "CREATURE_FAMILY_IMP"},
+            {"v": 24, "n": "CREATURE_FAMILY_BAT"},
+            {"v": 25, "n": "CREATURE_FAMILY_HYENA"},
+            {"v": 26, "n": "CREATURE_FAMILY_OWL"},
+            {"v": 27, "n": "CREATURE_FAMILY_WIND_SERPENT"},
+            {"v": 28, "n": "CREATURE_FAMILY_REMOTE_CONTROL"}
         ]
     },
 
@@ -432,7 +341,12 @@
         "field": "trainer_type",
         "type": 0,
         "desc": "",
-        "params": []
+        "params": [
+            {"v": 0, "n": "TRAINER_TYPE_CLASS"},
+            {"v": 1, "n": "TRAINER_TYPE_MOUNTS", "d": "on blizz it's 2"},
+            {"v": 2, "n": "TRAINER_TYPE_TRADESKILLS"},
+            {"v": 3, "n": "TRAINER_TYPE_PETS"}
+        ]
     },
 
     {
@@ -494,18 +408,31 @@
             {"v":8 , "n": "Critter"},
             {"v":9 , "n": "Mechanical"},
             {"v":10, "n": "Not specified"},
-            {"v":11, "n": "Totem"},
-            {"v":12, "n": "Non-combat Pet"},
-            {"v":13, "n": "Gas Cloud"}
+            {"v":11, "n": "Totem"}
         ]
     },
 
     {
         "field": "type_flags",
-        "type": 0,
+        "type": 3,
         "desc": "",
         "params": [
-
+            {"v": 1       , "n": "CREATURE_TYPEFLAGS_TAMEABLE"         , "d": "Tameable by any hunter"},
+            {"v": 2       , "n": "CREATURE_TYPEFLAGS_GHOST_VISIBLE"    , "d": "Creatures which can _also_ be seen when player is a ghost, used in CanInteract function by client, can't be attacked"},
+            {"v": 4       , "n": "CREATURE_TYPEFLAGS_BOSS"             , "d": "BOSS flag for tooltips"},
+            {"v": 8       , "n": "CREATURE_TYPEFLAGS_NO_WOUND_ANIM"    , "d": "disables wounded animations at spell taken"},
+            {"v": 16      , "n": "CREATURE_TYPEFLAGS_UNK5"             , "d": "controls something in client tooltip related to creature faction"},
+            {"v": 32      , "n": "CREATURE_TYPEFLAGS_UNK6"             , "d": "may be sound related"},
+            {"v": 64      , "n": "CREATURE_TYPEFLAGS_UNK7"             , "d": "may be related to attackable / not attackable creatures with spells, used together with lua_IsHelpfulSpell/lua_IsHarmfulSpell"},
+            {"v": 128     , "n": "CREATURE_TYPEFLAGS_DEAD_INTERACT"    , "d": "Player can interact with the creature if its dead (not player dead)"},
+            {"v": 256     , "n": "CREATURE_TYPEFLAGS_HERBLOOT"         , "d": "Can be looted by herbalist"},
+            {"v": 512     , "n": "CREATURE_TYPEFLAGS_MININGLOOT"       , "d": "Can be looted by miner"},
+            {"v": 1024    , "n": "CREATURE_TYPEFLAGS_UNK11"            , "d": "no idea, but it used by client"},
+            {"v": 2048    , "n": "CREATURE_TYPEFLAGS_MOUNTED_COMBAT"   , "d": "Creature can remain mounted when entering combat"},
+            {"v": 4096    , "n": "CREATURE_TYPEFLAGS_CAN_ASSIST"       , "d": "Can aid any player (and group) in combat. Typically seen for escorting NPC's"},
+            {"v": 8192    , "n": "CREATURE_TYPEFLAGS_UNK14"            , "d": "checked from calls in Lua_PetHasActionBar"},
+            {"v": 16384   , "n": "CREATURE_TYPEFLAGS_UNK15"            , "d": "Lua_UnitGUID, client does guid_low &= 0xFF000000 if this flag is set"},
+            {"v": 32768   , "n": "CREATURE_TYPEFLAGS_ENGINEERLOOT"     , "d": "Can be looted by engineer"}
         ]
     },
 
@@ -647,7 +574,7 @@
 
     {
         "field": "InhabitType",
-        "type": 0,
+        "type": 5,
         "desc": "",
         "params": [
             {"v": "NullAI"      , "n": "NullAI"      ,"d" : "Empty AI, creature does nothing."},
@@ -707,6 +634,7 @@
         "type": 3,
         "desc": "This makes the NPC immune to specific spell natures. See Spell.dbc at row effect_X_mechanic_id. Uses references from SpellMechanic.dbc.",
         "params": [
+            {"v": 0           , "n": "NONE"},
             {"v": 1           , "n": "MECHANIC_CHARM"},
             {"v": 2           , "n": "MECHANIC_CONFUSED"},
             {"v": 4           , "n": "MECHANIC_DISARM"},
@@ -742,7 +670,7 @@
 
     {
         "field": "SchoolImmuneMask",
-        "type": 0,
+        "type": 3,
         "desc": "This makes the NPC immune to specific spell schools.",
         "params": [
             {"v": 1     , "n": "SPELL_SCHOOL_NORMAL"},
@@ -757,7 +685,7 @@
 
     {
         "field": "flags_extra",
-        "type": 0,
+        "type": 3,
         "desc": "",
         "params": [
                 {"v": 1,    "n": "CREATURE_FLAG_EXTRA_INSTANCE_BIND",                "d": "creature kill bind instance with killer and killer's group"},

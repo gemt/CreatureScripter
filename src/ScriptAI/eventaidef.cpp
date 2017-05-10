@@ -82,7 +82,6 @@ QFile f(":/eventai/json/EventAI_cmangos.json");
         event.description = o["d1"].toString();
         QJsonArray params = o["params"].toArray();
         foreach(const QJsonValue& v, params){
-            qDebug() << v.toString();
             auto it = eventParameters.find(v.toString());
             if(it == eventParameters.end()){
                 event.params.push_back(Parameter{PT_UNKNOWN, "UNKNOWN", ""});
