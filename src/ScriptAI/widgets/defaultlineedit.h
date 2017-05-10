@@ -10,14 +10,13 @@
 class DefaultLineEdit : public QLineEdit
 {
 public:
-    DefaultLineEdit(MangosRecord& r, const QString fieldName, const EventAI::Parameter& param,  QWidget* parent = nullptr);
+    DefaultLineEdit(MangosRecord& r, const QString fieldName, const QString& tooltip, QWidget* parent = nullptr);
 
 private slots:
     void onTextChange(const QString& newText);
 
 private:
     MangosRecord& record;
-    const EventAI::Parameter& parameter;
     int rIdx;
 };
 

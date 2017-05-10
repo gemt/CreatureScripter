@@ -3,13 +3,13 @@
 #include <QDebug>
 #include <QIntValidator>
 
-DefaultLineEdit::DefaultLineEdit(MangosRecord &r, const QString fieldName, const EventAI::Parameter &param, QWidget *parent)
-    : QLineEdit(parent), record(r), parameter(param)
+DefaultLineEdit::DefaultLineEdit(MangosRecord &r, const QString fieldName, const QString& tooltip, QWidget *parent)
+    : QLineEdit(parent), record(r)
 {
     setValidator(new QIntValidator(std::numeric_limits<int>::min(), std::numeric_limits<int>::max()));
     rIdx = record.indexOf(fieldName);
     setText(record.value(rIdx).toString());
-    setToolTip(param.description);
+    setToolTip(tooltip);
     connect(this, &QLineEdit::textChanged, this, &DefaultLineEdit::onTextChange);
 }
 

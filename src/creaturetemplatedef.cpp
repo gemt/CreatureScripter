@@ -32,16 +32,18 @@ void CreatureTemplateDef::Load()
     }
     QJsonArray arr = doc.array();
 
-    foreach(const QJsonObject& obj, arr){
+    foreach(const QJsonValue& objV, arr){
+        QJsonObject obj = objV.toObject();
         TableTypeValue v;
-        obj.value("");
-        v.name = obj.contains("name") ? obj["name"].toString() : "";
+
+        v._field = obj["field"].toString();
+        v.name = (obj.contains("name") ? obj["name"].toString() : v._field);
         v.tooltip = obj["desc"].toString();
         v._type = (WidgetType)obj["type"].toInt();
         bool useAltVal = v._type == STRING_VALUE_DROPDOWN;
         QJsonArray params = obj["params"].toArray();
-        foreach(const QJsonValue& v, params){
-            QJsonObject p = v.toObject();
+        foreach(const QJsonValue& val, params){
+            QJsonObject p = val.toObject();
             EventAI::TypeValue t;
             t.description = p.contains("d") ? p["d"].toString() : "";
             t.name = p["n"].toString();
@@ -49,8 +51,8 @@ void CreatureTemplateDef::Load()
                 t.altValue = p["v"].toString();
             else
                 t.value = p["v"].toInt();
-
+            v.values.push_back(std::move(t));
         }
-        events.insert(event.id, std::move(event));
+        _fieldTypes.push_back(std::move(v));
     }
 }

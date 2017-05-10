@@ -15,11 +15,14 @@ enum WidgetType{
 
 struct TableTypeValue{
 public:
-    const WidgetType _type;
-    const QString _field;
-    const QString name;
-    const QString tooltip;
-    const QVector<EventAI::TypeValue> values;
+    WidgetType _type;
+    QString _field;
+
+    // usually same as _field, but sometimes different where
+    // _field is not very descriptive
+    QString name;
+    QString tooltip;
+    QVector<EventAI::TypeValue> values;
 };
 
 class CreatureTemplateDef

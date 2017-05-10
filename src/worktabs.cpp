@@ -6,6 +6,7 @@
 #include "templatetables.h"
 #include "creatureeventai.h"
 #include "changeswidget.h"
+#include "statstemplate.h"
 
 #include <QVBoxLayout>
 #include <QHBoxLayout>
@@ -29,6 +30,7 @@ WorkTab::WorkTab(uint entry, QString name, QWidget *parent) :
 
     //CreatureModifier* cm = new CreatureModifier(this);
     //rawTables = new CreatureTables(entry,this);
+    StatsTemplate* creatureTemplate = new StatsTemplate(data->creature, this);
 
     QVector<std::pair<QString,QSqlRecord>> templateRecords;
     //templateRecords.push_back(std::move(rawTables->GetSingleRecord(Tables::creature_template::dbTable())));
@@ -37,10 +39,10 @@ WorkTab::WorkTab(uint entry, QString name, QWidget *parent) :
     //templateRecords.push_back(std::move(rawTables->GetSingleRecord(Tables::creature_equip_template_raw::t())));
     //templateRecords.push_back(std::move(rawTables->GetSingleRecord(Tables::)));
     TemplateTables* templateTable = new TemplateTables(templateRecords, this);
-
-
-    //addTab(cm, "Modifier");
     addTab(templateTable, "Template Tables");
+
+    addTab(creatureTemplate, "CreatureTemplate");
+    //addTab(cm, "Modifier");
     //addTab(rawTables, "Raw Tables");
 
     changesTab = new ChangesWidget(this, data->creature);

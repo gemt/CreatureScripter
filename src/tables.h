@@ -141,8 +141,6 @@ struct creature_template : public Table{
     static const QString AIName;
     static const QString ScriptName;
 
-    static const QVector<EventAI::TableTypeValue> FieldTypes;
-
     creature_template(quint32 entry);
     MangosRecord record;
 

@@ -249,7 +249,7 @@
 
     {
         "field": "unit_flags",
-        "type": 0,
+        "type": 3,
         "desc": "",
         "params": [
             {"v": 0,                "n": "UNIT_FLAG_NONE"                 , "d": ""},
@@ -339,7 +339,7 @@
 
     {
         "field": "trainer_type",
-        "type": 0,
+        "type": 2,
         "desc": "",
         "params": [
             {"v": 0, "n": "TRAINER_TYPE_CLASS"},
@@ -394,7 +394,7 @@
     {
         "__COMMENT": "CreatureType",
         "field": "type",
-        "type": 0,
+        "type": 2,
         "desc": "",
         "params": [
             {"v":0 , "n": "None"},
@@ -563,7 +563,7 @@
 
     {
         "field": "MovementType",
-        "type": 0,
+        "type": 2,
         "desc": "",
         "params": [
             {"v": 0	, "n": "Idle – Stand Still (Stationary)"},

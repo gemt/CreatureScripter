@@ -42,7 +42,8 @@ HEADERS += $$files(src/*.h) \
     src/ScriptAI/widgets/eventtypewidget.h \
     src/loadingscreen.h \
     src/ScriptAI/statstemplate.h \
-    src/creaturetemplatedef.h
+    src/creaturetemplatedef.h \
+    src/ScriptAI/widgets/stringwidget.h
 HEADERS += $$files(src/CreatureTabs/*.h)
 HEADERS += $$files(src/ScriptAI/*.h)
 HEADERS += $$files(src/ScriptAI/widgets/*.h)
@@ -60,7 +61,8 @@ SOURCES += $$files(src/*.cpp) \
     src/ScriptAI/widgets/eventtypewidget.cpp \
     src/loadingscreen.cpp \
     src/ScriptAI/statstemplate.cpp \
-    src/creaturetemplatedef.cpp
+    src/creaturetemplatedef.cpp \
+    src/ScriptAI/widgets/stringwidget.cpp
 SOURCES += $$files(src/CreatureTabs/*.cpp)
 SOURCES += $$files(src/ScriptAI/*.cpp)
 SOURCES += $$files(src/ScriptAI/widgets/*.cpp)

@@ -54,7 +54,7 @@ static QWidget* CreateParameterWidget(const EventAI::Parameter& param, MangosRec
         rw = new MillisecondsWidget(record, field, param, w);
         break;
     case EventAI::PERCENTAGE:
-        rw =  new DefaultLineEdit(record, field, param, w);
+        rw =  new DefaultLineEdit(record, field, param.description, w);
         break;
     case EventAI::SPELL_ID:
         rw = new SpellIDWidget(record, field, param, w);
@@ -134,7 +134,7 @@ static QWidget* CreateParameterWidget(const EventAI::Parameter& param, MangosRec
     case EventAI::CLASS_MASK:
     case EventAI::AREA_FLAG:
     case EventAI::ZONE_OR_MAP_ID:
-        rw = new DefaultLineEdit(record, field, param, w);
+        rw = new DefaultLineEdit(record, field, param.description, w);
         break;
 
     ///////////////////

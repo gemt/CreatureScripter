@@ -6,6 +6,7 @@
 #include "eventaidef.h"
 #include "loadingscreen.h"
 #include "qswwrapper.h"
+#include "creaturetemplatedef.h"
 
 #include <QApplication>
 #include <QSettings>
@@ -76,6 +77,11 @@ int main(int argc, char *argv[])
 
     try {
         EventAI::EventAIStorage::Get();
+    }catch(std::exception& e){
+        Warnings::Warning(e.what(), QMessageBox::Critical);
+    }
+    try {
+        CreatureTemplateDef::Get();
     }catch(std::exception& e){
         Warnings::Warning(e.what(), QMessageBox::Critical);
     }
