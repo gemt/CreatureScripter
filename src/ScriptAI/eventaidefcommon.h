@@ -88,9 +88,9 @@ struct EventAI_Action{
 
 struct TypeValue{
     int value;
-    QString altValue;
     QString name;
     QString description;
+    QString altValue;
 };
 
 struct EventAI_event {

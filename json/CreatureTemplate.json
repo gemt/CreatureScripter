@@ -310,6 +310,7 @@
         "type": 2,
         "desc": "This Defines The Family That This Creature Belongs To. This Is Only Used If CreatureType Is 1 (Beast).",
         "params": [
+            {"v": 0,  "n": "0"},
             {"v": 1,  "n": "CREATURE_FAMILY_WOLF"},
             {"v": 2,  "n": "CREATURE_FAMILY_CAT"},
             {"v": 3,  "n": "CREATURE_FAMILY_SPIDER"},

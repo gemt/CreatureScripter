@@ -247,6 +247,8 @@ void CreatureSearcher::onActivated(const QModelIndex &idx)
 }
 
 void CreatureSearcher::Load(LoadingScreen& ls){
+    qDebug() << "Starting loading creatures";
+
     ls.SetMessage("Caching Creature information");
     QSqlDatabase db = Cache::Get().GetDB();
     QSqlQuery template_query(db);
@@ -298,6 +300,7 @@ void CreatureSearcher::Load(LoadingScreen& ls){
         }
         currCreature->maps.insert(map);
     }
+    qDebug() << "Finished loading " << QString::number(creatures.size()) << " creatures";
 }
 
 

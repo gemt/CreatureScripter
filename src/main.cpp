@@ -15,7 +15,7 @@
 #include <QDebug>
 #include <QStyleFactory>
 #include <QPalette>
-
+#undef QT_NO_DEBUG_OUTPUT
 void SetStyle()
 {
     qApp->setStyle(QStyleFactory::create("Fusion"));
@@ -44,25 +44,77 @@ void SetAppInfo()
     QCoreApplication::setApplicationName("CreatureScripter");
 }
 
-bool CheckConnectionSettings(MainWindow& mw)
+bool CheckConnectionSettings(MainWindow& mw, LoadingScreen& ls)
 {
     QSettings settings;
     if(!settings.contains("worldDB"))
     {
         // First time startup
+        ls.hide();
         DBConnectionSettings dbSettings(&mw);
-        return dbSettings.exec() == QDialog::Accepted;
+        bool ok = dbSettings.exec() == QDialog::Accepted;
+        ls.show();
+        return ok;
+
     }else{
         if(!Cache::Get().Connect()){
+            ls.hide();
             DBConnectionSettings dbSettings(&mw);
-            return dbSettings.exec() == QDialog::Accepted;
+            bool ok = dbSettings.exec() == QDialog::Accepted;
+            ls.show();
+            return ok;
         }
     }
     return true;
 }
 
+#include <QtDebug>
+#include <QApplication>
+#include <QFile>
+#include <QTextStream>
+
+
+
+QFile file("Log.txt");
+void logFileOut(QtMsgType type, const QMessageLogContext &context, const QString &msg) {
+    QTextStream out(&file);
+    out << QTime::currentTime().toString("hh:mm:ss.zzz ");
+    switch (type) {
+        case QtDebugMsg:
+            out << "DBG" << " (" << context.line << ")";
+            break;
+        case QtWarningMsg:
+            out << "WRN" << " (" << context.line << ")";
+            break;
+        case QtCriticalMsg:
+            out << "CRT" << " (" << context.line << ")";
+            break;
+        case QtFatalMsg:
+            out << "FTL" << " (" << context.line << ")";
+            break;
+        case QtInfoMsg:
+            out << "INF" << " (" << context.line << ")";
+            break;
+    }
+    out << " " << msg << '\n';
+    out.flush();
+}
+
+
+bool setup_logging(){
+    if(!file.open(QIODevice::Append | QIODevice::Text)){
+        Warnings::Warning("Unable to create and open log file");
+        return false;
+    }
+    qInstallMessageHandler(logFileOut);
+    return true;
+}
+
+
+
 int main(int argc, char *argv[])
 {
+    setup_logging();
     QApplication a(argc, argv);
     LoadingScreen loadingScreen(nullptr);
     loadingScreen.raise();
@@ -86,7 +138,7 @@ int main(int argc, char *argv[])
         Warnings::Warning(e.what(), QMessageBox::Critical);
     }
 
-    if(!CheckConnectionSettings(w)){
+    if(!CheckConnectionSettings(w, loadingScreen)){
         return 1;
     }
 
