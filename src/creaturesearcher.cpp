@@ -142,25 +142,35 @@ public:
     QString nameFilt;
     QVector<int> maps;
     bool onlyEventAI;
-
+    int numMaps;
     ProxyModel(QWidget* parent)
         :QSortFilterProxyModel(parent),
           onlyEventAI(false)
     {
+        numMaps = Cache::Get().GetMapVec().size();
     }
 protected:
     bool filterAcceptsRow(int source_row, const QModelIndex &source_parent) const
     {
         QModelIndex index0 = sourceModel()->index(source_row, 0, source_parent);
         QSet<int> mapset = sourceModel()->data(index0, Qt::UserRole+2).value<QSet<int>>();
-        bool inmap = false;
-        for(int i = 0; i < maps.size(); i++){
-            if(mapset.contains(maps[i])){
-                inmap = true;
-                break;
+
+
+        if(!mapset.isEmpty()){
+            bool inmap = false;
+            for(int i = 0; i < maps.size(); i++){
+                if(mapset.contains(maps[i])){
+                    inmap = true;
+                    break;
+                }
             }
+            if(!inmap){
+                return false;
+            }
+        }else if(maps.size() != numMaps){
+            // Gets arround creatures that does not exist in a map (summoned creatures, generally)
+            return false;
         }
-        if(!inmap) return false;
 
         if(onlyEventAI && !sourceModel()->data(index0, Qt::UserRole+3).toBool())
             return false;
