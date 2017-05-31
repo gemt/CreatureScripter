@@ -12,10 +12,10 @@ ChangesWidget::ChangesWidget(QWidget *parent, std::shared_ptr<Tables::creature_t
     :QWidget(parent)
 {
     l = new QVBoxLayout(this);
+    l->setSizeConstraint(QLayout::SetMinimumSize);
     //textEdit = new QTextEdit(this);
     //textEdit->setReadOnly(true);
     //l->addWidget(textEdit);
-
 
     using namespace Tables;
     connect(&_creature->record, &MangosRecord::valueChanged, this, &ChangesWidget::ValueChanged);
@@ -44,7 +44,7 @@ void ChangesWidget::ValueChanged(MangosRecord rec)
         f.setValue(vVal);
         f.setType(vVal.type());
         if(!updates.isEmpty()){
-            updates += ",";
+            updates += ", ";
         }
         updates += db.driver()->escapeIdentifier(rec.editable.fieldName(i), QSqlDriver::FieldName)
                 + "=" + db.driver()->formatValue(f);
@@ -66,21 +66,26 @@ void ChangesWidget::ValueChanged(MangosRecord rec)
         w->deleteLater();
     }
     else{
-        QString updateStr = QString("UPDATE %1 SET %2 WHERE %3=%4;\n")
+        QString updateStr = QString("UPDATE %1 SET %2 WHERE %3=%4;")
                 .arg(escaped_name)
                 .arg(updates)
                 .arg(escaped_pk)
                 .arg(escaped_pkv);
+        QLabel* lbl;
         if(it == changes.end()){
-            QLabel* lbl = new QLabel(updateStr, this);
-            lbl->setTextInteractionFlags(Qt::TextSelectableByMouse);
+            lbl = new QLabel(updateStr, this);
             lbl->setWordWrap(true);
+            //lbl->setAutoFillBackground(true);
+            lbl->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::MinimumExpanding);
+            lbl->setTextInteractionFlags(Qt::TextSelectableByMouse);
             l->addWidget(lbl, 0, Qt::AlignLeft|Qt::AlignTop);
             changes[change_identifier] = lbl;
         }else{
-            QLabel* lbl = static_cast<QLabel*>(it.value());
-            lbl->setWordWrap(true);
+            lbl = static_cast<QLabel*>(it.value());
             lbl->setText(updateStr);
         }
+        //lbl->adjustSize();
+        //adjustSize();
+
     }
 }

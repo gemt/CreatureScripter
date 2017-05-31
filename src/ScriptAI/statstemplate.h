@@ -15,6 +15,8 @@ public:
 
 private slots:
     void onFilterChanged(const QString& filt);
+    void onCellClicked(int row, int column);
+
 private:
     std::shared_ptr<Tables::creature_template> _creature;
     QTableWidget* table;

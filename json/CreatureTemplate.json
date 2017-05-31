@@ -508,28 +508,28 @@
 
     {
         "field": "spell1",
-        "type": 0,
+        "type": 6,
         "desc": "",
         "params": []
     },
 
     {
         "field": "spell2",
-        "type": 0,
+        "type": 6,
         "desc": "",
         "params": []
     },
 
     {
         "field": "spell3",
-        "type": 0,
+        "type": 6,
         "desc": "",
         "params": []
     },
 
     {
         "field": "spell4",
-        "type": 0,
+        "type": 6,
         "desc": "",
         "params": []
     },

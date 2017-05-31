@@ -5,7 +5,7 @@
 #include "defaultlineedit.h"
 #include "typevaluewidget.h"
 #include "stringwidget.h"
-
+#include "spellidwidget.h"
 
 #include <QSharedPointer>
 #include <QLabel>
@@ -29,6 +29,8 @@ StatsTemplate::StatsTemplate(std::shared_ptr<Tables::creature_template> _creatur
     const QVector<TableTypeValue>&  fields = CreatureTemplateDef::Get().FieldTypes();
 
     table = new QTableWidget(fields.size(), 2, this);
+    connect(table, &QTableWidget::cellClicked, this, &StatsTemplate::onCellClicked);
+
     mainLayout->addWidget(table);
 
     QWidget* w = nullptr;
@@ -57,10 +59,15 @@ StatsTemplate::StatsTemplate(std::shared_ptr<Tables::creature_template> _creatur
         case STRING_VALUE_DROPDOWN:
             w = new StringWidget(_creature->record, field._field, field.tooltip, this);
             break;
+        case SPELL_WIDGET:
+            w = new SpellIDWidget(_creature->record, field._field, field.tooltip, this);
+            w->setProperty("isSpell", true);
+            break;
         }
         table->setCellWidget(row, 1, w);
         row++;
     }
+
     table->setHorizontalHeaderLabels(QStringList{"Field", "Value"});
     table->verticalHeader()->setHidden(true);
     table->resizeColumnsToContents();
@@ -74,6 +81,18 @@ void StatsTemplate::onFilterChanged(const QString &filt)
             table->setRowHidden(i, false);
         }else{
             table->setRowHidden(i, true);
+        }
+    }
+}
+
+void StatsTemplate::onCellClicked(int row, int column)
+{
+    if(QWidget* w = table->cellWidget(row,column)){
+        if(w->property("isSpell").isValid()){
+            if(SpellIDWidget* sw = dynamic_cast<SpellIDWidget*>(w)){
+                sw->OnClicked();
+                return;
+            }
         }
     }
 }

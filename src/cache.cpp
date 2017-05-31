@@ -117,3 +117,8 @@ const QVector<std::pair<unsigned int, QString> > &Cache::GetMapVec()
 {
     return map_vec;
 }
+
+const QMap<unsigned int, QString> &Cache::GetMapMap()
+{
+    return maps;
+}

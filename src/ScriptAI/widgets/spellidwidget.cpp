@@ -19,11 +19,11 @@
 #include <QProcess>
 
 
-SpellIDWidget::SpellIDWidget(MangosRecord& r, const QString fieldName, const EventAI::Parameter& param, QWidget* parent)
+SpellIDWidget::SpellIDWidget(MangosRecord& r, const QString fieldName, const QString tooltip, QWidget* parent)
  : ClickableWidget(parent),
-   record(r),
-   parameter(param)
+   record(r)
 {
+    setToolTip(tooltip);
     setMouseTracking(true);
     rIdx = record.indexOf(fieldName);
     QHBoxLayout* l = new QHBoxLayout(this);

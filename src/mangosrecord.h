@@ -16,6 +16,8 @@ public:
     ~MangosRecord(){}
     void operator=(const MangosRecord& other);
 
+    void InsertToClipboard();
+
     QVariant value(int index) const;
     QVariant value(const QString& name) const;
     QString fieldName(int index) const;

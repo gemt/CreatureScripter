@@ -159,6 +159,46 @@ void MainWindow::InitWindow(LoadingScreen& ls)
         emit qswAct->trigger();
         ls.show();
     }
+    /*
+    QFile dumpf("dump.txt");
+    bool ok = dumpf.open(QIODevice::WriteOnly);
+    if(auto* plugin = QSWWrapper::Get().Plugin()){
+        int cnt = 0;
+        for(int i = 0; i < plugin->getSpellsCount();)
+        {
+            auto values = plugin->getValues(cnt++);
+            if(values.isEmpty())
+                continue;
+            else
+                i++;
+
+            quint32 school = values["spellSchoolId"].toUInt();
+            quint32 damageClass = values["damageClassId"].toUInt();
+            if(school == 0 && (damageClass == 1 || damageClass == 0))
+            {
+                QVariantList effList = values["effect"].toList();
+                bool isDamage = false;
+                foreach(const QVariant& v, effList)
+                {
+                    QVariantHash vh = v.value<QVariantHash>();
+                    if(vh["id"].toInt() == 2)
+                    {
+                        isDamage = true;
+                        break;
+                    }
+                }
+                if(!isDamage)
+                    continue;
+
+                QString writeData = QString("%1 %2\n")
+                        .arg(values["id"].toInt(), 6)
+                        .arg(values["nameWithRank"].toString());
+                dumpf.write(writeData.toUtf8());
+                dumpf.flush();
+            }
+        }
+    }
+    */
 }
 
 void MainWindow::onNameSearch()

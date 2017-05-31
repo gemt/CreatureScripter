@@ -45,6 +45,7 @@ WorkTab::WorkTab(uint entry, QString name, QWidget *parent) :
     //addTab(rawTables, "Raw Tables");
 
     changesTab = new ChangesWidget(this, data->creature);
+    event_ai->SetChangeWidget(changesTab);
     addTab(changesTab, "Changes");
 
 }

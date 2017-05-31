@@ -30,6 +30,8 @@ public:
     void LoadMaps();
 
     const QVector<std::pair<unsigned int, QString>>& GetMapVec();
+    const QMap<unsigned int, QString>& GetMapMap();
+
     QString MapName(unsigned int entry);
     QSettings settings;
     //SpellInfoInterface* spellInfo;

@@ -7,6 +7,7 @@
 #include "flagswidget.h"
 #include "migration.h"
 #include "warnings.h"
+#include "changeswidget.h"
 
 #include <QSqlRecord>
 #include <QFormLayout>
@@ -405,18 +406,21 @@ CreatureEventAI::CreatureEventAI(std::shared_ptr<Tables::creature_template> crea
     setWidgetResizable(true);
     setContentsMargins(0,0,0,0);
 
-    QWidget* scrollAreaWidget = new QWidget(this);
+    scrollAreaWidget = new QWidget(this);
     scrollAreaWidget->setContentsMargins(0,0,0,0);
     //scrollAreaWidget->setSizePolicy(QSizePolicy::Minimum,QSizePolicy::Minimum);
     scrollAreaWidget->setSizePolicy(QSizePolicy::Maximum,QSizePolicy::Maximum);
 
-    QVBoxLayout* vl = new QVBoxLayout(scrollAreaWidget);
+    vl = new QVBoxLayout(scrollAreaWidget);
 
     vl->setContentsMargins(0,0,0,0);
     scrollAreaWidget->setLayout(vl);
 
     setWidget(scrollAreaWidget);
 
+    QPushButton* newBtn = new QPushButton("+");
+    connect(newBtn, &QPushButton::clicked, this, &CreatureEventAI::NewEventAI);
+    vl->addWidget(newBtn);
     /*
     QPushButton* b = new QPushButton("changes", scrollAreaWidget);
     vl->addWidget(b);
@@ -443,6 +447,44 @@ CreatureEventAI::CreatureEventAI(std::shared_ptr<Tables::creature_template> crea
 
         //vl->setAlignment(frame, Qt::AlignTop);
     }
+    adjustSize();
+}
+
+void CreatureEventAI::SetChangeWidget(ChangesWidget *changWidg)
+{
+    changes = changWidg;
+}
+
+void CreatureEventAI::NewEventAI()
+{
+    quint32 entry = _creature->record.value(Tables::creature_template::entry).toInt();
+    int newId = entry*100+1;
+    QVector<MangosRecord>& records = _creature->scripts->records;
+    for(QVector<MangosRecord>::iterator it = records.begin(); it != records.end(); it++){
+        MangosRecord& r = *it;
+        int someId = r.value(Tables::creature_ai_scripts::id).toInt();
+        if( someId >= newId) {
+            newId = someId +1;
+        }
+    }
+
+    try{
+        MangosRecord& r = _creature->scripts->getNewEmpty();
+
+        CollapsibleFrame* frame = new CollapsibleFrame(
+                    "Event entry " +r.value(Tables::creature_ai_scripts::id).toString(),
+                    r.value(Tables::creature_ai_scripts::comment).toString(),
+                    scrollAreaWidget);
+        EventEntry* ew = new EventEntry(r, frame);
+        frame->SetWidget(ew);
+        vl->addWidget(frame, 0, Qt::AlignTop|Qt::AlignLeft);
+        entryWidgets.push_back(ew);
+        _creature->scripts->populateLatest(newId, entry);
+        connect(&r, &MangosRecord::valueChanged, changes, &ChangesWidget::ValueChanged);
+    }catch(std::exception& e){
+        Warnings::Warning(e.what());
+    }
+
     adjustSize();
 }
 

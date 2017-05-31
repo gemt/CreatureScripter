@@ -15,14 +15,13 @@ class SpellIDWidget : public ClickableWidget
 {
     Q_OBJECT
 public:
-    SpellIDWidget(MangosRecord& r, const QString fieldName, const EventAI::Parameter& param,  QWidget* parent = nullptr);
+    SpellIDWidget(MangosRecord& r, const QString fieldName, const QString tooltip,  QWidget* parent = nullptr);
 
 private slots:
     void onChangeSpellBtn();
 
 private:
     MangosRecord& record;
-    const EventAI::Parameter& parameter;
     int rIdx;
     QLabel* idLabel;
     QLabel* nameLabel;

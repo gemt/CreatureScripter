@@ -1,5 +1,10 @@
 #include "mangosrecord.h"
 #include "cache.h"
+#include "cache.h"
+
+#include <QApplication>
+#include <QClipboard>
+#include <QSqlDriver>
 
 MangosRecord::MangosRecord(const MangosRecord &other) :
     original(other.original),
@@ -24,6 +29,27 @@ void MangosRecord::operator=(const MangosRecord &other)
     this->original = other.original;
     this->table = other.table;
     this->pk = other.pk;
+}
+
+void MangosRecord::InsertToClipboard()
+{
+    QClipboard *clipboard = QApplication::clipboard();
+    QString str = QString("INSERT INTO %1\n(%2)\nVALUES\n(%3);");
+    QString arg1, arg2;
+    QSqlDatabase db = Cache::Get().GetDB();
+    for(int i = 0; i < editable.count(); i++)
+    {
+        if(!arg1.isEmpty()){
+            arg1+= ", ";
+            arg2+= ", ";
+        }
+
+        arg1 += db.driver()->escapeIdentifier(editable.fieldName(i), QSqlDriver::FieldName);
+        arg2 += db.driver()->formatValue(editable.field(i));
+    }
+    str = str.arg(db.driver()->escapeIdentifier(table, QSqlDriver::TableName),
+                  arg1, arg2);
+    clipboard->setText(str);
 }
 
 QVariant MangosRecord::value(int index) const

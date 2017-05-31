@@ -11,6 +11,7 @@ enum WidgetType{
     FLAGS_WIDGET=3,
     NUMBER_WIDGET=4,
     STRING_VALUE_DROPDOWN = 5,
+    SPELL_WIDGET = 6
 };
 
 struct TableTypeValue{

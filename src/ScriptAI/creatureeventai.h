@@ -15,6 +15,7 @@
 class QVBoxLayout;
 class QGridLayout;
 class QHBoxLayout;
+class ChangesWidget;
 namespace Tables{
 struct creature_template;
 }
@@ -26,6 +27,7 @@ class type_EventType;
 class type_ActionType;
 
 class EventEntry : public QWidget {
+    Q_OBJECT
 public:
     EventEntry(MangosRecord& record, QWidget* parent);
 
@@ -71,12 +73,19 @@ protected:
 
 class CreatureEventAI : public QScrollArea
 {
+Q_OBJECT
 public:
     CreatureEventAI(std::shared_ptr<Tables::creature_template> creature, QWidget* parent);
+    void SetChangeWidget(ChangesWidget* changWidg);
+public slots:
+    void NewEventAI();
 
 private:
     std::shared_ptr<Tables::creature_template> _creature;
     QVector<EventEntry*> entryWidgets;
+    QWidget* scrollAreaWidget;
+    QVBoxLayout* vl;
+    ChangesWidget* changes;
 };
 
 

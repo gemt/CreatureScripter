@@ -143,6 +143,50 @@ creature_equip_template::creature_equip_template(const QVariant &v) :
     //makeRelation<creature>("equipentry3", "entry", "Ranged")
 }
 
+MangosRecord &creature_ai_scripts::getNewEmpty()
+{
+
+    QSqlRecord r;
+    r.insert(0, QSqlField("id", QVariant::Int));
+    r.insert(1, QSqlField(this->creature_id, QVariant::Int));
+    r.insert(2, QSqlField(this->event_type, QVariant::Int));
+    r.insert(3, QSqlField(this->event_inverse_phase_mask, QVariant::Int));
+    r.insert(4, QSqlField(this->event_chance, QVariant::Int));
+    r.insert(5, QSqlField(this->event_flags, QVariant::Int));
+    r.insert(6, QSqlField(this->event_param1, QVariant::Int));
+    r.insert(7, QSqlField(this->event_param2, QVariant::Int));
+    r.insert(8, QSqlField(this->event_param3, QVariant::Int));
+    r.insert(9, QSqlField(this->event_param4, QVariant::Int));
+    r.insert(10, QSqlField(this->action1_type, QVariant::Int));
+    r.insert(11, QSqlField(this->action1_param1, QVariant::Int));
+    r.insert(12, QSqlField(this->action1_param2, QVariant::Int));
+    r.insert(13, QSqlField(this->action1_param3, QVariant::Int));
+    r.insert(14, QSqlField(this->action2_type, QVariant::Int));
+    r.insert(15, QSqlField(this->action2_param1, QVariant::Int));
+    r.insert(16, QSqlField(this->action2_param2, QVariant::Int));
+    r.insert(17, QSqlField(this->action2_param3, QVariant::Int));
+    r.insert(18, QSqlField(this->action3_type, QVariant::Int));
+    r.insert(19, QSqlField(this->action3_param1, QVariant::Int));
+    r.insert(20, QSqlField(this->action3_param2, QVariant::Int));
+    r.insert(21, QSqlField(this->action3_param3, QVariant::Int));
+    r.insert(22, QSqlField(this->comment, QVariant::String));
+    records.push_back(MangosRecord(r, t));
+    return records[records.size()-1];
+}
+
+void creature_ai_scripts::populateLatest(quint32 id, quint32 entry)
+{
+    MangosRecord& rec = records[records.size()-1];
+    rec.setValue(this->id, id);
+    rec.setValue(this->creature_id, entry);
+    for(int i = 2; i < num_cols-1; i++)
+    {
+        rec.setValue(i, 0);
+    }
+    rec.setValue(num_cols-1, "todo");
+
+}
+
 creature_ai_scripts::creature_ai_scripts(quint32 entry) :
     Table(t)
 {

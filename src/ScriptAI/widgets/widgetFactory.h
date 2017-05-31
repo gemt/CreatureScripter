@@ -57,7 +57,7 @@ static QWidget* CreateParameterWidget(const EventAI::Parameter& param, MangosRec
         rw =  new DefaultLineEdit(record, field, param.description, w);
         break;
     case EventAI::SPELL_ID:
-        rw = new SpellIDWidget(record, field, param, w);
+        rw = new SpellIDWidget(record, field, param.description, w);
         w->setProperty("hoverable", true);
         w->setMouseTracking(true);
         w->setProperty("clickWidget", QVariant::fromValue(rw));

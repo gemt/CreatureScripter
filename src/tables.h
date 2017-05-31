@@ -220,6 +220,9 @@ struct creature_ai_scripts : public Table{
     static const QString comment;
     static const int num_cols = 23;
 
+    MangosRecord& getNewEmpty();
+    void populateLatest(quint32 id, quint32 entry);
+
     creature_ai_scripts(quint32 entry);
     QVector<MangosRecord> records;
 private:

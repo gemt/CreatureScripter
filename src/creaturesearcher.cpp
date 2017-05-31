@@ -22,6 +22,7 @@
 #include <QStandardItem>
 #include <QSortFilterProxyModel>
 #include <QTableWidget>
+#include <QFontMetrics>
 
 class CreatureSearcherModel : public QSqlQueryModel
 {
@@ -193,6 +194,7 @@ CreatureSearcher::CreatureSearcher(QWidget *parent, const QSqlDatabase &db, Load
     }
     model = new QStandardItemModel(creatures.size(), 2);
     qRegisterMetaType<QSet<int>>("QSet<int>");
+    auto mapMap = Cache::Get().GetMapMap();
     int rowc = 0;
     foreach(CreatureModelCreature* cmc, creatures){
         QStandardItem* entryItem = new QStandardItem(QString::number(cmc->entry));
@@ -203,6 +205,14 @@ CreatureSearcher::CreatureSearcher(QWidget *parent, const QSqlDatabase &db, Load
         entryItem->setData(cmc->eventAI, Qt::UserRole+3);
         QStandardItem* nameItem = new QStandardItem(cmc->name);
         nameItem->setData(cmc->name.toLower());
+        QString nameTooltip;
+        foreach(int i, cmc->maps){
+            if(!nameTooltip.isEmpty())
+                nameTooltip+="\n";
+            nameTooltip += mapMap[i];
+        }
+
+        nameItem->setToolTip(nameTooltip);
         //QStandardItem* aiItem = new QStandardItem(cmc->aiType);
         model->setItem(rowc, 0, entryItem);
         model->setItem(rowc, 1, nameItem);
@@ -217,7 +227,9 @@ CreatureSearcher::CreatureSearcher(QWidget *parent, const QSqlDatabase &db, Load
     verticalHeader()->hide();
     connect(this, &QTableView::clicked, this, &CreatureSearcher::onActivated);
     SetZoneFilter("");
-    resizeColumnsToContents();
+    QFontMetrics fontMetrics(font());
+    setColumnWidth(0, fontMetrics.width("9999999"));
+    horizontalHeader()->setStretchLastSection(true);
 }
 
 void CreatureSearcher::Search(const QString &s)

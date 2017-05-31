@@ -1,4 +1,5 @@
 #include "creatureeventai.h"
+#include "mangosrecord.h"
 
 #include "collapsableframe.h"
 #include <QVBoxLayout>
@@ -35,6 +36,9 @@ CollapsibleFrame::CollapsibleFrame(const QString& buttonText, const QString& lab
     QPushButton* verboseBtn = new QPushButton("Toggle verbose", this);
     headerLayout->addWidget(verboseBtn, 0, Qt::AlignTop|Qt::AlignLeft);
 
+    QPushButton* copyInsert = new QPushButton("Copy Insert Statement", this);
+    headerLayout->addWidget(copyInsert, 0, Qt::AlignTop|Qt::AlignLeft);
+
     QLabel* label = new QLabel(labelText, this);
     headerLayout->addWidget(label, 0, Qt::AlignTop|Qt::AlignLeft);
     //QPushButton* resetBtn = new QPushButton("Reset Changes");
@@ -53,6 +57,11 @@ CollapsibleFrame::CollapsibleFrame(const QString& buttonText, const QString& lab
         Q_ASSERT(_w);
         _w->verbose = !_w->verbose;
         _w->DoRemake();
+    });
+
+    connect(copyInsert, &QPushButton::clicked, [this](){
+        Q_ASSERT(_w);
+        _w->record.InsertToClipboard();
     });
 }
 
